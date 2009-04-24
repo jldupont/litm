@@ -30,6 +30,8 @@ if not COMMAND_LINE_TARGETS:
 	Default(litm)
 
 
+# TODO move to pyjld
+# 
 def recursive_chmod(path, mode=0775, debug=False):
 	for root, dirs, files in os.walk(path):
 		for filename in files:
@@ -44,7 +46,8 @@ def recursive_chmod(path, mode=0775, debug=False):
 			os.chmod(this_path, mode)
 		
 
-
+# TODO move to pyjld
+# 
 def copytree_no_svn(src, dst, symlinks=False, debug=False):
     names = os.listdir(src)
     os.makedirs(dst)
