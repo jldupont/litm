@@ -1,4 +1,4 @@
-#Lightweight Inter-Thread Messaging.
+Lightweight Inter-Thread Messaging.
 
 = Introduction =
 
