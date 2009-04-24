@@ -16,7 +16,7 @@ Help("""\
 
 #Progress('Evaluating $TARGET\n')
 
-env = Environment()       
+env = Environment(CPPPATH='project/includes')       
        
 # DEFAULT: build `litm.a`
 # =======

@@ -13,7 +13,7 @@
 
 
 	litm_code
-litm_connect(litm_connection *conn) {
+litm_connect(litm_connection **conn) {
 
 }//
 
