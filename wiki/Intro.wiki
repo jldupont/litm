@@ -11,3 +11,12 @@ The functionality offered by this library sits between a simple thread-safe queu
   * _Bus_ semantic (ie. 1-to-many, 1-to-1)
   * Opaque Message delivery
   * Fixed number of _busses_
+  * Recycling of _envelopes_
+  
+= Principle of Operation =
+
+1. _Messages_ and _envelopes_ are owned by ``litm``
+
+	Once a _message_ is sent (through *litm_send* function), _litm_ owns
+	the message.
+	  
