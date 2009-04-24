@@ -1,0 +1,15 @@
+Package: litm
+Version: 0.1-1
+Priority: optional
+Architecture: i386
+Depends: 
+Suggests:
+Conflicts:
+Replaces:
+Installed-Size:
+Maintainer: Jean-Lou Dupont <litm#jldupont.com>
+Description: The GNU `litm` package consits in a
+ lightweight Inter-Thread Messaging library.
+ .
+ This package contains ``litm`` library.
+ .
