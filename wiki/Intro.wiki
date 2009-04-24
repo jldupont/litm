@@ -2,12 +2,12 @@ Lightweight Inter-Thread Messaging.
 
 = Introduction =
 
-The functionality offered by this library sits between a simple thread-safe queue and _DBUS_ type messaging. 
+The functionality offered by this library sits between a simple thread-safe queue and _DBUS_ type messaging. It is not meant to compete with more complex solutions such as _AMQP_ based messaging nor _remote procedure call_ based ones.
 
+= Features =
 
-= Details =
-
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+  * Lightweight
+  * Fast
+  * _Bus_ semantic (ie. 1-to-many, 1-to-1)
+  * Opaque Message delivery
+  * Fixed number of _busses_
