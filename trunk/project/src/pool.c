@@ -15,6 +15,7 @@
  */
 
 #include <string.h>
+#include <stdlib.h>
 
 #include "litm.h"
 #include "../includes/logger.h"
@@ -23,7 +24,7 @@
 
 	// PRIVATE //
 	// ======= //
-	litm_envelope _stack[LITM_POOL_SIZE];   //LIFO stack
+	litm_envelope * _stack[LITM_POOL_SIZE];   //LIFO stack
 
 	int _top_stack = 0;
 	int _created   = 0;
@@ -56,17 +57,17 @@ __litm_pool_get(void) {
 	litm_envelope *e;
 
 	// do we have a spare?
-	e = _stack[ _top_of_stack ];
+	e = _stack[ _top_stack ];
 	if (NULL!=e) {
 
-		_stack[_top_of_stack] = NULL;
+		_stack[_top_stack] = NULL;
 		__litm_pool_clean( e );
 
 		// statistics...
 		_returned ++;
 
-		if (0!=_top_of_stack)
-			_top_of_stack-- ;
+		if (0!=_top_stack)
+			_top_stack-- ;
 
 	} else {
 
@@ -102,6 +103,6 @@ __litm_pool_clean( litm_envelope *envlp ) {
 	DEBUG_LOG_PTR(envlp, "ERROR: __litm_pool_clean: NULL pointer");
 
 	// clear routing information
-	bzero( envlp->routes, sizeof(__litm_routing) );
+	bzero( (char *) &envlp->routes, sizeof(__litm_routing) );
 
 }//

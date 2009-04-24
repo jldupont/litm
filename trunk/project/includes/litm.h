@@ -8,8 +8,79 @@
 #ifndef LITM_H_
 #define LITM_H_
 
-
+#	include <sys/types.h>
 #	include <pthread.h>
+
+	// TYPES
+	// =====
+	//
+	//
+		// PRIVATE
+		// =======
+		typedef struct {
+
+		} __litm_routing;
+
+
+
+		typedef struct _queue_node {
+			void *msg;
+			struct _queue_node *next;
+		} queue_node;
+
+
+		typedef struct {
+			pthread_mutex_t *mutex;
+			queue_node *head, *tail;
+		} queue;
+
+
+		/**
+		 * ``Bus`` identifier type
+		 */
+		typedef int litm_bus;
+
+		/**
+		 * ``Connection`` type
+		 */
+		typedef struct {
+			queue *input_queue;
+		} litm_connection;
+
+
+		// Return Codes
+		// ------------
+		//
+		typedef enum {
+			LITM_MALLOC_ERROR,
+
+		} litm_code;
+
+
+		/**
+		 * ``Envelope`` structure for messages
+		 *
+		 * Contains the pointer to the message
+		 *  as well as a ``routing`` structure
+		 *  used to deliver the said message
+		 *  to all bus which have at least
+		 *  1 subscriber.
+		 *
+		 * The client (ie. receiver of the envelope)
+		 *  must not tamper with the message (ie. msg)
+		 *  as it is shared with other client(s).
+		 *
+		 */
+		typedef struct _litm_envelope {
+
+			// the routing information
+			__litm_routing routes;
+
+			// the sender's message
+			void *msg;
+
+		} litm_envelope;
+
 
 
 	// API
@@ -18,7 +89,7 @@
 		/**
 		 * Opens a ``connection`` to the ``switch``
 		 */
-		litm_code litm_connect(litm_connection *conn);
+		litm_code litm_connect(litm_connection **conn);
 
 
 		/**
@@ -80,75 +151,7 @@
 		void *litm_get_message(litm_envelope *envlp);
 
 
-	// TYPES
-	// =====
-	//
-		typedef queue; 			//forward declaration
-		typedef __litm_routing; //forward declaration
 
-
-		/**
-		 * Return Code type
-		 */
-		typedef int litm_code;
-
-		/**
-		 * ``Bus`` identifier type
-		 */
-		typedef int litm_bus;
-
-		/**
-		 * ``Connection`` type
-		 */
-		typedef struct {
-			queue *input_queue;
-		} litm_connection;
-
-
-		/**
-		 * ``Envelope`` structure for messages
-		 *
-		 * Contains the pointer to the message
-		 *  as well as a ``routing`` structure
-		 *  used to deliver the said message
-		 *  to all bus which have at least
-		 *  1 subscriber.
-		 *
-		 * The client (ie. receiver of the envelope)
-		 *  must not tamper with the message (ie. msg)
-		 *  as it is shared with other client(s).
-		 *
-		 */
-		typedef struct _litm_envelope {
-
-			// the routing information
-			__litm_routing routes;
-
-			// the sender's message
-			void *msg;
-
-		} litm_envelope;
-
-
-	//
-	// PRIVATE
-	// =======
-		typedef struct {
-
-		} __litm_routing;
-
-
-
-		typedef struct _queue_node {
-			void *msg;
-			struct _queue_node *next;
-		} queue_node;
-
-
-		typedef struct {
-			pthread_mutex_t *mutex;
-			queue_node *head, *tail;
-		} queue;
 
 
 #endif /* LITM_H_ */
