@@ -15,8 +15,37 @@ The functionality offered by this library sits between a simple thread-safe queu
   
 = Principle of Operation =
 
+== Overview ==
+The general operation is as follows:
+ 
+  * A _client_ opens a _connection_ to _litm_
+  * A _client_ subscribes to 1 or more _bus_
+  * A _client_ sends a message on 1 bus
+  * A _client_ receives a message on *any* bus (blocking) OR
+  * A _client_ receives a message on *any* bus *if one is available* (non-blocking)
+
+
+== Rules ==
 1. _Messages_ and _envelopes_ are owned by ``litm``
 
 	Once a _message_ is sent (through *litm_send* function), _litm_ owns
+	the message. The sender nor the receiver(s) can ever again modify
 	the message.
-	  
+	
+2. _Messages_ are sent on 1 _bus_ only
+
+3. A receiver (aka _client_) can subscribe to any _bus_
+
+4. A receiver can subscribe to as many _bus_ 
+
+5. A receiver *must* release a message once it is processed
+
+	Once a _message_ is processed by a _receiver_, it must be
+	released through the function *litm_release*.
+	
+	
+= Use Cases =
+
+  # One-to-One (degenerate case)
+  # One-to-Many
+
