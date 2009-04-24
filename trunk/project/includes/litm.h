@@ -83,6 +83,10 @@
 	// TYPES
 	// =====
 	//
+		typedef queue; 			//forward declaration
+		typedef __litm_routing; //forward declaration
+
+
 		/**
 		 * Return Code type
 		 */
@@ -97,17 +101,9 @@
 		 * ``Connection`` type
 		 */
 		typedef struct {
-
-
+			queue *input_queue;
 		} litm_connection;
 
-
-		/**
-		 * The client (ie. receiver of the envelope)
-		 *  must not tamper with the message (ie. msg)
-		 *  as it is shared with other client(s).
-		 */
-		struct __litm_routing; //forward declaration
 
 		/**
 		 * ``Envelope`` structure for messages
@@ -117,6 +113,11 @@
 		 *  used to deliver the said message
 		 *  to all bus which have at least
 		 *  1 subscriber.
+		 *
+		 * The client (ie. receiver of the envelope)
+		 *  must not tamper with the message (ie. msg)
+		 *  as it is shared with other client(s).
+		 *
 		 */
 		typedef struct _litm_envelope {
 
@@ -135,6 +136,19 @@
 		typedef struct {
 
 		} __litm_routing;
+
+
+
+		typedef struct _queue_node {
+			void *msg;
+			struct _queue_node *next;
+		} queue_node;
+
+
+		typedef struct {
+			pthread_mutex_t *mutex;
+			queue_node *head, *tail;
+		} queue;
 
 
 #endif /* LITM_H_ */

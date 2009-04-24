@@ -8,6 +8,7 @@ The functionality offered by this library sits between a simple thread-safe queu
 
   * Lightweight
   * Fast
+  * Thread-safe
   * _Bus_ semantic (ie. 1-to-many, 1-to-1)
   * Opaque Message delivery
   * Fixed number of _busses_
@@ -48,4 +49,13 @@ The general operation is as follows:
 
   # One-to-One (degenerate case)
   # One-to-Many
+
+
+= Usage =
+
+  For normal operation, the library must be used with *1 thread per client* 
+  whereas a _client_ corresponds to the owner thread of the call being made
+  to _litm_open_ function.
+  
+
 
