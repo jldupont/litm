@@ -16,13 +16,9 @@
 
 #include <string.h>
 
-#include "../includes/litm.h"
+#include "litm.h"
+#include "../includes/logger.h"
 #include "../includes/pool.h"
-
-#ifndef DEBUG_LOG
-#	define DEBUG_LOG(...)
-#	define DEBUG_LOG_PTR(ptr, ...)
-#endif
 
 
 	// PRIVATE //
@@ -40,6 +36,7 @@ __litm_pool_recycle( litm_envelope *envlp ) {
 
 	//can we recycle this one?
 	if ( _top_stack + 1 == LITM_POOL_SIZE ) {
+		__litm_pool_destroy( envlp );
 		return;
 	}
 
