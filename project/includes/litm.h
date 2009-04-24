@@ -52,7 +52,9 @@
 		// ------------
 		//
 		typedef enum {
-			LITM_MALLOC_ERROR,
+			LITM_CODE_OK,
+			LITM_CODE_ERROR_MALLOC,
+			LITM_CODE_ERROR_CONNECTION_OPEN,
 
 		} litm_code;
 
@@ -95,7 +97,7 @@
 		/**
 		 * Disconnects from the ``switch``
 		 */
-		litm_code litm_disconnect(void);
+		litm_code litm_disconnect(litm_connection *conn);
 
 
 		/**

@@ -15,12 +15,21 @@
 	litm_code
 litm_connect(litm_connection **conn) {
 
+	*conn = litm_connection_open();
+	if (NULL==*conn)
+		return LITM_CODE_ERROR_CONNECTION_OPEN;
+
+	return LITM_CODE_OK;
+
 }//
 
 
 	litm_code
-litm_disconnect(void) {
+litm_disconnect(litm_connection *conn) {
 
+	litm_connection_close(conn);
+
+	return LITM_CODE_OK;
 }//
 
 
