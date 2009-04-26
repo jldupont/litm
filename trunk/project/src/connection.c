@@ -4,11 +4,15 @@
  *  Created on: 2009-04-24
  *      Author: Jean-Lou Dupont
  */
+#include <pthread.h>
 
 #include "litm.h"
 #include "logger.h"
 #include "connection.h"
 #include "queue.h"
+
+
+litm_connection *_connections[LITM_CONNECTION_MAX];
 
 
 	litm_connection *

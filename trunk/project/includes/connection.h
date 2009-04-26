@@ -8,6 +8,8 @@
 #ifndef CONNECTION_H_
 #define CONNECTION_H_
 
+#	define LITM_CONNECTION_MAX 15
+
 	/**
 	 * Opens (creates) a new connection
 	 */
