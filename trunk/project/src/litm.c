@@ -15,6 +15,8 @@
 	litm_code
 litm_connect(litm_connection **conn) {
 
+	switch_init();
+
 	*conn = litm_connection_open();
 	if (NULL==*conn)
 		return LITM_CODE_ERROR_CONNECTION_OPEN;

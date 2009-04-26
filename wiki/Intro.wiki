@@ -24,6 +24,7 @@ The general operation is as follows:
   * A _client_ sends a message on 1 bus
   * A _client_ receives a message on *any* bus (blocking) OR
   * A _client_ receives a message on *any* bus *if one is available* (non-blocking)
+  * Messages can be delivered out-of-order 
 
 
 == Rules ==
@@ -57,5 +58,9 @@ The general operation is as follows:
   whereas a _client_ corresponds to the owner thread of the call being made
   to _litm_open_ function.
   
+= Delivery =
+
+  Messages can be delivered out-of-order; this is due to the way the
+  _switch_ polls for availability of recipients in a non-blocking fashion.
 
 
