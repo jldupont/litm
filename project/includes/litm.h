@@ -17,11 +17,6 @@
 	//
 		// PRIVATE
 		// =======
-		typedef struct {
-
-		} __litm_routing;
-
-
 
 		typedef struct _queue_node {
 			void *msg;
@@ -43,9 +38,20 @@
 		/**
 		 * ``Connection`` type
 		 */
-		typedef struct {
+		typedef struct _litm_connection {
 			queue *input_queue;
 		} litm_connection;
+
+		//typedef _litm_connection litm_connection;
+
+		typedef struct {
+			litm_connection *sender;
+			litm_connection *current;
+		} __litm_routing;
+
+
+
+
 
 
 		// Return Codes
