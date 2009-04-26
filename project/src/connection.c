@@ -45,3 +45,28 @@ litm_connection_close(litm_connection *conn) {
 	free( conn );
 
 }//
+
+	int
+litm_connection_get_index(litm_connection *conn) {
+
+	int result = -1; //pessimistic
+
+	for (index=0; index<LITM_CONNECTION_MAX; index++ ) {
+		if ( conn ==_connections[index] ) {
+			result = index;
+			break;
+		}
+	}//for
+
+	return result;
+}//
+
+
+	litm_connection *
+litm_connection_get_ptr(int connection_index) {
+
+	if (LITM_CONNECTION_MAX <= connection_index)
+		return NULL;
+
+	return _connections[connection_index];
+}//
