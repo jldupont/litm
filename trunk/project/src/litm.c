@@ -118,7 +118,7 @@ litm_get_message(litm_envelope *envlp) {
 	char *
 litm_translate_code(litm_code code) {
 
-	if (sizeof(LITM_CODE_MESSAGES) <= code )
+	if ((sizeof(litm_code)/sizeof(int)) <= code )
 		return NULL;
 
 	return LITM_CODE_MESSAGES[code];

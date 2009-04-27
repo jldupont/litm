@@ -8,7 +8,6 @@
 #include <errno.h>
 
 #include "litm.h"
-#include "logger.h"
 #include "connection.h"
 #include "queue.h"
 
@@ -79,7 +78,6 @@ litm_connection_open(litm_connection **conn) {
 
 	litm_code
 litm_connection_close(litm_connection *conn) {
-	DEBUG_LOG_PTR(conn, "litm_connection_close: NULL conn");
 
 	if (NULL==conn) {
 		return LITM_CODE_ERROR_BAD_CONNECTION;

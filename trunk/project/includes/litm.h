@@ -56,12 +56,10 @@
 
 
 
-
-
 		// Return Codes
 		// ------------
 		//
-		typedef enum {
+		typedef enum _litm_codes {
 			LITM_CODE_OK = 0,
 			LITM_CODE_NO_MESSAGE,
 			LITM_CODE_BUSY,
