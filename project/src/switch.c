@@ -40,13 +40,10 @@ int __switch_find_match(litm_connection *ref, litm_bus bus_id);
 litm_code __switch_try_sending_to_recipient(	litm_connection *recipient, litm_envelope *env);
 litm_code __switch_finalize(litm_envelope *envlp);
 litm_code __switch_try_sending_or_requeue(litm_connection *conn, litm_envelope *envlp);
-litm_code __switch_process_pending(litm_envelope *envlp);
 
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
 
 	int
 switch_init(void) {
@@ -74,11 +71,6 @@ switch_shutdown(void) {
  */
 	void *
 __switch_thread_function(void *params) {
-
-	enum _actions {
-		ACTION_IND,
-		ACTION_CONTINUE,
-	};
 
 	int pending, action;
 	litm_code code;
@@ -110,12 +102,11 @@ __switch_thread_function(void *params) {
 		//  was already processed and just waiting to be
 		//  sent!
 
-		action = ACTION_IND;
-
 		// message was processed and just sits pending
 
 		if (1==e->routes.pending) {
-			code = __switch_try_sending_or_requeue( conn, e );
+			current = e->routes.current;
+			code = __switch_try_sending_or_requeue( current, e );
 
 			// if the message was sent or requeued,
 			//  we are ok but anything else means something
@@ -126,84 +117,59 @@ __switch_thread_function(void *params) {
 			//           stems from connection changes
 			//           and this is not a normal usage pattern.
 			switch(code) {
+
 			case LITM_CODE_OK:
-				break;
 			case LITM_CODE_BUSY_OUTPUT_QUEUE:
 				break;
+
 			default:
+				// TODO log error?
 				__switch_finalize(e);
 				break;
-
 			}//switch
-
-			continue;  // <==================================
+			continue;  // <====================================
 		}//if
 
 
+		// FROM THIS POINT, the envelope was pending
+		//  so we need to figured out where to send it next.
+		// NOTE: anything short of LITM_CODE_OK gets the
+		//       envelope finalized.  This behavior covers
+		//       the normal case where all recipients have
+		//       had the chance to glance over the message.
 
-		if (0!=e->routes.pending) {
+		sender  = e->routes.sender;
+		current = e->routes.current;
+		bus_id  = e->routes.bus_id;
 
-			sender  = e->routes.sender;
-			current = e->routes.current;
-			bus_id  = e->routes.bus_id;
+		code = __switch_get_next_subscriber(	&next,
+												sender,
+												current,
+												bus_id);
 
-			code = __switch_get_next_subscriber(	&next,
-													sender,
-													current,
-													bus_id);
-
-		} else {
-			// message was just pending to be sent...
-			code = __switch_try_sending_or_requeue( conn, e );
-
+		if (LITM_CODE_OK!=code) {
+			// TODO log error?
+			__switch_finalize(e);
+			continue; // <=======================================
 		}
 
 
+		// WE ARE GOOD TO GO
 
 
-		code = LITM_CODE_OK;
+		//adjust envelope
+		e->routes.current = next;
 
-
+		code = __switch_try_sending_or_requeue( next, e );
 		switch(code) {
-		case LITM_CODE_BUSY:
-			//
-			break;
-
 		case LITM_CODE_OK:
-			litm_code returnCode;
-
-			//adjust envelope
-			e->routes.current = next;
-
-			returnCode = __switch_try_sending_to_recipient( next, e );
-			if (LITM_CODE_BUSY_OUTPUT_QUEUE==returnCode) {
-				// busy for now, try later
-				e->routes.pending = 1;
-				queue_put( _switch_queue, e );
-			}
-			if (LITM_CODE_OK==returnCode) {
-				// unconditional reset... we did send the message!
-				e->routes.pending = 0;
-			}
-			if (LITM_CODE_OK!=returnCode) {
-				// TODO log?
-			}
+		case LITM_CODE_BUSY_OUTPUT_QUEUE:
 			break;
 
-		}//switch
-
-
-		// everything looks OK, send!
-		if (LITM_CODE_OK==code) {
-
-		} else if (LITM_CODE_ERROR_SWITCH_NEXT_NOT_FOUND==code) {
-			// message *probably* reached all recipients OR
-			//  connection
-			// at this point... since we ``own`` the envelope anyhow,
-			// get rid of it
-
-		} else {
-			// TODO log?
+		default:
+			// TODO log error?
+			__switch_finalize(e);
+			break;
 		}
 
 
@@ -212,12 +178,6 @@ __switch_thread_function(void *params) {
 
 	return NULL;
 }//END THREAD
-
-	litm_code
-__switch_process_pending(litm_envelope *envlp) {
-
-
-}//
 
 
 /**
@@ -259,12 +219,12 @@ __switch_try_sending_or_requeue(litm_connection *conn, litm_envelope *envlp) {
 
 	litm_code result = __switch_try_sending_to_recipient(conn, envlp);
 
-	if (LITM_CODE_BUSY_OUTPUT_QUEUE==code) {
+	if (LITM_CODE_BUSY_OUTPUT_QUEUE==result) {
 		envlp->routes.pending = 1;
 		queue_put( _switch_queue, envlp );
 	}
 
-	return code;
+	return result;
 }//
 
 /**

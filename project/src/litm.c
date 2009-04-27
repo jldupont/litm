@@ -11,6 +11,22 @@
 #include "queue.h"
 #include "pool.h"
 
+char *LITM_CODE_MESSAGES[] = {
+		"LITM_CODE_OK",
+		"LITM_CODE_NO_MESSAGE",
+		"LITM_CODE_BUSY",
+		"LITM_CODE_ERROR_MALLOC",
+		"LITM_CODE_ERROR_CONNECTION_OPEN",
+		"LITM_CODE_ERROR_BAD_CONNECTION",
+		"LITM_CODE_ERROR_NO_MORE_CONNECTIONS",
+		"LITM_CODE_ERROR_INVALID_BUS",
+		"LITM_CODE_ERROR_SWITCH_SENDER_EQUAL_CURRENT",
+		"LITM_CODE_ERROR_SWITCH_NO_CURRENT",
+		"LITM_CODE_ERROR_SWITCH_NEXT_NOT_FOUND",
+		"LITM_CODE_ERROR_OUTPUT_QUEUING",
+		"LITM_CODE_BUSY_OUTPUT_QUEUE",
+		"LITM_CODE_ERROR_INVALID_ENVELOPE"
+};
 
 	litm_code
 litm_connect(litm_connection **conn) {
@@ -18,8 +34,10 @@ litm_connect(litm_connection **conn) {
 	switch_init();
 
 	litm_code code = litm_connection_open(conn);
-	if (LITM_CODE_OK!=code)
+	if (LITM_CODE_OK!=code) {
+		*conn = NULL;
 		return code;
+	}
 
 	return LITM_CODE_OK;
 
@@ -36,14 +54,14 @@ litm_disconnect(litm_connection *conn) {
 	litm_code
 litm_subscribe(litm_connection *conn, litm_bus bus_id) {
 
-	return litm_switch_add_subscriber( conn, bus_id );
+	return switch_add_subscriber( conn, bus_id );
 }//
 
 
 	litm_code
 litm_unsubscribe(litm_connection *conn, litm_bus bus_id) {
 
-	return litm_switch_remove_subscriber( conn, bus_id );
+	return switch_remove_subscriber( conn, bus_id );
 }//
 
 	litm_code
@@ -95,4 +113,13 @@ litm_get_message(litm_envelope *envlp) {
 	}
 
 	return envlp->msg;
+}//
+
+	char *
+litm_translate_code(litm_code code) {
+
+	if (sizeof(LITM_CODE_MESSAGES) <= code )
+		return NULL;
+
+	return LITM_CODE_MESSAGES[code];
 }//
