@@ -9,6 +9,7 @@
 #include <sys/types.h>
 
 #include "litm.h"
+#include "switch.h"
 #include "queue.h"
 
 // Input Queue
@@ -16,6 +17,9 @@ queue *_switch_queue;
 
 // Switch Thread
 pthread_t *_switchThread = NULL;
+
+// Subscriptions to busses
+litm_bus_subscription_map _subscribers[LITM_BUSSES_MAX];
 
 
 // PRIVATE

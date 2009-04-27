@@ -17,9 +17,9 @@ litm_connect(litm_connection **conn) {
 
 	switch_init();
 
-	*conn = litm_connection_open();
-	if (NULL==*conn)
-		return LITM_CODE_ERROR_CONNECTION_OPEN;
+	litm_code code = litm_connection_open(conn);
+	if (LITM_CODE_OK!=code)
+		return code;
 
 	return LITM_CODE_OK;
 
@@ -29,9 +29,7 @@ litm_connect(litm_connection **conn) {
 	litm_code
 litm_disconnect(litm_connection *conn) {
 
-	litm_connection_close(conn);
-
-	return LITM_CODE_OK;
+	return litm_connection_close(conn);
 }//
 
 

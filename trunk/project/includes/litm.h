@@ -11,12 +11,14 @@
 #	include <sys/types.h>
 #	include <pthread.h>
 
-	// TYPES
-	// =====
-	//
-	//
-		// PRIVATE
-		// =======
+
+#	define LITM_CONNECTION_MAX 15
+#	define LITM_BUSSES_MAX     7
+
+		// TYPES
+		// =====
+		//
+		//
 
 		typedef struct _queue_node {
 			void *msg;
@@ -61,6 +63,8 @@
 			LITM_CODE_OK,
 			LITM_CODE_ERROR_MALLOC,
 			LITM_CODE_ERROR_CONNECTION_OPEN,
+			LITM_CODE_ERROR_BAD_CONNECTION,
+			LITM_CODE_ERROR_NO_MORE_CONNECTIONS,
 
 		} litm_code;
 
