@@ -18,6 +18,11 @@ int __litm_connection_get_free_index(void);
  *  or -1 on Error
  */
 int	__litm_connection_get_index(litm_connection *conn);
+/**
+ * Returns the connection for a specified index
+ *  or NULL on error
+ */
+litm_connection *__litm_connection_get_ptr(int connection_index);
 
 
 // PRIVATE VARIABLES
@@ -64,24 +69,6 @@ litm_connection_open(litm_connection **conn) {
 }//
 
 
-/**
- * Verifies if a `spot` is available in
- *  the connection map OR -1 if none.
- *
- */
-	int
-__litm_connection_get_free_index(void) {
-
-	int index, result=-1;
-	for (index=1; index<LITM_CONNECTION_MAX; index++) {
-		if (NULL==_connections[index]) {
-			result=index;
-			break;
-		}
-	}
-
-	return index;
-}//
 
 	litm_code
 litm_connection_close(litm_connection *conn) {
@@ -134,10 +121,29 @@ __litm_connection_get_index(litm_connection *conn) {
 
 
 	litm_connection *
-litm_connection_get_ptr(int connection_index) {
+__litm_connection_get_ptr(int connection_index) {
 
 	if ((LITM_CONNECTION_MAX <= connection_index) || 0==connection_index)
 		return NULL;
 
 	return _connections[connection_index];
+}//
+
+/**
+ * Verifies if a `spot` is available in
+ *  the connection map OR -1 if none.
+ *
+ */
+	int
+__litm_connection_get_free_index(void) {
+
+	int index, result=-1;
+	for (index=1; index<LITM_CONNECTION_MAX; index++) {
+		if (NULL==_connections[index]) {
+			result=index;
+			break;
+		}
+	}
+
+	return index;
 }//
