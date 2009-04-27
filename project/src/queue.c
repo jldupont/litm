@@ -58,27 +58,28 @@ int queue_put(queue *q, void *msg) {
 		// if this malloc fails,
 		//  there are much bigger problems that loom
 		tmp = (queue_node *) malloc(sizeof(queue_node));
-		if (NULL==tmp)
-			return 0;
+		if (NULL==tmp) {
 
-		tmp->msg = msg;
+			tmp->msg = msg;
 
-		//perform the ''put'' operation {
-			//no next yet...
-			tmp->next=NULL;
+			//perform the ''put'' operation {
+				//no next yet...
+				tmp->next=NULL;
 
-			//insert pointer to element first
-			if (NULL!=q->tail)
-				(q->tail)->next=tmp;
+				//insert pointer to element first
+				if (NULL!=q->tail)
+					(q->tail)->next=tmp;
 
-			// insert element
-			q->tail = tmp;
+				// insert element
+				q->tail = tmp;
 
-			//was the queue empty?
-			if (NULL==q->head)
-				q->head=tmp;
-		//}
-
+				//was the queue empty?
+				if (NULL==q->head)
+					q->head=tmp;
+			//}
+		} else {
+			code = 0;
+		}
 	pthread_mutex_unlock( q->mutex );
 
 	//DEBUG_LOG(LOG_DEBUG,"queue_put: END");
@@ -86,6 +87,59 @@ int queue_put(queue *q, void *msg) {
 	return 1;
 }//[/queue_put]
 
+
+/**
+ * Queues a message (non-blocking)
+ *  in the communication queue
+ *
+ * Returns	1 on success,
+ * 			0 on error
+ * 			-1 on pending
+ */
+int queue_put_nb(queue *q, void *msg) {
+
+	queue_node *tmp=NULL;
+	int code = 0;
+
+	//DEBUG_LOG(LOG_DEBUG,"queue_put: BEGIN");
+
+	code = pthread_mutex_trylock( q->mutex );
+	if (EBUSY)
+		return -1;
+
+		// if this malloc fails,
+		//  there are much bigger problems that loom
+		tmp = (queue_node *) malloc(sizeof(queue_node));
+		if (NULL!=tmp) {
+
+			tmp->msg = msg;
+
+			//perform the ''put'' operation {
+				//no next yet...
+				tmp->next=NULL;
+
+				//insert pointer to element first
+				if (NULL!=q->tail)
+					(q->tail)->next=tmp;
+
+				// insert element
+				q->tail = tmp;
+
+				//was the queue empty?
+				if (NULL==q->head)
+					q->head=tmp;
+			//}
+
+		} else {
+			code = 0;
+		}
+
+	pthread_mutex_unlock( q->mutex );
+
+	//DEBUG_LOG(LOG_DEBUG,"queue_put: END");
+
+	return 1;
+}//[/queue_put]
 
 /**
  * Retrieves the next message from the communication queue
