@@ -74,6 +74,7 @@
 			LITM_CODE_ERROR_SWITCH_NEXT_NOT_FOUND,
 			LITM_CODE_ERROR_OUTPUT_QUEUING,   				//can't send to the recipient
 			LITM_CODE_BUSY_OUTPUT_QUEUE,
+			LITM_CODE_ERROR_INVALID_ENVELOPE,
 
 		} litm_code;
 
@@ -93,6 +94,9 @@
 		 *
 		 */
 		typedef struct _litm_envelope {
+
+			// cleaning function callback
+			void (*cleaner)(void *msg);
 
 			// the routing information
 			__litm_routing routes;
@@ -135,10 +139,18 @@
 		 * Send message on a ``bus``
 		 *
 		 * If an error occurs, it is the responsibility of the sender
-		 *  to dispose of the ``messages`` appropriately.
+		 *  to dispose of the ``messages`` appropriately.  If the
+		 *  operation went LITM_CODE_OK, then once all recipients
+		 *  are finished with the message, the ``cleaner`` will be
+		 *  called with the message pointer OR if ``cleaner`` is
+		 *  NULL, the message will simply be freed with free().
 		 *
 		 */
-		litm_code litm_send(litm_connection *conn, litm_bus bus_id, void *msg);
+		litm_code litm_send(	litm_connection *conn,
+								litm_bus bus_id,
+								void *msg,
+								void (*cleaner)(void *msg)
+								);
 
 
 		/**

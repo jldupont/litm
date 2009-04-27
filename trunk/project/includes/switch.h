@@ -17,6 +17,7 @@
 
 	litm_code switch_add_subscriber(litm_connection *conn, litm_bus bus_id);
 	litm_code switch_remove_subscriber(litm_connection *conn, litm_bus bus_id);
-	litm_code switch_send(litm_connection *conn, litm_bus bus_id, void *msg);
+	litm_code switch_send(litm_connection *conn, litm_bus bus_id, void *msg, void (*cleaner)(void *msg));
+	litm_code switch_release(litm_connection *conn, litm_envelope *envlp);
 
 #endif /* SWITCH_H_ */

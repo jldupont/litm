@@ -137,6 +137,11 @@ __switch_thread_function(void *params) {
 				// TODO log?
 			}
 
+		} else if (LITM_CODE_ERROR_SWITCH_NEXT_NOT_FOUND==code) {
+			// message *probably* reached all recipients
+			// at this point... since we ``own`` the envelope anyhow,
+			// get rid of it
+
 		} else {
 			// TODO log?
 		}
@@ -227,9 +232,14 @@ switch_remove_subscriber(litm_connection *conn, litm_bus bus_id) {
 	return result;
 }//
 
-
+/**
+ * This function just queues up the message in the
+ *  switch's input_queue without actually sending it
+ *  to recipients.
+ */
 	litm_code
-switch_send(litm_connection *conn, litm_bus bus_id, void *msg) {
+switch_send(litm_connection *conn, litm_bus bus_id, void *msg,
+			void (*cleaner)(void *msg)) {
 
 	if (NULL==conn) {
 		return LITM_CODE_ERROR_BAD_CONNECTION;
@@ -241,9 +251,11 @@ switch_send(litm_connection *conn, litm_bus bus_id, void *msg) {
 
 	// Grab an envelope & init
 	litm_envelope *e=__litm_pool_get();
+	e->cleaner = cleaner;
+	e->routes.pending = 0; //FALSE
 	e->routes.bus_id = bus_id;
 	e->routes.sender = conn;
-	e->routes.current = NULL;
+	e->routes.current = NULL;  // First time sent
 	e->msg = msg;
 
 	/*
@@ -258,6 +270,31 @@ switch_send(litm_connection *conn, litm_bus bus_id, void *msg) {
 
 	return LITM_CODE_OK;
 }//
+
+
+	litm_code
+switch_release(litm_connection *conn, litm_envelope *envlp) {
+
+	if (NULL==conn) {
+		return LITM_CODE_BAD_CONNECTION;
+	}
+	if (NULL==envlp) {
+		return LITM_CODE_ERROR_INVALID_ENVELOPE;
+	}
+
+	(void (*)(void *msg)) *cleaner = envlp->cleaner;
+
+	if (NULL==cleaner) {
+		free( envlp->msg );
+	} else {
+		*cleaner( msg );
+	}
+
+	__litm_pool_recycle( envlp );
+
+	return LITM_CODE_OK;
+}//
+
 
 /**
  * Scans the subscription map for the subscriber that
