@@ -47,9 +47,13 @@ litm_unsubscribe(litm_connection *conn, litm_bus bus_id) {
 }//
 
 	litm_code
-litm_send(litm_connection *conn, litm_bus bus_id, void *msg) {
+litm_send(	litm_connection *conn,
+			litm_bus bus_id,
+			void *msg,
+			void (*cleaner)(void)
+			) {
 
-	return litm_switch_send(conn, bus_id, msg);
+	return switch_send(conn, bus_id, msg, cleaner);
 }//
 
 
@@ -69,9 +73,18 @@ litm_receive_nb(litm_connection *conn, litm_envelope **envlp) {
 }//
 
 
+/**
+ * Release a message to LITM
+ *
+ * This function should *ONLY* be used by client's
+ *  as a result of finishing the processing of an
+ *  envelope/message retrieved through ``litm_receive_nb''.
+ *
+ */
 	litm_code
 litm_release(litm_connection *conn, litm_envelope *envlp) {
 
+	return switch_release( conn, envlp );
 }//
 
 
