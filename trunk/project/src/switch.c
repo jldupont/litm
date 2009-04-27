@@ -66,7 +66,7 @@ __switch_thread_function(void *params) {
 
 	litm_code code;
 	litm_envelope *e;
-	litm_connection *conn, sender, current;
+	litm_connection *conn, *sender, *current;
 	litm_bus bus_id;
 
 	//TODO switch shutdown signal check
@@ -97,6 +97,7 @@ __switch_thread_function(void *params) {
 	}//while
 
 
+	return NULL;
 }//
 
 
@@ -179,7 +180,7 @@ switch_send(litm_connection *conn, litm_bus bus_id, void *msg) {
 	 *  Initial message submission: if something goes
 	 *  wrong, we need to get rid of envelope.
 	 */
-	int result = queue->put(_switch_queue, (void *) e);
+	int result = queue_put(_switch_queue, (void *) e);
 	if (1 != result) {
 		__litm_pool_recycle( e );
 		return LITM_CODE_ERROR_MALLOC;
@@ -248,7 +249,7 @@ __switch_get_next_subscriber(	litm_connection **result,
 		if (1==foundFirst) {
 			// we found the first recipient
 			// bail out with the result!
-			result = _subscribers[bus_id][foundFirst];
+			*result = _subscribers[bus_id][foundFirst];
 			bailOut=1;
 		}
 
@@ -259,7 +260,7 @@ __switch_get_next_subscriber(	litm_connection **result,
 
 			if (0==foundMatch) {
 				// can't find ``current``...
-				code = LITM_CODE_ERROR_NO_CURRENT;
+				returnCode = LITM_CODE_ERROR_SWITCH_NO_CURRENT;
 				bailOut = 1;
 			} else {
 				// we found ``current``...
@@ -270,20 +271,20 @@ __switch_get_next_subscriber(	litm_connection **result,
 					if ((NULL!=c) && (sender!=c)) {
 						foundNext = index;
 						*result = c;
-						code = LITM_CODE_OK;
+						returnCode = LITM_CODE_OK;
 						break;
 					}
 				}//for
 
 				if (0==foundNext)
-					code = LITM_CODE_ERROR_SWITCH_NEXT_NOT_FOUND;
+					returnCode = LITM_CODE_ERROR_SWITCH_NEXT_NOT_FOUND;
 
 			}//foundMatch
 		}//bailOut
 
 	pthread_mutex_unlock( &_subscribers_mutex );
 
-	return code;
+	return returnCode;
 }//
 
 /**
