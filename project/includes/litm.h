@@ -47,6 +47,7 @@
 		//typedef _litm_connection litm_connection;
 
 		typedef struct {
+			litm_bus         bus_id;
 			litm_connection *sender;
 			litm_connection *current;
 		} __litm_routing;
