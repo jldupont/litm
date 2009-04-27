@@ -5,6 +5,7 @@
  *      Author: Jean-Lou Dupont
  */
 #include <pthread.h>
+#include <errno.h>
 
 #include "litm.h"
 #include "logger.h"
@@ -24,6 +25,9 @@ int	__litm_connection_get_index(litm_connection *conn);
  */
 litm_connection *__litm_connection_get_ptr(int connection_index);
 
+void _litm_connections_lock(void);
+void _litm_connections_unlock(void);
+
 
 // PRIVATE VARIABLES
 // -----------------
@@ -38,9 +42,12 @@ litm_connection *_connections[LITM_CONNECTION_MAX];
 	litm_code
 litm_connection_open(litm_connection **conn) {
 
-	int target_index;
+	int target_index, code;
 
-	pthread_mutex_lock( &_connections_mutex );
+	code = pthread_mutex_trylock( &_connections_mutex );
+	if (EBUSY==code) {
+		return LITM_CODE_BUSY;
+	}
 
 	target_index = __litm_connection_get_free_index();
 	if (-1 == target_index) {
@@ -78,7 +85,10 @@ litm_connection_close(litm_connection *conn) {
 		return LITM_CODE_ERROR_BAD_CONNECTION;
 	}
 
-	pthread_mutex_lock( &_connections_mutex );
+	int code = pthread_mutex_trylock( &_connections_mutex );
+	if (EBUSY==code) {
+		return LITM_CODE_BUSY;
+	}
 
 	//is it really a connection?
 	int index = __litm_connection_get_index(conn);
@@ -146,4 +156,17 @@ __litm_connection_get_free_index(void) {
 	}
 
 	return index;
+}//
+
+
+	void
+_litm_connections_lock(void) {
+
+	pthread_mutex_lock( &_connections_mutex );
+}//
+
+	void
+_litm_connections_unlock(void) {
+
+	pthread_mutex_unlock( &_connections_mutex );
 }//

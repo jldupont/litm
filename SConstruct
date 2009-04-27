@@ -61,3 +61,12 @@ if 'deb' in COMMAND_LINE_TARGETS:
 		print "*** ERROR [%s] ***" % e
 	
 env.Command("deb", "/tmp/litm", "dpkg-deb --build $SOURCE")
+
+
+# INSTALLING on LOCAL MACHINE
+if 'install' in COMMAND_LINE_TARGETS:
+	print "scons: INSTALLING LOCALLY"
+	shutil.copy('./project/includes/litm.h', '/usr/include')
+	#shutil.copy('./liblitm.a', '/usr/lib')
+
+env.Command("install", "./liblitm.a", "cp $SOURCE /usr/lib")

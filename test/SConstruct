@@ -1,0 +1,17 @@
+"""
+scons build file
+
+@author: Jean-Lou Dupont
+"""
+import os
+import sys
+import shutil
+
+Help("""\
+ Type:	
+   'scons' to build the program,
+""")
+
+env = Environment()
+Program('test', Glob("src/*.c"), LIBS=['litm'] )       
+
