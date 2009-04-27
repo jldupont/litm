@@ -65,6 +65,7 @@
 			LITM_CODE_ERROR_CONNECTION_OPEN,
 			LITM_CODE_ERROR_BAD_CONNECTION,
 			LITM_CODE_ERROR_NO_MORE_CONNECTIONS,
+			LITM_CODE_ERROR_INVALID_BUS,
 
 		} litm_code;
 
@@ -124,6 +125,10 @@
 
 		/**
 		 * Send message on a ``bus``
+		 *
+		 * If an error occurs, it is the responsibility of the sender
+		 *  to dispose of the ``messages`` appropriately.
+		 *
 		 */
 		litm_code litm_send(litm_connection *conn, litm_bus bus_id, void *msg);
 

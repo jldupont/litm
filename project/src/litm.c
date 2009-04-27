@@ -36,18 +36,20 @@ litm_disconnect(litm_connection *conn) {
 	litm_code
 litm_subscribe(litm_connection *conn, litm_bus bus_id) {
 
+	return litm_switch_add_subscriber( conn, bus_id );
 }//
 
 
 	litm_code
 litm_unsubscribe(litm_connection *conn, litm_bus bus_id) {
 
-
+	return litm_switch_remove_subscriber( conn, bus_id );
 }//
 
 	litm_code
 litm_send(litm_connection *conn, litm_bus bus_id, void *msg) {
 
+	return litm_switch_send(conn, bus_id, msg);
 }//
 
 
