@@ -37,7 +37,7 @@ litm_code __switch_get_next_subscriber(	litm_connection **result,
 int __switch_find_next_non_match(litm_connection *ref, litm_bus bus_id);
 int __switch_find_match(litm_connection *ref, litm_bus bus_id);
 litm_code __switch_try_sending_to_recipient(	litm_connection *recipient, litm_envelope *env);
-
+litm_code __switch_finalize(litm_envelope *envlp);
 
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -151,6 +151,31 @@ __switch_thread_function(void *params) {
 
 
 	return NULL;
+}//
+
+/**
+ * A client has finished processing a message: send it
+ *  through through the ``input_queue`` and if all intended
+ *  recipients have processed it already, it will be finalized.
+ */
+	litm_code
+switch_release(litm_connection *conn, litm_envelope *envlp) {
+
+	if (NULL==conn) {
+		return LITM_CODE_ERROR_BAD_CONNECTION;
+	}
+
+	if (( LITM_BUSSES_MAX < bus_id ) || (0>=bus_id)) {
+		return LITM_CODE_ERROR_INVALID_BUS;
+	}
+
+	int result = queue_put(_switch_queue, (void *) envlp);
+	if (1 != result) {
+		__switch_finalize( envlp );
+		return LITM_CODE_ERROR_MALLOC;
+	}
+
+	return LITM_CODE_OK;
 }//
 
 /**
@@ -272,8 +297,12 @@ switch_send(litm_connection *conn, litm_bus bus_id, void *msg,
 }//
 
 
+/**
+ * Finalizes a message
+ *
+ */
 	litm_code
-switch_release(litm_connection *conn, litm_envelope *envlp) {
+__switch_finalize(litm_envelope *envlp) {
 
 	if (NULL==conn) {
 		return LITM_CODE_BAD_CONNECTION;

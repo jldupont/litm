@@ -56,7 +56,6 @@ The general operation is as follows:
   # One-to-One (degenerate case)
   # One-to-Many
 
-
 = Usage =
 
   For normal operation, the library must be used with *1 thread per client* 
@@ -84,3 +83,7 @@ The general operation is as follows:
   to dispose of the message.
 
   Split-horizon is used for sending: the message is not sent back to the sender.
+
+= Releasing =
+
+  Once a message has reached all the intended recipients, 
