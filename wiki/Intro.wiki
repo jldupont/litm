@@ -67,7 +67,15 @@ The general operation is as follows:
 = Connections & Busses =
 
   There are 15 connections and 7 busses possible although the library can be 
-  recompiled to support more.  The _worst case_ scenario would be when
-  all _busses_ are used in 1-to-1 pattern thereby:
-  7busses * 2clients = 14 connections
+  recompiled to support more.  
   
+  The _worst case_ scenario is when all _busses_ are used in 1-to-1 pattern thereby:  
+  
+  	{{{
+  		7busses * 2clients = 14 connections
+  	}}}
+  	
+= Sending =
+  Upon error accessing _litm_send_, it is the responsibility of the sender
+  to dispose of the message.
+

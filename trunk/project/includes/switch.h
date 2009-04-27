@@ -10,18 +10,13 @@
 
 #include <pthread.h>
 
-	// TYPES
-	// -----
-
-	typedef struct _litm_bus_subscription_map {
-		litm_connection *subscribers[LITM_CONNECTION_MAX];
-	} litm_bus_subscription_map;
-
 
 	// PROTOTYPES
 	int   switch_init(void);
 	void *switch_thread_function(void *params);
 
-
+	litm_code switch_add_subscriber(litm_connection *conn, litm_bus bus_id);
+	litm_code switch_remove_subscriber(litm_connection *conn, litm_bus bus_id);
+	litm_code switch_send(litm_connection *conn, litm_bus bus_id, void *msg);
 
 #endif /* SWITCH_H_ */

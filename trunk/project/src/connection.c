@@ -12,10 +12,22 @@
 #include "queue.h"
 
 // PRIVATE
-int litm_connection_get_free_index(void);
+int __litm_connection_get_free_index(void);
+/**
+ * Returns the index for a specified connection
+ *  or -1 on Error
+ */
+int	__litm_connection_get_index(litm_connection *conn);
 
 
+// PRIVATE VARIABLES
+// -----------------
+pthread_mutex_t  _connections_mutex = PTHREAD_MUTEX_INITIALIZER;
 litm_connection *_connections[LITM_CONNECTION_MAX];
+
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 	litm_code
@@ -23,23 +35,31 @@ litm_connection_open(litm_connection **conn) {
 
 	int target_index;
 
-	target_index = litm_connection_get_free_index();
-	if (-1 == target_index)
+	pthread_mutex_lock( &_connections_mutex );
+
+	target_index = __litm_connection_get_free_index();
+	if (-1 == target_index) {
+		pthread_mutex_unlock( &_connections_mutex );
 		return LITM_CODE_ERROR_NO_MORE_CONNECTIONS;
+	}
 
 	*conn=malloc(sizeof(litm_connection));
-	if (NULL==*conn)
+	if (NULL==*conn) {
+		pthread_mutex_unlock( &_connections_mutex );
 		return LITM_CODE_ERROR_MALLOC;
+	}
 
 	queue *q = queue_create();
 	if (NULL==q) {
 		free(*conn);
+		pthread_mutex_unlock( &_connections_mutex );
 		return LITM_CODE_ERROR_MALLOC;
 	}
 
 	_connections[target_index] = *conn;
 	(*conn)->input_queue = q;
 
+	pthread_mutex_unlock( &_connections_mutex );
 	return LITM_CODE_OK;
 }//
 
@@ -50,7 +70,7 @@ litm_connection_open(litm_connection **conn) {
  *
  */
 	int
-litm_connection_get_free_index(void) {
+__litm_connection_get_free_index(void) {
 
 	int index, result=-1;
 	for (index=1; index<LITM_CONNECTION_MAX; index++) {
@@ -70,22 +90,35 @@ litm_connection_close(litm_connection *conn) {
 	if (NULL==conn) {
 		return LITM_CODE_ERROR_BAD_CONNECTION;
 	}
+
+	pthread_mutex_lock( &_connections_mutex );
+
 	//is it really a connection?
-	int index = litm_connection_get_index(conn);
+	int index = __litm_connection_get_index(conn);
 
 	if (-1 == index) {
+		pthread_mutex_unlock( &_connections_mutex );
 		return LITM_CODE_ERROR_BAD_CONNECTION;
 	}
 
 	_connections[index] = NULL;
+
+	// don't need to hold the mutex for the last part
+	// of the operation: the connection isn't part of
+	// the protected table anymore AND we stand less
+	// chances for a livelock since we would be holding
+	// another mutex when calling ``queue_destroy``
+	pthread_mutex_unlock( &_connections_mutex );
+
 	queue_destroy( conn->input_queue );
 	free( conn );
+
 
 	return LITM_CODE_OK;
 }//
 
 	int
-litm_connection_get_index(litm_connection *conn) {
+__litm_connection_get_index(litm_connection *conn) {
 
 	int index, result = -1; //pessimistic
 

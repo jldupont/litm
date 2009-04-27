@@ -21,12 +21,6 @@
 
 
 	/**
-	 * Returns the index for a specified connection
-	 *  or -1 on Error
-	 */
-	int	litm_connection_get_index(litm_connection *conn);
-
-	/**
 	 * Returns the connection for a specified index
 	 *  or NULL on error
 	 */
