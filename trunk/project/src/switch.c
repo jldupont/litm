@@ -29,18 +29,27 @@ litm_connection *_subscribers[LITM_BUSSES_MAX][LITM_CONNECTION_MAX];
 
 // PRIVATE
 // -------
-void *switch_thread_function(void *params);
-
+void *__switch_thread_function(void *params);
+litm_connection *__switch_get_next_subscriber(litm_connection *current, litm_bus bus_id);
 
 	int
 switch_init(void) {
 
 	if (NULL== _switchThread) {
-		pthread_create(_switchThread, NULL, &switch_thread_function, NULL);
+		pthread_create(_switchThread, NULL, &__switch_thread_function, NULL);
 
 		_switch_queue = queue_create();
 	}
 }//
+
+/**
+ * TODO implement switch shutdown
+ */
+	int
+switch_shutdown(void) {
+
+}//
+
 
 /**
  * The switch thread dequeues messages from the
@@ -48,14 +57,27 @@ switch_init(void) {
  *  next connection queue.
  */
 	void *
-switch_thread_function(void *params) {
+__switch_thread_function(void *params) {
 
 	litm_envelope *e;
 
+	//TODO switch shutdown signal check
+	while(1) {
+		// we block here since if we have no messages
+		//  to process, we don't have anything else to do...
+		e=(litm_envelope *) queue_get( _switch_queue );
 
-	// we block here since if we have no messages
-	//  to process, we don't have anything else to do...
-	e=(litm_envelope *) queue_get( _switch_queue );
+		// The envelope contains the sender's connection ptr
+		//  as well as the ``current`` connection ptr.
+
+		// When the message is first sent on any bus,
+		//  the switch sets the ``current`` connection ptr
+		//  to the subscriber's connection ptr; this pointer
+		//  is obtained by scanning the ``subscription map``
+		//  for the first subscriber to the target bus.
+
+
+	}//while
 
 
 }//
@@ -131,6 +153,7 @@ switch_send(litm_connection *conn, litm_bus bus_id, void *msg) {
 
 	// Grab an envelope & init
 	litm_envelope *e=__litm_pool_get();
+	e->routes.bus_id = bus_id;
 	e->routes.sender = conn;
 	e->routes.current = NULL;
 	e->msg = msg;
@@ -146,4 +169,25 @@ switch_send(litm_connection *conn, litm_bus bus_id, void *msg) {
 	}
 
 	return LITM_CODE_OK;
+}//
+
+/**
+ * Scans the subscription map for the subscriber that
+ * follows ``current``.  If ``current`` is NULL (thus
+ * indicating the start of the scan), then pull the
+ * first subscriber from the subscription to bus ``bus_id``.
+ *
+ * If end of list is reached, return NULL.
+ */
+	litm_connection *
+__switch_get_next_subscriber(litm_connection *current, litm_bus bus_id) {
+
+	int result = NULL;
+
+	pthread_mutex_lock( &_subscribers_mutex );
+
+
+	pthread_mutex_unlock( &_subscribers_mutex );
+
+	return result;
 }//
