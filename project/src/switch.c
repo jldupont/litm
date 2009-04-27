@@ -30,7 +30,12 @@ litm_connection *_subscribers[LITM_BUSSES_MAX][LITM_CONNECTION_MAX];
 // PRIVATE
 // -------
 void *__switch_thread_function(void *params);
-litm_connection *__switch_get_next_subscriber(litm_connection *current, litm_bus bus_id);
+litm_code __switch_get_next_subscriber(	litm_connection **result,
+										litm_connection *sender,
+										litm_connection *current,
+										litm_bus bus_id);
+int __switch_find_next_non_match(litm_connection *ref, litm_bus bus_id);
+int __switch_find_match(litm_connection *ref, litm_bus bus_id);
 
 	int
 switch_init(void) {
@@ -59,7 +64,10 @@ switch_shutdown(void) {
 	void *
 __switch_thread_function(void *params) {
 
+	litm_code code;
 	litm_envelope *e;
+	litm_connection *conn, sender, current;
+	litm_bus bus_id;
 
 	//TODO switch shutdown signal check
 	while(1) {
@@ -75,6 +83,15 @@ __switch_thread_function(void *params) {
 		//  to the subscriber's connection ptr; this pointer
 		//  is obtained by scanning the ``subscription map``
 		//  for the first subscriber to the target bus.
+
+		sender  = e->routes.sender;
+		current = e->routes.current;
+		bus_id  = e->routes.bus_id;
+
+		code = __switch_find_next_subscriber(	&conn,
+												sender,
+												current,
+												bus_id);
 
 
 	}//while
@@ -177,17 +194,136 @@ switch_send(litm_connection *conn, litm_bus bus_id, void *msg) {
  * indicating the start of the scan), then pull the
  * first subscriber from the subscription to bus ``bus_id``.
  *
+ * Furthermore, we are implementing ``split horizon``
+ *  forwarding ie. don't send the message back to the
+ *  originator.
+ *
  * If end of list is reached, return NULL.
+ *
+ * CASES:
+ * ======
+ *
+ * 1- empty subscription list
+ * 2- single subscriber
+ *    a) the sender
+ *    b) other subscriber
+ * 3- more than 1 subscriber
+ *
  */
-	litm_connection *
-__switch_get_next_subscriber(litm_connection *current, litm_bus bus_id) {
+	litm_code
+__switch_get_next_subscriber(	litm_connection **result,
+								litm_connection *sender,
+								litm_connection *current,
+								litm_bus bus_id) {
 
-	int result = NULL;
+	litm_code returnCode = LITM_CODE_OK; //optimistic
+
+	int index=1;
+	int foundNext = 0;
+	int foundFirst=0, bailOut=0; //FALSE
+	litm_connection *c=NULL;
+
+	// this shouldn't happen...
+	if (sender==current) {
+		return LITM_CODE_ERROR_SWITCH_SENDER_EQUAL_CURRENT;
+	}
 
 	pthread_mutex_lock( &_subscribers_mutex );
 
+		// FIND FIRST {{
+		if (NULL==current) {
+
+			int searchResultIndex = 0;
+			searchResultIndex = __switch_find_next_non_match(sender, bus_id);
+
+			if (0!=searchResultIndex) {
+				// non-null && non-sender
+				foundFirst = searchResultIndex;
+			} else {
+				bailOut = 1;
+			}
+		}//if
+		// }}
+
+		if (1==foundFirst) {
+			// we found the first recipient
+			// bail out with the result!
+			result = _subscribers[bus_id][foundFirst];
+			bailOut=1;
+		}
+
+		// at this point, we are looking for the recipient
+		// after ``current`` but that isn't ``sender`` nor NULL
+		if (1!=bailOut) {
+			int foundMatch = __switch_find_match(current, bus_id);
+
+			if (0==foundMatch) {
+				// can't find ``current``...
+				code = LITM_CODE_ERROR_NO_CURRENT;
+				bailOut = 1;
+			} else {
+				// we found ``current``...
+				// need the following subscriber
+				// without forgetting about split-horizon!
+				for ( index=foundMatch+1; index<LITM_CONNECTION_MAX; index++) {
+					c = _subscribers[bus_id][index];
+					if ((NULL!=c) && (sender!=c)) {
+						foundNext = index;
+						*result = c;
+						code = LITM_CODE_OK;
+						break;
+					}
+				}//for
+
+				if (0==foundNext)
+					code = LITM_CODE_ERROR_SWITCH_NEXT_NOT_FOUND;
+
+			}//foundMatch
+		}//bailOut
 
 	pthread_mutex_unlock( &_subscribers_mutex );
+
+	return code;
+}//
+
+/**
+ * Find the next ``non-match`` and non-NULL
+ */
+	int
+__switch_find_next_non_match(litm_connection *ref, litm_bus bus_id) {
+
+	int index, result = 0;
+
+	for (index=1; index<LITM_CONNECTION_MAX; index++) {
+		litm_connection *current;
+
+		current=_subscribers[bus_id][index];
+		if ((current!=ref) && (current!=NULL)) {
+			result = index;
+			break;
+		}
+	}
+
+	return result;
+}//
+
+/**
+ * Find ``match``
+ */
+	int
+__switch_find_match(litm_connection *ref, litm_bus bus_id) {
+
+	int index, result = 0;
+
+	for (index=1; index<LITM_CONNECTION_MAX; index++) {
+		litm_connection *current;
+
+		current=_subscribers[bus_id][index];
+		if ((current==ref) && (current!=NULL)) {
+			result = index;
+			break;
+		}
+	}
 
 	return result;
 }//
