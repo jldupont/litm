@@ -73,11 +73,13 @@ __litm_pool_get(void) {
 
 		// prepare a new one
 		e = malloc(sizeof(litm_envelope));
-		if (NULL!=e)
+		if (NULL!=e) {
 			bzero(e, sizeof(litm_envelope));
 
-		// statistics...
-		_created ++ ;
+			// statistics...
+			_created ++ ;
+		}
+
 	}
 
 	return e;
