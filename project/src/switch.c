@@ -40,8 +40,6 @@ switch_init(void) {
 
 		_switch_queue = queue_create();
 	}
-
-
 }//
 
 /**
@@ -52,6 +50,12 @@ switch_init(void) {
 	void *
 switch_thread_function(void *params) {
 
+	litm_envelope *e;
+
+
+	// we block here since if we have no messages
+	//  to process, we don't have anything else to do...
+	e=(litm_envelope *) queue_get( _switch_queue );
 
 
 }//
