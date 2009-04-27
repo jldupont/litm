@@ -47,6 +47,7 @@
 		//typedef _litm_connection litm_connection;
 
 		typedef struct {
+			int				 pending;
 			litm_bus         bus_id;
 			litm_connection *sender;
 			litm_connection *current;
@@ -70,6 +71,8 @@
 			LITM_CODE_ERROR_SWITCH_SENDER_EQUAL_CURRENT,
 			LITM_CODE_ERROR_SWITCH_NO_CURRENT,
 			LITM_CODE_ERROR_SWITCH_NEXT_NOT_FOUND,
+			LITM_CODE_ERROR_OUTPUT_QUEUING,   				//can't send to the recipient
+			LITM_CODE_BUSY_OUTPUT_QUEUE,
 
 		} litm_code;
 

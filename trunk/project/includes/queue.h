@@ -18,6 +18,7 @@
 	queue *queue_create(void);
 	void   queue_destroy(queue *queue);
 
+	int   queue_put_nb(queue *q, void *msg);
 	int   queue_put(queue *q, void *msg);
 	void *queue_get(queue *q);
 	int   queue_peek(queue *q);

@@ -36,6 +36,14 @@ litm_code __switch_get_next_subscriber(	litm_connection **result,
 										litm_bus bus_id);
 int __switch_find_next_non_match(litm_connection *ref, litm_bus bus_id);
 int __switch_find_match(litm_connection *ref, litm_bus bus_id);
+litm_code __switch_try_sending_to_recipient(	litm_connection *recipient, litm_envelope *env);
+
+
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
 
 	int
 switch_init(void) {
@@ -64,9 +72,10 @@ switch_shutdown(void) {
 	void *
 __switch_thread_function(void *params) {
 
+	int pending;
 	litm_code code;
 	litm_envelope *e;
-	litm_connection *conn, *sender, *current;
+	litm_connection *next, *sender, *current;
 	litm_bus bus_id;
 
 	//TODO switch shutdown signal check
@@ -74,6 +83,10 @@ __switch_thread_function(void *params) {
 		// we block here since if we have no messages
 		//  to process, we don't have anything else to do...
 		e=(litm_envelope *) queue_get( _switch_queue );
+
+		if (null==e) {
+			continue;
+		}
 
 		// The envelope contains the sender's connection ptr
 		//  as well as the ``current`` connection ptr.
@@ -84,20 +97,76 @@ __switch_thread_function(void *params) {
 		//  is obtained by scanning the ``subscription map``
 		//  for the first subscriber to the target bus.
 
-		sender  = e->routes.sender;
-		current = e->routes.current;
-		bus_id  = e->routes.bus_id;
+		// BUT FIRST, we need to know if the envelope
+		//  was already processed and just waiting to be
+		//  sent!
+		if (0!=e->routes.pending) {
 
-		code = __switch_find_next_subscriber(	&conn,
-												sender,
-												current,
-												bus_id);
+			sender  = e->routes.sender;
+			current = e->routes.current;
+			bus_id  = e->routes.bus_id;
+
+			code = __switch_find_next_subscriber(	&next,
+													sender,
+													current,
+													bus_id);
+		} else  {
+			// message was pending...
+			code = LITM_CODE_OK;
+		}
+
+		// everything looks OK, send!
+		if (LITM_CODE_OK==code) {
+			litm_code returnCode;
+
+			//adjust envelope
+			e->routes.current = next;
+
+			returnCode = __switch_try_sending_to_recipient( next, e );
+			if (LITM_CODE_BUSY_OUTPUT_QUEUE==returnCode) {
+				// busy for now, try later
+				e->routes.pending = 1;
+				queue_put( _switch_queue, e );
+			}
+			if (LITM_CODE_OK==returnCode) {
+				// unconditional reset... we did send the message!
+				e->routes.pending = 0;
+			}
+			if (LITM_CODE_OK!=returnCode) {
+				// TODO log?
+			}
+
+		} else {
+			// TODO log?
+		}
 
 
 	}//while
 
 
 	return NULL;
+}//
+
+/**
+ * Try sending the message to the recipient.
+ *
+ * This function does not block waiting for the recipient.
+ */
+	litm_code
+__switch_try_sending_to_recipient(	litm_connection *recipient,
+									litm_envelope *env) {
+
+	int returnCode = 0;
+
+	returnCode = queue_put_nb( recipient->input_queue, (void *) env);
+
+	if (0==returnCode)
+		return LITM_CODE_ERROR_OUTPUT_QUEUING;
+
+	if (-1==returnCode)
+		return LITM_CODE_BUSY_OUTPUT_QUEUE;
+
+	return LITM_CODE_OK;
 }//
 
 
