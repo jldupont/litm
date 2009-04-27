@@ -84,7 +84,8 @@ __switch_thread_function(void *params) {
 		//  to process, we don't have anything else to do...
 		e=(litm_envelope *) queue_get( _switch_queue );
 
-		if (null==e) {
+		if (NULL==e) {
+			sleep(0.001);
 			continue;
 		}
 

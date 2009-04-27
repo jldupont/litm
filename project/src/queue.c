@@ -6,6 +6,7 @@
  */
 
 #include <pthread.h>
+#include <errno.h>
 
 #include "../includes/logger.h"
 #include "litm.h"
@@ -49,6 +50,7 @@ void queue_destroy(queue *q) {
  */
 int queue_put(queue *q, void *msg) {
 
+	int code = 1;
 	queue_node *tmp=NULL;
 
 	//DEBUG_LOG(LOG_DEBUG,"queue_put: BEGIN");
@@ -84,7 +86,7 @@ int queue_put(queue *q, void *msg) {
 
 	//DEBUG_LOG(LOG_DEBUG,"queue_put: END");
 
-	return 1;
+	return code;
 }//[/queue_put]
 
 
