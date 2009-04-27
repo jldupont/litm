@@ -50,7 +50,7 @@ litm_unsubscribe(litm_connection *conn, litm_bus bus_id) {
 litm_send(	litm_connection *conn,
 			litm_bus bus_id,
 			void *msg,
-			void (*cleaner)(void) ) {
+			void (*cleaner)(void *msg) ) {
 
 	return switch_send(conn, bus_id, msg, cleaner);
 }//

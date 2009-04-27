@@ -20,5 +20,8 @@
 	litm_code litm_connection_close(litm_connection *conn);
 
 
+	// PRIVATE
+	void _litm_connections_lock(void);
+	void _litm_connections_unlock(void);
 
 #endif /* CONNECTION_H_ */

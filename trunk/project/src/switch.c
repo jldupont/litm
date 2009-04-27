@@ -6,6 +6,7 @@
  */
 #include <stdlib.h>
 #include <pthread.h>
+#include <errno.h>
 #include <sys/types.h>
 
 #include "litm.h"
@@ -38,6 +39,8 @@ int __switch_find_next_non_match(litm_connection *ref, litm_bus bus_id);
 int __switch_find_match(litm_connection *ref, litm_bus bus_id);
 litm_code __switch_try_sending_to_recipient(	litm_connection *recipient, litm_envelope *env);
 litm_code __switch_finalize(litm_envelope *envlp);
+litm_code __switch_try_sending_or_requeue(litm_connection *conn, litm_envelope *envlp);
+litm_code __switch_process_pending(litm_envelope *envlp);
 
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -72,7 +75,12 @@ switch_shutdown(void) {
 	void *
 __switch_thread_function(void *params) {
 
-	int pending;
+	enum _actions {
+		ACTION_IND,
+		ACTION_CONTINUE,
+	};
+
+	int pending, action;
 	litm_code code;
 	litm_envelope *e;
 	litm_connection *next, *sender, *current;
@@ -101,23 +109,67 @@ __switch_thread_function(void *params) {
 		// BUT FIRST, we need to know if the envelope
 		//  was already processed and just waiting to be
 		//  sent!
+
+		action = ACTION_IND;
+
+		// message was processed and just sits pending
+
+		if (1==e->routes.pending) {
+			code = __switch_try_sending_or_requeue( conn, e );
+
+			// if the message was sent or requeued,
+			//  we are ok but anything else means something
+			//  went wrong (duh!) and since we are the owner
+			//  of the envelope/message, we will "recover"
+			//  by getting rid of the envelope+message.
+			//  REASON:  the probable cause of errors
+			//           stems from connection changes
+			//           and this is not a normal usage pattern.
+			switch(code) {
+			case LITM_CODE_OK:
+				break;
+			case LITM_CODE_BUSY_OUTPUT_QUEUE:
+				break;
+			default:
+				__switch_finalize(e);
+				break;
+
+			}//switch
+
+			continue;  // <==================================
+		}//if
+
+
+
 		if (0!=e->routes.pending) {
 
 			sender  = e->routes.sender;
 			current = e->routes.current;
 			bus_id  = e->routes.bus_id;
 
-			code = __switch_find_next_subscriber(	&next,
+			code = __switch_get_next_subscriber(	&next,
 													sender,
 													current,
 													bus_id);
-		} else  {
-			// message was pending...
-			code = LITM_CODE_OK;
+
+		} else {
+			// message was just pending to be sent...
+			code = __switch_try_sending_or_requeue( conn, e );
+
 		}
 
-		// everything looks OK, send!
-		if (LITM_CODE_OK==code) {
+
+
+
+		code = LITM_CODE_OK;
+
+
+		switch(code) {
+		case LITM_CODE_BUSY:
+			//
+			break;
+
+		case LITM_CODE_OK:
 			litm_code returnCode;
 
 			//adjust envelope
@@ -136,9 +188,17 @@ __switch_thread_function(void *params) {
 			if (LITM_CODE_OK!=returnCode) {
 				// TODO log?
 			}
+			break;
+
+		}//switch
+
+
+		// everything looks OK, send!
+		if (LITM_CODE_OK==code) {
 
 		} else if (LITM_CODE_ERROR_SWITCH_NEXT_NOT_FOUND==code) {
-			// message *probably* reached all recipients
+			// message *probably* reached all recipients OR
+			//  connection
 			// at this point... since we ``own`` the envelope anyhow,
 			// get rid of it
 
@@ -151,12 +211,20 @@ __switch_thread_function(void *params) {
 
 
 	return NULL;
+}//END THREAD
+
+	litm_code
+__switch_process_pending(litm_envelope *envlp) {
+
+
 }//
+
 
 /**
  * A client has finished processing a message: send it
  *  through through the ``input_queue`` and if all intended
  *  recipients have processed it already, it will be finalized.
+ *
  */
 	litm_code
 switch_release(litm_connection *conn, litm_envelope *envlp) {
@@ -164,10 +232,14 @@ switch_release(litm_connection *conn, litm_envelope *envlp) {
 	if (NULL==conn) {
 		return LITM_CODE_ERROR_BAD_CONNECTION;
 	}
-
-	if (( LITM_BUSSES_MAX < bus_id ) || (0>=bus_id)) {
-		return LITM_CODE_ERROR_INVALID_BUS;
+	if (NULL==envlp) {
+		return LITM_CODE_ERROR_INVALID_ENVELOPE;
 	}
+
+	// if a message comes this way, it means a client
+	// has finished processing it... get rid of the
+	// "pending" state if at all present.
+	envlp->routes.pending = 0;
 
 	int result = queue_put(_switch_queue, (void *) envlp);
 	if (1 != result) {
@@ -176,6 +248,23 @@ switch_release(litm_connection *conn, litm_envelope *envlp) {
 	}
 
 	return LITM_CODE_OK;
+}//
+
+/**
+ * Tries sending the envelope along BUT requeue if this is
+ *  not possible at this juncture.
+ */
+	litm_code
+__switch_try_sending_or_requeue(litm_connection *conn, litm_envelope *envlp) {
+
+	litm_code result = __switch_try_sending_to_recipient(conn, envlp);
+
+	if (LITM_CODE_BUSY_OUTPUT_QUEUE==code) {
+		envlp->routes.pending = 1;
+		queue_put( _switch_queue, envlp );
+	}
+
+	return code;
 }//
 
 /**
@@ -212,7 +301,9 @@ switch_add_subscriber(litm_connection *conn, litm_bus bus_id) {
 		return LITM_CODE_ERROR_INVALID_BUS;
 	}
 
-	pthread_mutex_lock( &_subscribers_mutex );
+	int code = pthread_mutex_trylock( &_subscribers_mutex );
+	if (EBUSY==code)
+		return LITM_CODE_BUSY;
 
 	int result=LITM_CODE_ERROR_INVALID_BUS;
 	int index;
@@ -240,7 +331,9 @@ switch_remove_subscriber(litm_connection *conn, litm_bus bus_id) {
 		return LITM_CODE_ERROR_INVALID_BUS;
 	}
 
-	pthread_mutex_lock( &_subscribers_mutex );
+	int code = pthread_mutex_trylock( &_subscribers_mutex );
+	if (EBUSY==code)
+		return LITM_CODE_BUSY;
 
 	int result=LITM_CODE_ERROR_INVALID_BUS;
 	int index;
@@ -261,6 +354,11 @@ switch_remove_subscriber(litm_connection *conn, litm_bus bus_id) {
  * This function just queues up the message in the
  *  switch's input_queue without actually sending it
  *  to recipients.
+ *
+ *  This function blocks whilst accessing the switch's
+ *  ``input_queue`` but no deadlock scenario is possible
+ *  since the switch's thread does not block whilst dequeuing.
+ *
  */
 	litm_code
 switch_send(litm_connection *conn, litm_bus bus_id, void *msg,
@@ -304,19 +402,16 @@ switch_send(litm_connection *conn, litm_bus bus_id, void *msg,
 	litm_code
 __switch_finalize(litm_envelope *envlp) {
 
-	if (NULL==conn) {
-		return LITM_CODE_BAD_CONNECTION;
-	}
 	if (NULL==envlp) {
 		return LITM_CODE_ERROR_INVALID_ENVELOPE;
 	}
 
-	(void (*)(void *msg)) *cleaner = envlp->cleaner;
+	void (*cleaner)(void *msg) = envlp->cleaner;
 
 	if (NULL==cleaner) {
 		free( envlp->msg );
 	} else {
-		*cleaner( msg );
+		(*cleaner)( (void *) envlp->msg );
 	}
 
 	__litm_pool_recycle( envlp );
@@ -365,59 +460,64 @@ __switch_get_next_subscriber(	litm_connection **result,
 		return LITM_CODE_ERROR_SWITCH_SENDER_EQUAL_CURRENT;
 	}
 
-	pthread_mutex_lock( &_subscribers_mutex );
+	int code = pthread_mutex_trylock( &_subscribers_mutex );
+	if (EBUSY==code)
+		return LITM_CODE_BUSY;
 
-		// FIND FIRST {{
-		if (NULL==current) {
+		_litm_connections_lock();
 
-			int searchResultIndex = 0;
-			searchResultIndex = __switch_find_next_non_match(sender, bus_id);
+			// FIND FIRST {{
+			if (NULL==current) {
 
-			if (0!=searchResultIndex) {
-				// non-null && non-sender
-				foundFirst = searchResultIndex;
-			} else {
-				bailOut = 1;
+				int searchResultIndex = 0;
+				searchResultIndex = __switch_find_next_non_match(sender, bus_id);
+
+				if (0!=searchResultIndex) {
+					// non-null && non-sender
+					foundFirst = searchResultIndex;
+				} else {
+					bailOut = 1;
+				}
+			}//if
+			// }}
+
+			if (1==foundFirst) {
+				// we found the first recipient
+				// bail out with the result!
+				*result = _subscribers[bus_id][foundFirst];
+				bailOut=1;
 			}
-		}//if
-		// }}
 
-		if (1==foundFirst) {
-			// we found the first recipient
-			// bail out with the result!
-			*result = _subscribers[bus_id][foundFirst];
-			bailOut=1;
-		}
+			// at this point, we are looking for the recipient
+			// after ``current`` but that isn't ``sender`` nor NULL
+			if (1!=bailOut) {
+				int foundMatch = __switch_find_match(current, bus_id);
 
-		// at this point, we are looking for the recipient
-		// after ``current`` but that isn't ``sender`` nor NULL
-		if (1!=bailOut) {
-			int foundMatch = __switch_find_match(current, bus_id);
+				if (0==foundMatch) {
+					// can't find ``current``...
+					// maybe the connection was pull-off from our feet
+					returnCode = LITM_CODE_ERROR_SWITCH_NO_CURRENT;
+					bailOut = 1;
+				} else {
+					// we found ``current``...
+					// need the following subscriber
+					// without forgetting about split-horizon!
+					for ( index=foundMatch+1; index<LITM_CONNECTION_MAX; index++) {
+						c = _subscribers[bus_id][index];
+						if ((NULL!=c) && (sender!=c)) {
+							foundNext = index;
+							*result = c;
+							returnCode = LITM_CODE_OK;
+							break;
+						}
+					}//for
 
-			if (0==foundMatch) {
-				// can't find ``current``...
-				returnCode = LITM_CODE_ERROR_SWITCH_NO_CURRENT;
-				bailOut = 1;
-			} else {
-				// we found ``current``...
-				// need the following subscriber
-				// without forgetting about split-horizon!
-				for ( index=foundMatch+1; index<LITM_CONNECTION_MAX; index++) {
-					c = _subscribers[bus_id][index];
-					if ((NULL!=c) && (sender!=c)) {
-						foundNext = index;
-						*result = c;
-						returnCode = LITM_CODE_OK;
-						break;
-					}
-				}//for
+					if (0==foundNext)
+						returnCode = LITM_CODE_ERROR_SWITCH_NEXT_NOT_FOUND;
 
-				if (0==foundNext)
-					returnCode = LITM_CODE_ERROR_SWITCH_NEXT_NOT_FOUND;
-
-			}//foundMatch
-		}//bailOut
-
+				}//foundMatch
+			}//bailOut
+		_litm_connections_unlock();
 	pthread_mutex_unlock( &_subscribers_mutex );
 
 	return returnCode;
@@ -425,6 +525,8 @@ __switch_get_next_subscriber(	litm_connection **result,
 
 /**
  * Find the next ``non-match`` and non-NULL
+ *
+ * THIS FUNCTION IS NOT *CONNECTION SAFE*
  */
 	int
 __switch_find_next_non_match(litm_connection *ref, litm_bus bus_id) {
@@ -446,6 +548,8 @@ __switch_find_next_non_match(litm_connection *ref, litm_bus bus_id) {
 
 /**
  * Find ``match``
+ *
+ * THIS FUNCTION IS NOT *CONNECTION SAFE*
  */
 	int
 __switch_find_match(litm_connection *ref, litm_bus bus_id) {

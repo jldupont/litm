@@ -15,6 +15,8 @@ The functionality offered by this library sits between a simple thread-safe queu
   * Recycling of _envelopes_
   * Out-of-order delivery
   * Split-horizon sending
+  * Async access for all API methods
+
   
 = Principle of Operation =
 
@@ -27,6 +29,9 @@ The general operation is as follows:
   * A _client_ receives a message on *any* bus (blocking) OR
   * A _client_ receives a message on *any* bus *if one is available* (non-blocking)
   * Messages can be delivered out-of-order 
+
+NOTE that the client must process the return code for all methods as
+the operation might have failed for various reasons but most notably *LITM_CODE_BUSY* .
 
 
 == Rules ==
@@ -50,6 +55,10 @@ The general operation is as follows:
 6. A client can send on a bus without a subscription
    ie. a client needs not be subscribed to a bus to send a
    message on it.
+   
+7. Messages *may* be destroyed without being delivered to all
+   recipients *IF* connections are altered. 
+   
 	
 = Use Cases =
 
@@ -86,4 +95,11 @@ The general operation is as follows:
 
 = Releasing =
 
-  Once a message has reached all the intended recipients, 
+  Once a message has reached all the intended recipients, it will be
+  finalized by LITM.
+  
+= Connection state change =
+
+  It is not a usual usage to change connections dynamically: doing so
+  will ultimately result in message lost (but not before such messages
+  being finalized).
