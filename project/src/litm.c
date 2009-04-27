@@ -54,14 +54,18 @@ litm_send(litm_connection *conn, litm_bus bus_id, void *msg) {
 
 
 	litm_code
-litm_receive(litm_connection *conn, litm_envelope *envlp) {
+litm_receive_nb(litm_connection *conn, litm_envelope **envlp) {
 
-}//
+	if (NULL==conn) {
+		return LITM_CODE_ERROR_BAD_CONNECTION;
+	}
 
+	*envlp = queue_get_nb( conn->input_queue );
+	if (NULL==*envlp) {
+		return LITM_CODE_NO_MESSAGE;
+	}
 
-	litm_code
-litm_receive_nb(litm_connection *conn, litm_envelope *envlp) {
-
+	return LITM_CODE_OK;
 }//
 
 
@@ -74,4 +78,9 @@ litm_release(litm_connection *conn, litm_envelope *envlp) {
 	void *
 litm_get_message(litm_envelope *envlp) {
 
+	if (NULL==envlp) {
+		return NULL;
+	}
+
+	return envlp->msg;
 }//

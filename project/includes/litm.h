@@ -63,6 +63,7 @@
 		//
 		typedef enum {
 			LITM_CODE_OK,
+			LITM_CODE_NO_MESSAGE,
 			LITM_CODE_ERROR_MALLOC,
 			LITM_CODE_ERROR_CONNECTION_OPEN,
 			LITM_CODE_ERROR_BAD_CONNECTION,
@@ -141,15 +142,9 @@
 
 
 		/**
-		 * Receives (blocking) from any ``bus``
-		 */
-		litm_code litm_receive(litm_connection *conn, litm_envelope *envlp);
-
-
-		/**
 		 * Receives (non-blocking) from any ``bus``
 		 */
-		litm_code litm_receive_nb(litm_connection *conn, litm_envelope *envlp);
+		litm_code litm_receive_nb(litm_connection *conn, litm_envelope **envlp);
 
 
 		/**

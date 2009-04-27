@@ -94,7 +94,7 @@ int queue_put(queue *q, void *msg) {
  *
  * Returns	1 on success,
  * 			0 on error
- * 			-1 on pending
+ * 			-1 on busy
  */
 int queue_put_nb(queue *q, void *msg) {
 
@@ -153,6 +153,36 @@ void *queue_get(queue *q) {
 	//DEBUG_LOG(LOG_DEBUG,"queue_get: BEGIN");
 
 	pthread_mutex_lock( q->mutex );
+
+		tmp = q->head;
+		if (tmp!=NULL) {
+			q->head = q->head->next;
+			msg = tmp->msg;
+			free(tmp);
+			doLog(LOG_DEBUG,"queue_get: MESSAGE PRESENT");
+		}
+
+	pthread_mutex_unlock( q->mutex );
+
+	//DEBUG_LOG(LOG_DEBUG,"queue_get: END");
+
+	return msg;
+}//[/queue_get]
+
+/**
+ * Returns NULL if NONE / BUSY
+ */
+void *queue_get_nb(queue *q) {
+
+	queue_node *tmp = NULL;
+	void *msg=NULL;
+
+	//DEBUG_LOG(LOG_DEBUG,"queue_get: BEGIN");
+
+	int code = pthread_mutex_trylock( q->mutex );
+	if (EBUSY==code) {
+		return NULL;
+	}
 
 		tmp = q->head;
 		if (tmp!=NULL) {
