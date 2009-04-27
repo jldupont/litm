@@ -13,5 +13,5 @@ Help("""\
 """)
 
 env = Environment()
-Program('test', Glob("src/*.c"), LIBS=['litm'] )       
+Program('test', Glob("src/*.c"), LIBS=['litm', 'pthread'] )       
 

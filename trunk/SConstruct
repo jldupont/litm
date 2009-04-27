@@ -32,7 +32,7 @@ env = Environment(CPPPATH='project/includes')
 #
 #
 if not COMMAND_LINE_TARGETS:
-	litm = env.Library('litm', Glob("./project/src/*.c") )
+	litm = env.Library('litm', Glob("./project/src/*.c"), LIBS=['pthread',] )
 	Default(litm)
 
 
