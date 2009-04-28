@@ -18,6 +18,8 @@
  */
 queue *queue_create(void) {
 
+	DEBUG_LOG(LOG_INFO, "queue_create: BEGIN");
+
 	// if this malloc fails,
 	//  there are much bigger problems that loom
 	pthread_mutex_t *mutex = malloc( sizeof(pthread_mutex_t) );
@@ -31,6 +33,7 @@ queue *queue_create(void) {
 		q->mutex = mutex;
 	}
 
+	DEBUG_LOG(LOG_INFO, "queue_create: END");
 	return q;
 }// init
 
@@ -103,7 +106,7 @@ int queue_put_nb(queue *q, void *msg) {
 	queue_node *tmp=NULL;
 	int code = 0;
 
-	//DEBUG_LOG(LOG_DEBUG,"queue_put: BEGIN");
+	DEBUG_LOG(LOG_DEBUG,"queue_put_nb: BEGIN");
 
 	code = pthread_mutex_trylock( q->mutex );
 	if (EBUSY)
@@ -138,7 +141,7 @@ int queue_put_nb(queue *q, void *msg) {
 
 	pthread_mutex_unlock( q->mutex );
 
-	//DEBUG_LOG(LOG_DEBUG,"queue_put: END");
+	DEBUG_LOG(LOG_DEBUG,"queue_put_nb: END");
 
 	return 1;
 }//[/queue_put]
@@ -176,13 +179,16 @@ void *queue_get(queue *q) {
  */
 void *queue_get_nb(queue *q) {
 
+	//DEBUG_LOG_PTR(q, LOG_ERR, "queue_get_nb: NULL");
+
 	queue_node *tmp = NULL;
 	void *msg=NULL;
 
-	//DEBUG_LOG(LOG_DEBUG,"queue_get: BEGIN");
+	DEBUG_LOG(LOG_DEBUG,"queue_get_nb: BEGIN");
 
 	int code = pthread_mutex_trylock( q->mutex );
 	if (EBUSY==code) {
+		//DEBUG_LOG(LOG_DEBUG,"queue_get_nb: BUSY");
 		return NULL;
 	}
 
@@ -191,12 +197,12 @@ void *queue_get_nb(queue *q) {
 			q->head = q->head->next;
 			msg = tmp->msg;
 			free(tmp);
-			doLog(LOG_DEBUG,"queue_get: MESSAGE PRESENT");
+			DEBUG_LOG(LOG_DEBUG,"queue_get_nb: MESSAGE PRESENT");
 		}
 
 	pthread_mutex_unlock( q->mutex );
 
-	//DEBUG_LOG(LOG_DEBUG,"queue_get: END");
+	//DEBUG_LOG(LOG_DEBUG,"queue_get_nb: END");
 
 	return msg;
 }//[/queue_get]
