@@ -4,9 +4,7 @@ scons build file
 @author: Jean-Lou Dupont
 """
 import os
-import sys
 import shutil
-
 try:
 	from pyjld.os import recursive_chmod, safe_copytree
 except:
@@ -18,23 +16,26 @@ Help("""\
  Type:	
    'scons' to build the library,
    'scons deb' to build the .deb package
+   'scons debug' to build the debug library
 """)
 
-#Progress('Evaluating $TARGET\n')
 
-env = Environment(CPPPATH='project/includes')       
-       
-# DEFAULT: build `litm.a`
-# =======
-#
-#  1- build library
-#  2- prepare environment for packaging
-#
-#
-if not COMMAND_LINE_TARGETS:
-	litm = env.Library('litm', Glob("./project/src/*.c"), LIBS=['pthread',] )
-	Default(litm)
 
+env_release = Environment(CPPPATH='#project/includes')
+SConscript('project/src/SConscript', build_dir='release', exports={'env':env_release})
+
+
+env_debug   = Environment(CPPPATH='#project/includes', CPPFLAGS="-D_DEBUG")
+SConscript('project/src/SConscript', build_dir='debug', exports={'env':env_debug})
+
+# INSTALLING on LOCAL MACHINE
+if 'install' in COMMAND_LINE_TARGETS:
+	print "scons: INSTALLING LOCALLY"
+	shutil.copy('./project/includes/litm.h', '/usr/include')
+	shutil.copy('./release/liblitm.a', '/usr/lib/liblitm.a')
+	shutil.copy('./debug/liblitm.a', '/usr/lib/liblitm_debug.a')
+
+env_release.Command("install", "./release/liblitm.a", "cp $SOURCE /usr/lib")
 
 
 # BUILDING .deb PACKAGE
@@ -43,7 +44,8 @@ if 'deb' in COMMAND_LINE_TARGETS:
 	print "Preparing .deb package"
 	try:
 		print """scons: cloning 'liblitm.a'""" 
-		shutil.copy('liblitm.a', './packages/debian/usr/lib')
+		shutil.copy('./release/liblitm.a', './packages/debian/usr/lib')
+		shutil.copy('./debug/liblitm.a', './packages/debian/usr/lib/liblitm_debug.a')
 		
 		print """scons: cloning 'litm.h'"""
 		shutil.copy('./project/includes/litm.h', './packages/debian/usr/include')
@@ -60,13 +62,4 @@ if 'deb' in COMMAND_LINE_TARGETS:
 	except Exception,e:
 		print "*** ERROR [%s] ***" % e
 	
-env.Command("deb", "/tmp/litm", "dpkg-deb --build $SOURCE")
-
-
-# INSTALLING on LOCAL MACHINE
-if 'install' in COMMAND_LINE_TARGETS:
-	print "scons: INSTALLING LOCALLY"
-	shutil.copy('./project/includes/litm.h', '/usr/include')
-	#shutil.copy('./liblitm.a', '/usr/lib')
-
-env.Command("install", "./liblitm.a", "cp $SOURCE /usr/lib")
+env_release.Command("deb", "/tmp/litm", "dpkg-deb --build $SOURCE")

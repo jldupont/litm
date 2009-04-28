@@ -19,7 +19,7 @@
 
 #include "litm.h"
 #include "pool.h"
-
+#include "logger.h"
 
 	// PRIVATE //
 	// ======= //
@@ -87,6 +87,7 @@ __litm_pool_get(void) {
 
 	void
 __litm_pool_destroy( litm_envelope *envlp ) {
+	DEBUG_LOG_PTR( envlp, LOG_ERR, "__litm_pool_destroy: NULL");
 
 	// First, destroy the message
 	free( envlp-> msg );
@@ -98,6 +99,7 @@ __litm_pool_destroy( litm_envelope *envlp ) {
 
 	void
 __litm_pool_clean( litm_envelope *envlp ) {
+	DEBUG_LOG_PTR( envlp, LOG_ERR, "__litm_pool_clean: NULL");
 
 	// clear routing information
 	bzero( (char *) &envlp->routes, sizeof(__litm_routing) );
