@@ -119,7 +119,7 @@ __switch_thread_function(void *params) {
 		e=(litm_envelope *) queue_get_nb( _switch_queue );
 
 		if (NULL==e) {
-			sleep(0.001);
+			//sleep(0.001);
 
 			//shutdown signaled?
 			if (1==__switch_signal_shutdown) {
@@ -189,7 +189,7 @@ __switch_thread_function(void *params) {
 		current = e->routes.current;
 		bus_id  = e->routes.bus_id;
 
-		DEBUG_LOG(LOG_INFO, "__switch_thread_function: ENVELOPE NORMAL, bus[%u] sender[%x] current[%x]", bus_id, sender, current);
+		DEBUG_LOG(LOG_INFO, "__switch_thread_function: ENVELOPE NORMAL, bus[%u] sender[%x] current[%x] envelope[%x]", bus_id, sender, current, e);
 
 
 		code = __switch_get_next_subscriber(	&next,
@@ -252,6 +252,8 @@ switch_release(litm_connection *conn, litm_envelope *envlp) {
 	if (NULL==envlp) {
 		return LITM_CODE_ERROR_INVALID_ENVELOPE;
 	}
+
+	DEBUG_LOG(LOG_DEBUG, "switch_release: conn[%x] envelope[%x]", conn, envlp );
 
 	// if a message comes this way, it means a client
 	// has finished processing it... get rid of the
