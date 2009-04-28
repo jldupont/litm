@@ -82,7 +82,7 @@ __switch_thread_function(void *params) {
 	while(1) {
 		// we block here since if we have no messages
 		//  to process, we don't have anything else to do...
-		e=(litm_envelope *) queue_get( _switch_queue );
+		e=(litm_envelope *) queue_get_nb( _switch_queue );
 
 		if (NULL==e) {
 			sleep(0.001);

@@ -56,14 +56,13 @@
 
 
 
-
-
 		// Return Codes
 		// ------------
 		//
-		typedef enum {
-			LITM_CODE_OK,
+		typedef enum _litm_codes {
+			LITM_CODE_OK = 0,
 			LITM_CODE_NO_MESSAGE,
+			LITM_CODE_BUSY,
 			LITM_CODE_ERROR_MALLOC,
 			LITM_CODE_ERROR_CONNECTION_OPEN,
 			LITM_CODE_ERROR_BAD_CONNECTION,
@@ -182,7 +181,10 @@
 		void *litm_get_message(litm_envelope *envlp);
 
 
-
+		/**
+		 * Translates a code to a message pointer
+		 */
+		char *litm_translate_code(litm_code code);
 
 
 #endif /* LITM_H_ */
