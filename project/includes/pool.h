@@ -1,8 +1,8 @@
-/*
- * pool.h
+/**
+ * @file   pool.h
  *
- *  Created on: 2009-04-24
- *      Author: Jean-Lou Dupont
+ * @date   2009-04-24
+ * @author Jean-Lou Dupont
  */
 
 #ifndef POOL_H_
