@@ -110,6 +110,8 @@
 			LITM_CODE_ERROR_OUTPUT_QUEUING,   				//can't send to the recipient
 			LITM_CODE_BUSY_OUTPUT_QUEUE,
 			LITM_CODE_ERROR_INVALID_ENVELOPE,
+			LITM_CODE_ERROR_SUBSCRIPTION_NOT_FOUND,
+			LITM_CODE_ERROR_BUS_FULL,
 
 		} litm_code;
 
@@ -224,6 +226,15 @@
 		 *  **MUST** release it back to litm.
 		 */
 		litm_code litm_release(litm_connection *conn, litm_envelope *envlp);
+
+
+		/**
+		 * Shutdown
+		 *
+		 * This function attempts to shutdown all the connection
+		 * threads in a graceful manner.  This function is blocking.
+		 */
+		void litm_shutdown(void);
 
 
 		/**

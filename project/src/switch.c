@@ -1,8 +1,15 @@
-/*
- * switch.c
+/**
+ * @file   switch.c
  *
- *  Created on: 2009-04-25
- *      Author: Jean-Lou Dupont
+ * @date   2009-04-25
+ * @author Jean-Lou Dupont
+ *
+ * \section Overview
+ *
+ * 			This source implements the *switch* function whereby *envelopes*
+ *			are presented, turn-wise, to each recipient(s) subscribing
+ *			to a particular	*bus*.
+ *
  */
 #include <stdlib.h>
 #include <pthread.h>
@@ -22,12 +29,15 @@ queue *_switch_queue;
 
 // Switch Thread
 pthread_t _switchThread;
-int _switchThread_id=0;
+int _switchThread_status=0; //not created
 
 // Subscriptions to busses
 // -----------------------
 pthread_mutex_t _subscribers_mutex = PTHREAD_MUTEX_INITIALIZER;
 litm_connection *_subscribers[LITM_BUSSES_MAX][LITM_CONNECTION_MAX];
+
+// "Signal"
+volatile int __switch_signal_shutdown = 0; // FALSE
 
 
 // PRIVATE
@@ -42,6 +52,7 @@ int __switch_find_match(litm_connection *ref, litm_bus bus_id);
 litm_code __switch_try_sending_to_recipient(	litm_connection *recipient, litm_envelope *env);
 litm_code __switch_finalize(litm_envelope *envlp);
 litm_code __switch_try_sending_or_requeue(litm_connection *conn, litm_envelope *envlp);
+void __switch_init_tables(void);
 
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -50,19 +61,36 @@ litm_code __switch_try_sending_or_requeue(litm_connection *conn, litm_envelope *
 	int
 switch_init(void) {
 
-	if (0== _switchThread_id) {
+	if (0== _switchThread_status) {
 		DEBUG_LOG(LOG_INFO, "switch_init: creating switch thread & queue");
+
+		// init queue *before* launching thread!
 		_switch_queue = queue_create();
-		_switchThread_id = pthread_create(&_switchThread, NULL, &__switch_thread_function, NULL);
+		__switch_init_tables();
+
+		pthread_create(&_switchThread, NULL, &__switch_thread_function, NULL);
+		_switchThread_status = 1; //created
 	}
 }//
+
+	void
+__switch_init_tables(void) {
+	int b, c;
+
+	for (b=0; b<LITM_BUSSES_MAX; b++)
+		for (c=0;c<LITM_CONNECTION_MAX;c++)
+			_subscribers[b][c] = NULL;
+}
 
 /**
  * TODO implement switch shutdown
  */
-	int
+	void
 switch_shutdown(void) {
 
+	__switch_signal_shutdown = 1;
+
+	pthread_join( _switchThread, (void **)NULL );
 }//
 
 
@@ -90,6 +118,12 @@ __switch_thread_function(void *params) {
 
 		if (NULL==e) {
 			sleep(0.001);
+
+			//shutdown signaled?
+			if (1==__switch_signal_shutdown) {
+				break;
+			}
+
 			continue;
 		}
 
@@ -275,7 +309,7 @@ switch_add_subscriber(litm_connection *conn, litm_bus bus_id) {
 	if (EBUSY==code)
 		return LITM_CODE_BUSY;
 
-	int result=LITM_CODE_ERROR_INVALID_BUS;
+	int result=LITM_CODE_ERROR_BUS_FULL;
 	int index;
 	for (index=1; index<LITM_CONNECTION_MAX; index++) {
 		if (NULL==_subscribers[bus_id][index]) {
@@ -305,7 +339,7 @@ switch_remove_subscriber(litm_connection *conn, litm_bus bus_id) {
 	if (EBUSY==code)
 		return LITM_CODE_BUSY;
 
-	int result=LITM_CODE_ERROR_INVALID_BUS;
+	int result=LITM_CODE_ERROR_SUBSCRIPTION_NOT_FOUND;
 	int index;
 	for (index=1; index<LITM_CONNECTION_MAX; index++) {
 		if (conn==_subscribers[bus_id][index]) {

@@ -85,35 +85,35 @@ This graph shows which files directly or indirectly include this file:</div>
 
 <p>
 
-<p>Definition at line <a class="el" href="switch_8c-source.html#l00264">264</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
-<div class="fragment"><pre class="fragment"><a name="l00264"></a>00264                                                               {
-<a name="l00265"></a>00265 
-<a name="l00266"></a>00266         <span class="keywordflow">if</span> (NULL==conn) {
-<a name="l00267"></a>00267                 <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293030ffb6b9de7d729330056b0c40eeaa4">LITM_CODE_ERROR_BAD_CONNECTION</a>;
-<a name="l00268"></a>00268         }
-<a name="l00269"></a>00269 
-<a name="l00270"></a>00270         <span class="keywordflow">if</span> (( <a class="code" href="litm_8h.html#fbd708ff493c92eb23ebf90685253660">LITM_BUSSES_MAX</a> &lt; bus_id ) || (0&gt;=bus_id)) {
-<a name="l00271"></a>00271                 <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622933f8543ac2f3b59248fb667f2adfa2263">LITM_CODE_ERROR_INVALID_BUS</a>;
-<a name="l00272"></a>00272         }
-<a name="l00273"></a>00273 
-<a name="l00274"></a>00274         <span class="keywordtype">int</span> code = pthread_mutex_trylock( &amp;<a class="code" href="switch_8c.html#66b222465cf692f5b9da017fa259dda1">_subscribers_mutex</a> );
-<a name="l00275"></a>00275         <span class="keywordflow">if</span> (EBUSY==code)
-<a name="l00276"></a>00276                 <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622939fd144765aaaf968cb7a7b7fa847a278">LITM_CODE_BUSY</a>;
-<a name="l00277"></a>00277 
-<a name="l00278"></a>00278         <span class="keywordtype">int</span> result=<a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622933f8543ac2f3b59248fb667f2adfa2263">LITM_CODE_ERROR_INVALID_BUS</a>;
-<a name="l00279"></a>00279         <span class="keywordtype">int</span> index;
-<a name="l00280"></a>00280         <span class="keywordflow">for</span> (index=1; index&lt;<a class="code" href="litm_8h.html#1b077a43eb60b36c3a0d6d4d71cf1fac">LITM_CONNECTION_MAX</a>; index++) {
-<a name="l00281"></a>00281                 <span class="keywordflow">if</span> (NULL==<a class="code" href="switch_8c.html#1945b3d804ccad8849548539b52a86bd">_subscribers</a>[bus_id][index]) {
-<a name="l00282"></a>00282                         <a class="code" href="switch_8c.html#1945b3d804ccad8849548539b52a86bd">_subscribers</a>[bus_id][index] = conn;
-<a name="l00283"></a>00283                         result = <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622930b651a4f84388b526d32980e3b43c4a2">LITM_CODE_OK</a>;
-<a name="l00284"></a>00284                         <span class="keywordflow">break</span>;
-<a name="l00285"></a>00285                 }
-<a name="l00286"></a>00286         }
-<a name="l00287"></a>00287 
-<a name="l00288"></a>00288         pthread_mutex_unlock( &amp;<a class="code" href="switch_8c.html#66b222465cf692f5b9da017fa259dda1">_subscribers_mutex</a> );
-<a name="l00289"></a>00289 
-<a name="l00290"></a>00290         <span class="keywordflow">return</span> result;
-<a name="l00291"></a>00291 }<span class="comment">//</span>
+<p>Definition at line <a class="el" href="switch_8c-source.html#l00271">271</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
+<div class="fragment"><pre class="fragment"><a name="l00271"></a>00271                                                               {
+<a name="l00272"></a>00272 
+<a name="l00273"></a>00273         <span class="keywordflow">if</span> (NULL==conn) {
+<a name="l00274"></a>00274                 <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293030ffb6b9de7d729330056b0c40eeaa4">LITM_CODE_ERROR_BAD_CONNECTION</a>;
+<a name="l00275"></a>00275         }
+<a name="l00276"></a>00276 
+<a name="l00277"></a>00277         <span class="keywordflow">if</span> (( <a class="code" href="litm_8h.html#fbd708ff493c92eb23ebf90685253660">LITM_BUSSES_MAX</a> &lt; bus_id ) || (0&gt;=bus_id)) {
+<a name="l00278"></a>00278                 <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622933f8543ac2f3b59248fb667f2adfa2263">LITM_CODE_ERROR_INVALID_BUS</a>;
+<a name="l00279"></a>00279         }
+<a name="l00280"></a>00280 
+<a name="l00281"></a>00281         <span class="keywordtype">int</span> code = pthread_mutex_trylock( &amp;<a class="code" href="switch_8c.html#66b222465cf692f5b9da017fa259dda1">_subscribers_mutex</a> );
+<a name="l00282"></a>00282         <span class="keywordflow">if</span> (EBUSY==code)
+<a name="l00283"></a>00283                 <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622939fd144765aaaf968cb7a7b7fa847a278">LITM_CODE_BUSY</a>;
+<a name="l00284"></a>00284 
+<a name="l00285"></a>00285         <span class="keywordtype">int</span> result=<a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622933f8543ac2f3b59248fb667f2adfa2263">LITM_CODE_ERROR_INVALID_BUS</a>;
+<a name="l00286"></a>00286         <span class="keywordtype">int</span> index;
+<a name="l00287"></a>00287         <span class="keywordflow">for</span> (index=1; index&lt;<a class="code" href="litm_8h.html#1b077a43eb60b36c3a0d6d4d71cf1fac">LITM_CONNECTION_MAX</a>; index++) {
+<a name="l00288"></a>00288                 <span class="keywordflow">if</span> (NULL==<a class="code" href="switch_8c.html#1945b3d804ccad8849548539b52a86bd">_subscribers</a>[bus_id][index]) {
+<a name="l00289"></a>00289                         <a class="code" href="switch_8c.html#1945b3d804ccad8849548539b52a86bd">_subscribers</a>[bus_id][index] = conn;
+<a name="l00290"></a>00290                         result = <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622930b651a4f84388b526d32980e3b43c4a2">LITM_CODE_OK</a>;
+<a name="l00291"></a>00291                         <span class="keywordflow">break</span>;
+<a name="l00292"></a>00292                 }
+<a name="l00293"></a>00293         }
+<a name="l00294"></a>00294 
+<a name="l00295"></a>00295         pthread_mutex_unlock( &amp;<a class="code" href="switch_8c.html#66b222465cf692f5b9da017fa259dda1">_subscribers_mutex</a> );
+<a name="l00296"></a>00296 
+<a name="l00297"></a>00297         <span class="keywordflow">return</span> result;
+<a name="l00298"></a>00298 }<span class="comment">//</span>
 </pre></div>
 <p>
 
@@ -146,15 +146,15 @@ Here is the caller graph for this function:</div>
 
 <p>
 
-<p>Definition at line <a class="el" href="switch_8c-source.html#l00051">51</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
-<div class="fragment"><pre class="fragment"><a name="l00051"></a>00051                   {
-<a name="l00052"></a>00052 
-<a name="l00053"></a>00053         <span class="keywordflow">if</span> (0== <a class="code" href="switch_8c.html#4d96ee71c32e710320da8ab5b7da249a">_switchThread_id</a>) {
-<a name="l00054"></a>00054                 <a class="code" href="logger_8h.html#21a2c7330a04ac78200a986f66609369">DEBUG_LOG</a>(LOG_INFO, <span class="stringliteral">"switch_init: creating switch thread &amp; queue"</span>);
-<a name="l00055"></a>00055                 <a class="code" href="switch_8c.html#45d2c8f54ca279893a75408e9164be6a">_switch_queue</a> = <a class="code" href="queue_8c.html#404f283e7764be86026fda0714b6b7b6">queue_create</a>();
-<a name="l00056"></a>00056                 <a class="code" href="switch_8c.html#4d96ee71c32e710320da8ab5b7da249a">_switchThread_id</a> = pthread_create(&amp;<a class="code" href="switch_8c.html#cb3ec39b5454e93fd98267ce8a0d7bab">_switchThread</a>, NULL, &amp;<a class="code" href="switch_8c.html#99ec0a50e5e594cb656f9ea1f7d39554">__switch_thread_function</a>, NULL);
-<a name="l00057"></a>00057         }
-<a name="l00058"></a>00058 }<span class="comment">//</span>
+<p>Definition at line <a class="el" href="switch_8c-source.html#l00058">58</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
+<div class="fragment"><pre class="fragment"><a name="l00058"></a>00058                   {
+<a name="l00059"></a>00059 
+<a name="l00060"></a>00060         <span class="keywordflow">if</span> (0== <a class="code" href="switch_8c.html#4d96ee71c32e710320da8ab5b7da249a">_switchThread_id</a>) {
+<a name="l00061"></a>00061                 <a class="code" href="logger_8h.html#21a2c7330a04ac78200a986f66609369">DEBUG_LOG</a>(LOG_INFO, <span class="stringliteral">"switch_init: creating switch thread &amp; queue"</span>);
+<a name="l00062"></a>00062                 <a class="code" href="switch_8c.html#45d2c8f54ca279893a75408e9164be6a">_switch_queue</a> = <a class="code" href="queue_8c.html#404f283e7764be86026fda0714b6b7b6">queue_create</a>();
+<a name="l00063"></a>00063                 <a class="code" href="switch_8c.html#4d96ee71c32e710320da8ab5b7da249a">_switchThread_id</a> = pthread_create(&amp;<a class="code" href="switch_8c.html#cb3ec39b5454e93fd98267ce8a0d7bab">_switchThread</a>, NULL, &amp;<a class="code" href="switch_8c.html#99ec0a50e5e594cb656f9ea1f7d39554">__switch_thread_function</a>, NULL);
+<a name="l00064"></a>00064         }
+<a name="l00065"></a>00065 }<span class="comment">//</span>
 </pre></div>
 <p>
 
@@ -205,29 +205,29 @@ Here is the caller graph for this function:</div>
 
 <p>
 A client has finished processing a message: send it through through the ``input_queue`` and if all intended recipients have processed it already, it will be finalized. 
-<p>Definition at line <a class="el" href="switch_8c-source.html#l00200">200</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
-<div class="fragment"><pre class="fragment"><a name="l00200"></a>00200                                                             {
-<a name="l00201"></a>00201 
-<a name="l00202"></a>00202         <span class="keywordflow">if</span> (NULL==conn) {
-<a name="l00203"></a>00203                 <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293030ffb6b9de7d729330056b0c40eeaa4">LITM_CODE_ERROR_BAD_CONNECTION</a>;
-<a name="l00204"></a>00204         }
-<a name="l00205"></a>00205         <span class="keywordflow">if</span> (NULL==envlp) {
-<a name="l00206"></a>00206                 <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622930aea3671c60548df5c630dfb89adf3bb">LITM_CODE_ERROR_INVALID_ENVELOPE</a>;
-<a name="l00207"></a>00207         }
+<p>Definition at line <a class="el" href="switch_8c-source.html#l00207">207</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
+<div class="fragment"><pre class="fragment"><a name="l00207"></a>00207                                                             {
 <a name="l00208"></a>00208 
-<a name="l00209"></a>00209         <span class="comment">// if a message comes this way, it means a client</span>
-<a name="l00210"></a>00210         <span class="comment">// has finished processing it... get rid of the</span>
-<a name="l00211"></a>00211         <span class="comment">// "pending" state if at all present.</span>
-<a name="l00212"></a>00212         envlp-&gt;<a class="code" href="struct__litm__envelope.html#7c7a351b72e9b4d084e526a00787a44f">routes</a>.<a class="code" href="struct____litm__routing.html#078e15223c87cc831becc4169d2f7a2f">pending</a> = 0;
-<a name="l00213"></a>00213 
-<a name="l00214"></a>00214         <span class="keywordtype">int</span> result = <a class="code" href="queue_8c.html#3d346fcf3a730d9e52e0b27359de6256">queue_put</a>(<a class="code" href="switch_8c.html#45d2c8f54ca279893a75408e9164be6a">_switch_queue</a>, (<span class="keywordtype">void</span> *) envlp);
-<a name="l00215"></a>00215         <span class="keywordflow">if</span> (1 != result) {
-<a name="l00216"></a>00216                 <a class="code" href="switch_8c.html#149e07f06e61c0daee8f4cf38200dff2">__switch_finalize</a>( envlp );
-<a name="l00217"></a>00217                 <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d6229369f5e764faddb58449c77b25df30dfc6">LITM_CODE_ERROR_MALLOC</a>;
-<a name="l00218"></a>00218         }
-<a name="l00219"></a>00219 
-<a name="l00220"></a>00220         <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622930b651a4f84388b526d32980e3b43c4a2">LITM_CODE_OK</a>;
-<a name="l00221"></a>00221 }<span class="comment">//</span>
+<a name="l00209"></a>00209         <span class="keywordflow">if</span> (NULL==conn) {
+<a name="l00210"></a>00210                 <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293030ffb6b9de7d729330056b0c40eeaa4">LITM_CODE_ERROR_BAD_CONNECTION</a>;
+<a name="l00211"></a>00211         }
+<a name="l00212"></a>00212         <span class="keywordflow">if</span> (NULL==envlp) {
+<a name="l00213"></a>00213                 <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622930aea3671c60548df5c630dfb89adf3bb">LITM_CODE_ERROR_INVALID_ENVELOPE</a>;
+<a name="l00214"></a>00214         }
+<a name="l00215"></a>00215 
+<a name="l00216"></a>00216         <span class="comment">// if a message comes this way, it means a client</span>
+<a name="l00217"></a>00217         <span class="comment">// has finished processing it... get rid of the</span>
+<a name="l00218"></a>00218         <span class="comment">// "pending" state if at all present.</span>
+<a name="l00219"></a>00219         envlp-&gt;<a class="code" href="struct__litm__envelope.html#7c7a351b72e9b4d084e526a00787a44f">routes</a>.<a class="code" href="struct____litm__routing.html#078e15223c87cc831becc4169d2f7a2f">pending</a> = 0;
+<a name="l00220"></a>00220 
+<a name="l00221"></a>00221         <span class="keywordtype">int</span> result = <a class="code" href="queue_8c.html#3d346fcf3a730d9e52e0b27359de6256">queue_put</a>(<a class="code" href="switch_8c.html#45d2c8f54ca279893a75408e9164be6a">_switch_queue</a>, (<span class="keywordtype">void</span> *) envlp);
+<a name="l00222"></a>00222         <span class="keywordflow">if</span> (1 != result) {
+<a name="l00223"></a>00223                 <a class="code" href="switch_8c.html#149e07f06e61c0daee8f4cf38200dff2">__switch_finalize</a>( envlp );
+<a name="l00224"></a>00224                 <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d6229369f5e764faddb58449c77b25df30dfc6">LITM_CODE_ERROR_MALLOC</a>;
+<a name="l00225"></a>00225         }
+<a name="l00226"></a>00226 
+<a name="l00227"></a>00227         <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622930b651a4f84388b526d32980e3b43c4a2">LITM_CODE_OK</a>;
+<a name="l00228"></a>00228 }<span class="comment">//</span>
 </pre></div>
 <p>
 
@@ -278,35 +278,35 @@ Here is the caller graph for this function:</div>
 
 <p>
 
-<p>Definition at line <a class="el" href="switch_8c-source.html#l00294">294</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
-<div class="fragment"><pre class="fragment"><a name="l00294"></a>00294                                                                  {
-<a name="l00295"></a>00295 
-<a name="l00296"></a>00296         <span class="keywordflow">if</span> (NULL==conn) {
-<a name="l00297"></a>00297                 <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293030ffb6b9de7d729330056b0c40eeaa4">LITM_CODE_ERROR_BAD_CONNECTION</a>;
-<a name="l00298"></a>00298         }
-<a name="l00299"></a>00299 
-<a name="l00300"></a>00300         <span class="keywordflow">if</span> (( <a class="code" href="litm_8h.html#fbd708ff493c92eb23ebf90685253660">LITM_BUSSES_MAX</a> &lt; bus_id ) || (0&gt;=bus_id)) {
-<a name="l00301"></a>00301                 <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622933f8543ac2f3b59248fb667f2adfa2263">LITM_CODE_ERROR_INVALID_BUS</a>;
-<a name="l00302"></a>00302         }
-<a name="l00303"></a>00303 
-<a name="l00304"></a>00304         <span class="keywordtype">int</span> code = pthread_mutex_trylock( &amp;<a class="code" href="switch_8c.html#66b222465cf692f5b9da017fa259dda1">_subscribers_mutex</a> );
-<a name="l00305"></a>00305         <span class="keywordflow">if</span> (EBUSY==code)
-<a name="l00306"></a>00306                 <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622939fd144765aaaf968cb7a7b7fa847a278">LITM_CODE_BUSY</a>;
-<a name="l00307"></a>00307 
-<a name="l00308"></a>00308         <span class="keywordtype">int</span> result=<a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622933f8543ac2f3b59248fb667f2adfa2263">LITM_CODE_ERROR_INVALID_BUS</a>;
-<a name="l00309"></a>00309         <span class="keywordtype">int</span> index;
-<a name="l00310"></a>00310         <span class="keywordflow">for</span> (index=1; index&lt;<a class="code" href="litm_8h.html#1b077a43eb60b36c3a0d6d4d71cf1fac">LITM_CONNECTION_MAX</a>; index++) {
-<a name="l00311"></a>00311                 <span class="keywordflow">if</span> (conn==<a class="code" href="switch_8c.html#1945b3d804ccad8849548539b52a86bd">_subscribers</a>[bus_id][index]) {
-<a name="l00312"></a>00312                         <a class="code" href="switch_8c.html#1945b3d804ccad8849548539b52a86bd">_subscribers</a>[bus_id][index] = NULL;
-<a name="l00313"></a>00313                         result = <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622930b651a4f84388b526d32980e3b43c4a2">LITM_CODE_OK</a>;
-<a name="l00314"></a>00314                         <span class="keywordflow">break</span>;
-<a name="l00315"></a>00315                 }
-<a name="l00316"></a>00316         }
-<a name="l00317"></a>00317 
-<a name="l00318"></a>00318         pthread_mutex_unlock( &amp;<a class="code" href="switch_8c.html#66b222465cf692f5b9da017fa259dda1">_subscribers_mutex</a> );
-<a name="l00319"></a>00319 
-<a name="l00320"></a>00320         <span class="keywordflow">return</span> result;
-<a name="l00321"></a>00321 }<span class="comment">//</span>
+<p>Definition at line <a class="el" href="switch_8c-source.html#l00301">301</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
+<div class="fragment"><pre class="fragment"><a name="l00301"></a>00301                                                                  {
+<a name="l00302"></a>00302 
+<a name="l00303"></a>00303         <span class="keywordflow">if</span> (NULL==conn) {
+<a name="l00304"></a>00304                 <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293030ffb6b9de7d729330056b0c40eeaa4">LITM_CODE_ERROR_BAD_CONNECTION</a>;
+<a name="l00305"></a>00305         }
+<a name="l00306"></a>00306 
+<a name="l00307"></a>00307         <span class="keywordflow">if</span> (( <a class="code" href="litm_8h.html#fbd708ff493c92eb23ebf90685253660">LITM_BUSSES_MAX</a> &lt; bus_id ) || (0&gt;=bus_id)) {
+<a name="l00308"></a>00308                 <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622933f8543ac2f3b59248fb667f2adfa2263">LITM_CODE_ERROR_INVALID_BUS</a>;
+<a name="l00309"></a>00309         }
+<a name="l00310"></a>00310 
+<a name="l00311"></a>00311         <span class="keywordtype">int</span> code = pthread_mutex_trylock( &amp;<a class="code" href="switch_8c.html#66b222465cf692f5b9da017fa259dda1">_subscribers_mutex</a> );
+<a name="l00312"></a>00312         <span class="keywordflow">if</span> (EBUSY==code)
+<a name="l00313"></a>00313                 <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622939fd144765aaaf968cb7a7b7fa847a278">LITM_CODE_BUSY</a>;
+<a name="l00314"></a>00314 
+<a name="l00315"></a>00315         <span class="keywordtype">int</span> result=<a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622933f8543ac2f3b59248fb667f2adfa2263">LITM_CODE_ERROR_INVALID_BUS</a>;
+<a name="l00316"></a>00316         <span class="keywordtype">int</span> index;
+<a name="l00317"></a>00317         <span class="keywordflow">for</span> (index=1; index&lt;<a class="code" href="litm_8h.html#1b077a43eb60b36c3a0d6d4d71cf1fac">LITM_CONNECTION_MAX</a>; index++) {
+<a name="l00318"></a>00318                 <span class="keywordflow">if</span> (conn==<a class="code" href="switch_8c.html#1945b3d804ccad8849548539b52a86bd">_subscribers</a>[bus_id][index]) {
+<a name="l00319"></a>00319                         <a class="code" href="switch_8c.html#1945b3d804ccad8849548539b52a86bd">_subscribers</a>[bus_id][index] = NULL;
+<a name="l00320"></a>00320                         result = <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622930b651a4f84388b526d32980e3b43c4a2">LITM_CODE_OK</a>;
+<a name="l00321"></a>00321                         <span class="keywordflow">break</span>;
+<a name="l00322"></a>00322                 }
+<a name="l00323"></a>00323         }
+<a name="l00324"></a>00324 
+<a name="l00325"></a>00325         pthread_mutex_unlock( &amp;<a class="code" href="switch_8c.html#66b222465cf692f5b9da017fa259dda1">_subscribers_mutex</a> );
+<a name="l00326"></a>00326 
+<a name="l00327"></a>00327         <span class="keywordflow">return</span> result;
+<a name="l00328"></a>00328 }<span class="comment">//</span>
 </pre></div>
 <p>
 
@@ -361,38 +361,38 @@ Here is the caller graph for this function:</div>
 <p>
 This function just queues up the message in the switch's input_queue without actually sending it to recipients.<p>
 This function blocks whilst accessing the switch's ``input_queue`` but no deadlock scenario is possible since the switch's thread does not block whilst dequeuing. 
-<p>Definition at line <a class="el" href="switch_8c-source.html#l00334">334</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
-<div class="fragment"><pre class="fragment"><a name="l00335"></a>00335                                                     {
-<a name="l00336"></a>00336 
-<a name="l00337"></a>00337         <span class="keywordflow">if</span> (NULL==conn) {
-<a name="l00338"></a>00338                 <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293030ffb6b9de7d729330056b0c40eeaa4">LITM_CODE_ERROR_BAD_CONNECTION</a>;
-<a name="l00339"></a>00339         }
-<a name="l00340"></a>00340 
-<a name="l00341"></a>00341         <span class="keywordflow">if</span> (( <a class="code" href="litm_8h.html#fbd708ff493c92eb23ebf90685253660">LITM_BUSSES_MAX</a> &lt; bus_id ) || (0&gt;=bus_id)) {
-<a name="l00342"></a>00342                 <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622933f8543ac2f3b59248fb667f2adfa2263">LITM_CODE_ERROR_INVALID_BUS</a>;
-<a name="l00343"></a>00343         }
-<a name="l00344"></a>00344 
-<a name="l00345"></a>00345         <span class="comment">// Grab an envelope &amp; init</span>
-<a name="l00346"></a>00346         <a class="code" href="struct__litm__envelope.html">litm_envelope</a> *e=<a class="code" href="pool_8c.html#5a3eeccda0cfcf633af7177fad20c783">__litm_pool_get</a>();
-<a name="l00347"></a>00347         e-&gt;<a class="code" href="struct__litm__envelope.html#9e1e2e92283fc88e458ab22c80ed5a10">cleaner</a> = cleaner;
-<a name="l00348"></a>00348         e-&gt;<a class="code" href="struct__litm__envelope.html#7c7a351b72e9b4d084e526a00787a44f">routes</a>.<a class="code" href="struct____litm__routing.html#078e15223c87cc831becc4169d2f7a2f">pending</a> = 0; <span class="comment">//FALSE</span>
-<a name="l00349"></a>00349         e-&gt;<a class="code" href="struct__litm__envelope.html#7c7a351b72e9b4d084e526a00787a44f">routes</a>.<a class="code" href="struct____litm__routing.html#1f7b0cd5a23c153bf0a244fd7cba6689">bus_id</a> = bus_id;
-<a name="l00350"></a>00350         e-&gt;<a class="code" href="struct__litm__envelope.html#7c7a351b72e9b4d084e526a00787a44f">routes</a>.<a class="code" href="struct____litm__routing.html#855edf29452572a9d83b7d551c2b3a3b">sender</a> = conn;
-<a name="l00351"></a>00351         e-&gt;<a class="code" href="struct__litm__envelope.html#7c7a351b72e9b4d084e526a00787a44f">routes</a>.<a class="code" href="struct____litm__routing.html#30882ea416f664293fb2f0468cb09e8b">current</a> = NULL;  <span class="comment">// First time sent</span>
-<a name="l00352"></a>00352         e-&gt;<a class="code" href="struct__litm__envelope.html#5ed18526b98cb26460fdb273ea2178ac">msg</a> = msg;
-<a name="l00353"></a>00353 
-<a name="l00354"></a>00354         <span class="comment">/*</span>
-<a name="l00355"></a>00355 <span class="comment">         *  Initial message submission: if something goes</span>
-<a name="l00356"></a>00356 <span class="comment">         *  wrong, we need to get rid of envelope.</span>
-<a name="l00357"></a>00357 <span class="comment">         */</span>
-<a name="l00358"></a>00358         <span class="keywordtype">int</span> result = <a class="code" href="queue_8c.html#3d346fcf3a730d9e52e0b27359de6256">queue_put</a>(<a class="code" href="switch_8c.html#45d2c8f54ca279893a75408e9164be6a">_switch_queue</a>, (<span class="keywordtype">void</span> *) e);
-<a name="l00359"></a>00359         <span class="keywordflow">if</span> (1 != result) {
-<a name="l00360"></a>00360                 <a class="code" href="pool_8c.html#1266647a6ed7c20e9c5d08f4bef09dd3">__litm_pool_recycle</a>( e );
-<a name="l00361"></a>00361                 <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d6229369f5e764faddb58449c77b25df30dfc6">LITM_CODE_ERROR_MALLOC</a>;
-<a name="l00362"></a>00362         }
-<a name="l00363"></a>00363 
-<a name="l00364"></a>00364         <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622930b651a4f84388b526d32980e3b43c4a2">LITM_CODE_OK</a>;
-<a name="l00365"></a>00365 }<span class="comment">//</span>
+<p>Definition at line <a class="el" href="switch_8c-source.html#l00341">341</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
+<div class="fragment"><pre class="fragment"><a name="l00342"></a>00342                                                     {
+<a name="l00343"></a>00343 
+<a name="l00344"></a>00344         <span class="keywordflow">if</span> (NULL==conn) {
+<a name="l00345"></a>00345                 <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293030ffb6b9de7d729330056b0c40eeaa4">LITM_CODE_ERROR_BAD_CONNECTION</a>;
+<a name="l00346"></a>00346         }
+<a name="l00347"></a>00347 
+<a name="l00348"></a>00348         <span class="keywordflow">if</span> (( <a class="code" href="litm_8h.html#fbd708ff493c92eb23ebf90685253660">LITM_BUSSES_MAX</a> &lt; bus_id ) || (0&gt;=bus_id)) {
+<a name="l00349"></a>00349                 <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622933f8543ac2f3b59248fb667f2adfa2263">LITM_CODE_ERROR_INVALID_BUS</a>;
+<a name="l00350"></a>00350         }
+<a name="l00351"></a>00351 
+<a name="l00352"></a>00352         <span class="comment">// Grab an envelope &amp; init</span>
+<a name="l00353"></a>00353         <a class="code" href="struct__litm__envelope.html">litm_envelope</a> *e=<a class="code" href="pool_8c.html#5a3eeccda0cfcf633af7177fad20c783">__litm_pool_get</a>();
+<a name="l00354"></a>00354         e-&gt;<a class="code" href="struct__litm__envelope.html#9e1e2e92283fc88e458ab22c80ed5a10">cleaner</a> = cleaner;
+<a name="l00355"></a>00355         e-&gt;<a class="code" href="struct__litm__envelope.html#7c7a351b72e9b4d084e526a00787a44f">routes</a>.<a class="code" href="struct____litm__routing.html#078e15223c87cc831becc4169d2f7a2f">pending</a> = 0; <span class="comment">//FALSE</span>
+<a name="l00356"></a>00356         e-&gt;<a class="code" href="struct__litm__envelope.html#7c7a351b72e9b4d084e526a00787a44f">routes</a>.<a class="code" href="struct____litm__routing.html#1f7b0cd5a23c153bf0a244fd7cba6689">bus_id</a> = bus_id;
+<a name="l00357"></a>00357         e-&gt;<a class="code" href="struct__litm__envelope.html#7c7a351b72e9b4d084e526a00787a44f">routes</a>.<a class="code" href="struct____litm__routing.html#855edf29452572a9d83b7d551c2b3a3b">sender</a> = conn;
+<a name="l00358"></a>00358         e-&gt;<a class="code" href="struct__litm__envelope.html#7c7a351b72e9b4d084e526a00787a44f">routes</a>.<a class="code" href="struct____litm__routing.html#30882ea416f664293fb2f0468cb09e8b">current</a> = NULL;  <span class="comment">// First time sent</span>
+<a name="l00359"></a>00359         e-&gt;<a class="code" href="struct__litm__envelope.html#5ed18526b98cb26460fdb273ea2178ac">msg</a> = msg;
+<a name="l00360"></a>00360 
+<a name="l00361"></a>00361         <span class="comment">/*</span>
+<a name="l00362"></a>00362 <span class="comment">         *  Initial message submission: if something goes</span>
+<a name="l00363"></a>00363 <span class="comment">         *  wrong, we need to get rid of envelope.</span>
+<a name="l00364"></a>00364 <span class="comment">         */</span>
+<a name="l00365"></a>00365         <span class="keywordtype">int</span> result = <a class="code" href="queue_8c.html#3d346fcf3a730d9e52e0b27359de6256">queue_put</a>(<a class="code" href="switch_8c.html#45d2c8f54ca279893a75408e9164be6a">_switch_queue</a>, (<span class="keywordtype">void</span> *) e);
+<a name="l00366"></a>00366         <span class="keywordflow">if</span> (1 != result) {
+<a name="l00367"></a>00367                 <a class="code" href="pool_8c.html#1266647a6ed7c20e9c5d08f4bef09dd3">__litm_pool_recycle</a>( e );
+<a name="l00368"></a>00368                 <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d6229369f5e764faddb58449c77b25df30dfc6">LITM_CODE_ERROR_MALLOC</a>;
+<a name="l00369"></a>00369         }
+<a name="l00370"></a>00370 
+<a name="l00371"></a>00371         <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622930b651a4f84388b526d32980e3b43c4a2">LITM_CODE_OK</a>;
+<a name="l00372"></a>00372 }<span class="comment">//</span>
 </pre></div>
 <p>
 
@@ -437,7 +437,7 @@ Here is the caller graph for this function:</div>
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Tue Apr 28 10:16:04 2009 for LITM by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Tue Apr 28 10:26:37 2009 for LITM by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.6 </small></address>
 </body>

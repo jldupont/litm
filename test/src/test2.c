@@ -75,24 +75,6 @@ void create_connections(void) {
 
 }
 
-void *threadFunction(void *params) {
-
-	thread_params *tp = (thread_params *) params;
-
-	int thread_id;
-	litm_connection *conn = NULL;
-	litm_code code;
-
-	thread_id = tp->thread_id;
-	conn      = tp->conn;
-
-	printMessage2("Thread [%u] started\n", thread_id);
-
-	sleep(5);
-
-	printMessage2("Thread [%u] ENDING\n", thread_id);
-}//
-
 void printMessage(litm_code code, char *header, char *message, ...) {
 
 	char buffer[4096];
@@ -133,3 +115,35 @@ void printMessage2(char *message, ...) {
 
 	printf( buffer2 );
 }//
+
+
+// ===================================================================
+// ===================================================================
+
+
+
+void *threadFunction(void *params) {
+
+	thread_params *tp = (thread_params *) params;
+
+	int thread_id;
+	litm_connection *conn = NULL;
+	litm_code code;
+
+	thread_id = tp->thread_id;
+	conn      = tp->conn;
+
+	printMessage2("Thread [%u] started\n", thread_id);
+
+	code = litm_subscribe(conn, 1);
+	printMessage(code, "* Subscribed, code[%s]...","thread_id[%u]\n", thread_id );
+
+	sleep(1);
+
+	code = litm_unsubscribe(conn, 1);
+	printMessage(code, "* Unsubscribed, code[%s]...","thread_id[%u]\n", thread_id );
+
+
+	printMessage2("Thread [%u] ENDING\n", thread_id);
+}//
+
