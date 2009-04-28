@@ -15,7 +15,9 @@
   </div>
 </div>
 <div class="contents">
-<h1>project/src/litm.c File Reference</h1><code>#include &quot;<a class="el" href="litm_8h-source.html">litm.h</a>&quot;</code><br>
+<h1>project/src/litm.c File Reference</h1>
+<p>
+<code>#include &quot;<a class="el" href="litm_8h-source.html">litm.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="connection_8h-source.html">connection.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="queue_8h-source.html">queue.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="pool_8h-source.html">pool.h</a>&quot;</code><br>
@@ -173,8 +175,13 @@ Here is the call graph for this function:</div>
 
 <p>
 Returns a copy of the pointer to the message.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>*envlp</em>&nbsp;</td><td>the envelope from which to extract the pointer to the message</td></tr>
+  </table>
+</dl>
 This function should be used instead of relying on the ``litm_envelope`` data structure.<p>
-** DO NOT** modify the message! 
+<b>** DO NOT** modify the message!</b> 
 <p>Definition at line <a class="el" href="litm_8c-source.html#l00113">113</a> of file <a class="el" href="litm_8c-source.html">litm.c</a>.</p>
 <div class="fragment"><pre class="fragment"><a name="l00113"></a>00113                                        {
 <a name="l00114"></a>00114 
@@ -215,7 +222,14 @@ This function should be used instead of relying on the ``litm_envelope`` data st
 <div class="memdoc">
 
 <p>
-Receives (non-blocking) from any ``bus`` 
+Receives (non-blocking) from any ``bus``<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>*conn</em>&nbsp;</td><td>connection reference </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>**envlp</em>&nbsp;</td><td>the pointer to received envelope </td></tr>
+  </table>
+</dl>
+
 <p>Definition at line <a class="el" href="litm_8c-source.html#l00082">82</a> of file <a class="el" href="litm_8c-source.html">litm.c</a>.</p>
 <div class="fragment"><pre class="fragment"><a name="l00082"></a>00082                                                               {
 <a name="l00083"></a>00083 
@@ -429,7 +443,13 @@ Here is the call graph for this function:</div>
 <div class="memdoc">
 
 <p>
-Translates a code to a message pointer 
+Translates a code to a message pointer<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>code</em>&nbsp;</td><td>a <em>litm_code</em> to translate to a string version </td></tr>
+  </table>
+</dl>
+
 <p>Definition at line <a class="el" href="litm_8c-source.html#l00123">123</a> of file <a class="el" href="litm_8c-source.html">litm.c</a>.</p>
 <div class="fragment"><pre class="fragment"><a name="l00123"></a>00123                                     {
 <a name="l00124"></a>00124 
@@ -531,7 +551,7 @@ Here is the call graph for this function:</div>
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Tue Apr 28 09:37:08 2009 for LITM by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Tue Apr 28 10:16:04 2009 for LITM by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.6 </small></address>
 </body>

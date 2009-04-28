@@ -4,6 +4,23 @@
  * @date   2009-04-24
  * @author Jean-Lou Dupont
  *
+ * @mainpage Welcome to the documentation for the library LITM
+ *
+ *           The library serves as a <b>Lightweight Inter-Thread Messaging</b> under Linux/Unix.
+ *
+ * \section Dependencies
+ *
+ *			<b>Mandatory</b>
+
+ *          - libpthread
+ *
+ *          <b>Optional</b>
+ *          The following components are only required if building from source:
+ *
+ *          - scons
+ *
+ *          - python package "pyjld.os" (available through <i>easy_install</i>)
+ *
  *
  */
 
