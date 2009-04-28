@@ -14,13 +14,15 @@
 #include "queue.h"
 #include "pool.h"
 #include "connection.h"
+#include "logger.h"
 
 
 // Input Queue
 queue *_switch_queue;
 
 // Switch Thread
-pthread_t *_switchThread = NULL;
+pthread_t _switchThread;
+int _switchThread_id=0;
 
 // Subscriptions to busses
 // -----------------------
@@ -48,10 +50,10 @@ litm_code __switch_try_sending_or_requeue(litm_connection *conn, litm_envelope *
 	int
 switch_init(void) {
 
-	if (NULL== _switchThread) {
-		pthread_create(_switchThread, NULL, &__switch_thread_function, NULL);
-
+	if (0== _switchThread_id) {
+		DEBUG_LOG(LOG_INFO, "switch_init: creating switch thread & queue");
 		_switch_queue = queue_create();
+		_switchThread_id = pthread_create(&_switchThread, NULL, &__switch_thread_function, NULL);
 	}
 }//
 
@@ -78,6 +80,8 @@ __switch_thread_function(void *params) {
 	litm_connection *next, *sender, *current;
 	litm_bus bus_id;
 
+	DEBUG_LOG(LOG_INFO, "__switch_thread_function: starting");
+
 	//TODO switch shutdown signal check
 	while(1) {
 		// we block here since if we have no messages
@@ -88,6 +92,8 @@ __switch_thread_function(void *params) {
 			sleep(0.001);
 			continue;
 		}
+
+		DEBUG_LOG(LOG_INFO, "__switch_thread_function: GOT ENVELOPE");
 
 		// The envelope contains the sender's connection ptr
 		//  as well as the ``current`` connection ptr.
@@ -105,6 +111,8 @@ __switch_thread_function(void *params) {
 		// message was processed and just sits pending
 
 		if (1==e->routes.pending) {
+			DEBUG_LOG(LOG_INFO, "__switch_thread_function: ENVELOPE PENDING");
+
 			current = e->routes.current;
 			code = __switch_try_sending_or_requeue( current, e );
 
@@ -130,6 +138,8 @@ __switch_thread_function(void *params) {
 			continue;  // <====================================
 		}//if
 
+
+		DEBUG_LOG(LOG_INFO, "__switch_thread_function: ENVELOPE NORMAL");
 
 		// FROM THIS POINT, the envelope was pending
 		//  so we need to figured out where to send it next.

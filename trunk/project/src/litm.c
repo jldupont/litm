@@ -10,6 +10,7 @@
 #include "connection.h"
 #include "queue.h"
 #include "pool.h"
+#include "logger.h"
 
 char *LITM_CODE_MESSAGES[] = {
 		"LITM_CODE_OK",
@@ -31,6 +32,8 @@ char *LITM_CODE_MESSAGES[] = {
 	litm_code
 litm_connect(litm_connection **conn) {
 
+	DEBUG_LOG(LOG_INFO, "litm_connect: BEGIN");
+
 	switch_init();
 
 	litm_code code = litm_connection_open(conn);
@@ -39,6 +42,7 @@ litm_connect(litm_connection **conn) {
 		return code;
 	}
 
+	DEBUG_LOG(LOG_INFO, "litm_connect: END");
 	return LITM_CODE_OK;
 
 }//

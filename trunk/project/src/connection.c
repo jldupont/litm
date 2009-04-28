@@ -10,6 +10,7 @@
 #include "litm.h"
 #include "connection.h"
 #include "queue.h"
+#include "logger.h"
 
 // PRIVATE
 int __litm_connection_get_free_index(void);
@@ -41,6 +42,8 @@ litm_connection *_connections[LITM_CONNECTION_MAX];
 	litm_code
 litm_connection_open(litm_connection **conn) {
 
+	DEBUG_LOG(LOG_INFO, "litm_connection_open: BEGIN");
+
 	int target_index, code;
 
 	code = pthread_mutex_trylock( &_connections_mutex );
@@ -67,10 +70,14 @@ litm_connection_open(litm_connection **conn) {
 		return LITM_CODE_ERROR_MALLOC;
 	}
 
+	DEBUG_LOG(LOG_INFO, "litm_connection_open: OPENED");
+
 	_connections[target_index] = *conn;
 	(*conn)->input_queue = q;
 
 	pthread_mutex_unlock( &_connections_mutex );
+
+	DEBUG_LOG(LOG_INFO, "litm_connection_open: END");
 	return LITM_CODE_OK;
 }//
 
