@@ -1,8 +1,12 @@
 /*
- * test.c
+ * test2.c
  *
  *  Created on: 2009-04-27
  *      Author: Jean-Lou Dupont
+ *
+ *
+ *  Subscription / Unsubscription Test
+ *
  */
 
 #include <litm.h>

@@ -42,7 +42,7 @@ litm_connection *_connections[LITM_CONNECTION_MAX];
 	litm_code
 litm_connection_open(litm_connection **conn) {
 
-	DEBUG_LOG(LOG_INFO, "litm_connection_open: BEGIN");
+	//DEBUG_LOG(LOG_INFO, "litm_connection_open: BEGIN");
 
 	int target_index, code;
 
@@ -70,14 +70,17 @@ litm_connection_open(litm_connection **conn) {
 		return LITM_CODE_ERROR_MALLOC;
 	}
 
-	DEBUG_LOG(LOG_INFO, "litm_connection_open: OPENED");
+
 
 	_connections[target_index] = *conn;
 	(*conn)->input_queue = q;
 
+	DEBUG_LOG(LOG_INFO, "litm_connection_open: OPENED, index[%u] ref[%x], q[%x]", target_index, *conn, q);
+
+
 	pthread_mutex_unlock( &_connections_mutex );
 
-	DEBUG_LOG(LOG_INFO, "litm_connection_open: END");
+	//DEBUG_LOG(LOG_INFO, "litm_connection_open: END");
 	return LITM_CODE_OK;
 }//
 
@@ -103,6 +106,11 @@ litm_connection_close(litm_connection *conn) {
 		return LITM_CODE_ERROR_BAD_CONNECTION;
 	}
 
+	queue *q = conn->input_queue;
+
+	DEBUG_LOG(LOG_INFO, "litm_connection_close: CLOSED, index[%u] ref[%x] q[%x]", index, conn, q);
+
+	queue_destroy( q );
 	_connections[index] = NULL;
 
 	// don't need to hold the mutex for the last part

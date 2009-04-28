@@ -34,7 +34,7 @@ char *LITM_CODE_MESSAGES[] = {
 	litm_code
 litm_connect(litm_connection **conn) {
 
-	DEBUG_LOG(LOG_INFO, "litm_connect: BEGIN");
+	//DEBUG_LOG(LOG_INFO, "litm_connect: BEGIN");
 
 	switch_init();
 
@@ -44,7 +44,8 @@ litm_connect(litm_connection **conn) {
 		return code;
 	}
 
-	DEBUG_LOG(LOG_INFO, "litm_connect: END");
+	//DEBUG_LOG(LOG_INFO, "litm_connect: END");
+
 	return LITM_CODE_OK;
 
 }//
