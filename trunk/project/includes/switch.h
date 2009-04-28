@@ -1,8 +1,8 @@
-/*
- * switch.h
+/**
+ * @file   switch.h
  *
- *  Created on: 2009-04-25
- *      Author: Jean-Lou Dupont
+ * @date   2009-04-25
+ * @author Jean-Lou Dupont
  */
 
 #ifndef SWITCH_H_

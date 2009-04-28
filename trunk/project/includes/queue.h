@@ -1,8 +1,8 @@
-/*
- * queue.h
+/**
+ * @file   queue.h
  *
- *  Created on: 2009-04-23
- *      Author: Jean-Lou Dupont
+ * @date   2009-04-23
+ * @author Jean-Lou Dupont
  */
 
 #ifndef QUEUE_H_

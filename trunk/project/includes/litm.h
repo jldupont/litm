@@ -1,8 +1,10 @@
-/*
- * litm.h
+/**
+ * @file   litm.h
  *
- *  Created on: 2009-04-24
- *      Author: Jean-Lou Dupont
+ * @date   2009-04-24
+ * @author Jean-Lou Dupont
+ *
+ *
  */
 
 #ifndef LITM_H_
@@ -15,17 +17,24 @@
 #	define LITM_CONNECTION_MAX 15
 #	define LITM_BUSSES_MAX     7
 
-		// TYPES
-		// =====
-		//
-		//
-
+		/**
+		 * Queue node - entry in a queue
+		 *
+		 * @param msg:  pointer to the message
+		 * @param next: pointer to the ``next`` queue_node entry
+		 */
 		typedef struct _queue_node {
 			void *msg;
 			struct _queue_node *next;
 		} queue_node;
 
-
+		/**
+		 * Queue - thread-safe
+		 *
+		 * @param mutex: mutex
+		 * @param head:  pointer to ``head``
+		 * @param tail:  pointer to ``tail``
+		 */
 		typedef struct {
 			pthread_mutex_t *mutex;
 			queue_node *head, *tail;
@@ -39,6 +48,8 @@
 
 		/**
 		 * ``Connection`` type
+		 *
+		 * @param input_queue the connection's input queue
 		 */
 		typedef struct _litm_connection {
 			queue *input_queue;
@@ -46,6 +57,14 @@
 
 		//typedef _litm_connection litm_connection;
 
+		/**
+		 * Envelope Routing
+		 *
+		 * @param pending Pending Status Flag
+		 * @param bus_id  Destination ``bus``
+		 * @param sender  The sender's connection pointer
+		 * @param current The current recipient's connection pointer
+		 */
 		typedef struct {
 			int				 pending;
 			litm_bus         bus_id;
@@ -81,6 +100,10 @@
 		/**
 		 * ``Envelope`` structure for messages
 		 *
+		 * @param cleaner The ``cleaner`` function to use
+		 * @param routes  The ``routing`` structure
+		 * @param msg     The pointer to the message
+		 *
 		 * Contains the pointer to the message
 		 *  as well as a ``routing`` structure
 		 *  used to deliver the said message
@@ -94,48 +117,59 @@
 		 */
 		typedef struct _litm_envelope {
 
-			// cleaning function callback
 			void (*cleaner)(void *msg);
-
-			// the routing information
 			__litm_routing routes;
-
-			// the sender's message
 			void *msg;
 
 		} litm_envelope;
 
 
-
-	// API
-	// ===
-	//
 		/**
 		 * Opens a ``connection`` to the ``switch``
+		 *  and returns a pointer to the connection reference
+		 *
+		 * @param **conn pointer to connection reference
 		 */
 		litm_code litm_connect(litm_connection **conn);
 
 
 		/**
 		 * Disconnects from the ``switch``
+		 *
+		 * @param *conn connection reference
 		 */
 		litm_code litm_disconnect(litm_connection *conn);
 
 
 		/**
 		 * Subscribe to a ``bus``
+		 *
+		 * @param *conn connection reference
+		 * @param bus_id the ``bus`` identifier to subscribe to
+		 *
 		 */
 		litm_code litm_subscribe(litm_connection *conn, litm_bus bus_id);
 
 
 		/**
 		 * Unsubscribe from a ``bus``
+		 *
+		 * @param *conn connection reference
+		 * @param bus_id the ``bus`` identifier to unsubscribe from
 		 */
 		litm_code litm_unsubscribe(litm_connection *conn, litm_bus bus_id);
 
 
 		/**
 		 * Send message on a ``bus``
+		 *
+		 * @param *conn connection reference
+		 * @param bus_id the ``bus`` to send the message onto
+		 * @param *msg the pointer to the message
+		 * @param *cleaner the pointer to the cleaner function
+		 *
+		 * If omitted, the default ``cleaner`` function will be
+		 * <b>free()</b>.
 		 *
 		 * If an error occurs, it is the responsibility of the sender
 		 *  to dispose of the ``messages`` appropriately.  If the
@@ -154,12 +188,19 @@
 
 		/**
 		 * Receives (non-blocking) from any ``bus``
+		 *
+		 * @param *conn connection reference
+		 * @param **envlp the pointer to received envelope
+		 *
 		 */
 		litm_code litm_receive_nb(litm_connection *conn, litm_envelope **envlp);
 
 
 		/**
 		 * Releases an ``envelope``
+		 *
+		 * @param *conn connection reference
+		 * @param *envlp the pointer to received envelope to release
 		 *
 		 *  Once the client has consumed the message
 		 *  ``contained`` in the envelope, the client
@@ -169,20 +210,25 @@
 
 
 		/**
-		 * Returns a copy of the pointer to the
-		 *  message.
+		 * Returns a copy of the pointer to the message.
+		 *
+		 * @param *envlp the envelope from which to extract the pointer to the message
 		 *
 		 * This function should be used instead
 		 *  of relying on the ``litm_envelope``
 		 *  data structure.
 		 *
-		 *  ** DO NOT** modify the message!
+		 *  <b>** DO NOT** modify the message!</b>
+		 *
 		 */
 		void *litm_get_message(litm_envelope *envlp);
 
 
 		/**
 		 * Translates a code to a message pointer
+		 *
+		 * @param code a <i>litm_code</i> to translate to a string version
+		 *
 		 */
 		char *litm_translate_code(litm_code code);
 
