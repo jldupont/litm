@@ -15,7 +15,14 @@
   </div>
 </div>
 <div class="contents">
-<h1>project/includes/litm.h File Reference</h1><code>#include &lt;sys/types.h&gt;</code><br>
+<h1>project/includes/litm.h File Reference</h1><hr><a name="_details"></a><h2>Detailed Description</h2>
+<dl class="date" compact><dt><b>Date:</b></dt><dd>2009-04-24 </dd></dl>
+<dl class="author" compact><dt><b>Author:</b></dt><dd>Jean-Lou Dupont </dd></dl>
+
+<p>Definition in file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
+
+<p>
+<code>#include &lt;sys/types.h&gt;</code><br>
 <code>#include &lt;pthread.h&gt;</code><br>
 
 <p>
@@ -106,11 +113,6 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">char *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="litm_8h.html#76f700b9bb8531fd8baf8931e67c4604">litm_translate_code</a> (<a class="el" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a> code)</td></tr>
 
 </table>
-<hr><a name="_details"></a><h2>Detailed Description</h2>
-<dl class="date" compact><dt><b>Date:</b></dt><dd>2009-04-24 </dd></dl>
-<dl class="author" compact><dt><b>Author:</b></dt><dd>Jean-Lou Dupont </dd></dl>
-
-<p>Definition in file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
 <hr><h2>Define Documentation</h2>
 <a class="anchor" name="fbd708ff493c92eb23ebf90685253660"></a><!-- doxytag: member="litm.h::LITM_BUSSES_MAX" ref="fbd708ff493c92eb23ebf90685253660" args="" -->
 <div class="memitem">
@@ -125,7 +127,7 @@ This graph shows which files directly or indirectly include this file:</div>
 
 <p>
 
-<p>Definition at line <a class="el" href="litm_8h-source.html#l00018">18</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
+<p>Definition at line <a class="el" href="litm_8h-source.html#l00035">35</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
 
 </div>
 </div><p>
@@ -142,7 +144,7 @@ This graph shows which files directly or indirectly include this file:</div>
 
 <p>
 
-<p>Definition at line <a class="el" href="litm_8h-source.html#l00017">17</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
+<p>Definition at line <a class="el" href="litm_8h-source.html#l00034">34</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
 
 </div>
 </div><p>
@@ -160,7 +162,7 @@ This graph shows which files directly or indirectly include this file:</div>
 
 <p>
 ``Bus`` identifier type 
-<p>Definition at line <a class="el" href="litm_8h-source.html#l00047">47</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
+<p>Definition at line <a class="el" href="litm_8h-source.html#l00064">64</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
 
 </div>
 </div><p>
@@ -292,24 +294,24 @@ Queue node - entry in a <a class="el" href="structqueue.html">queue</a><p>
 </table>
 </dl>
 
-<p>Definition at line <a class="el" href="litm_8h-source.html#l00081">81</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
-<div class="fragment"><pre class="fragment"><a name="l00081"></a>00081                                          {
-<a name="l00082"></a>00082                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622930b651a4f84388b526d32980e3b43c4a2">LITM_CODE_OK</a> = 0,
-<a name="l00083"></a>00083                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293c4db0bf4a6b68b3ae976c9cbe323da3e">LITM_CODE_NO_MESSAGE</a>,
-<a name="l00084"></a>00084                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622939fd144765aaaf968cb7a7b7fa847a278">LITM_CODE_BUSY</a>,
-<a name="l00085"></a>00085                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d6229369f5e764faddb58449c77b25df30dfc6">LITM_CODE_ERROR_MALLOC</a>,
-<a name="l00086"></a>00086                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293fb95351b58800e5e56d3069a47cd60e4">LITM_CODE_ERROR_CONNECTION_OPEN</a>,
-<a name="l00087"></a>00087                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293030ffb6b9de7d729330056b0c40eeaa4">LITM_CODE_ERROR_BAD_CONNECTION</a>,
-<a name="l00088"></a>00088                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622939aeb836e2cf171cef63d14d898c847da">LITM_CODE_ERROR_NO_MORE_CONNECTIONS</a>,
-<a name="l00089"></a>00089                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622933f8543ac2f3b59248fb667f2adfa2263">LITM_CODE_ERROR_INVALID_BUS</a>,
-<a name="l00090"></a>00090                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622935220c97da0615dec2b888d62f937a7c8">LITM_CODE_ERROR_SWITCH_SENDER_EQUAL_CURRENT</a>,
-<a name="l00091"></a>00091                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293a973644706468eb1af25e07dff363b19">LITM_CODE_ERROR_SWITCH_NO_CURRENT</a>,
-<a name="l00092"></a>00092                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622934d8aae31a6e2d37e27001a7eb78883f6">LITM_CODE_ERROR_SWITCH_NEXT_NOT_FOUND</a>,
-<a name="l00093"></a>00093                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622939982f109e1fbfd1b3e0968a5ff51d438">LITM_CODE_ERROR_OUTPUT_QUEUING</a>,                                 <span class="comment">//can't send to the recipient</span>
-<a name="l00094"></a>00094                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622937355ba30364dfa3151df630f8e330e1c">LITM_CODE_BUSY_OUTPUT_QUEUE</a>,
-<a name="l00095"></a>00095                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622930aea3671c60548df5c630dfb89adf3bb">LITM_CODE_ERROR_INVALID_ENVELOPE</a>,
-<a name="l00096"></a>00096 
-<a name="l00097"></a>00097                 } <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a>;
+<p>Definition at line <a class="el" href="litm_8h-source.html#l00098">98</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
+<div class="fragment"><pre class="fragment"><a name="l00098"></a>00098                                          {
+<a name="l00099"></a>00099                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622930b651a4f84388b526d32980e3b43c4a2">LITM_CODE_OK</a> = 0,
+<a name="l00100"></a>00100                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293c4db0bf4a6b68b3ae976c9cbe323da3e">LITM_CODE_NO_MESSAGE</a>,
+<a name="l00101"></a>00101                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622939fd144765aaaf968cb7a7b7fa847a278">LITM_CODE_BUSY</a>,
+<a name="l00102"></a>00102                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d6229369f5e764faddb58449c77b25df30dfc6">LITM_CODE_ERROR_MALLOC</a>,
+<a name="l00103"></a>00103                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293fb95351b58800e5e56d3069a47cd60e4">LITM_CODE_ERROR_CONNECTION_OPEN</a>,
+<a name="l00104"></a>00104                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293030ffb6b9de7d729330056b0c40eeaa4">LITM_CODE_ERROR_BAD_CONNECTION</a>,
+<a name="l00105"></a>00105                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622939aeb836e2cf171cef63d14d898c847da">LITM_CODE_ERROR_NO_MORE_CONNECTIONS</a>,
+<a name="l00106"></a>00106                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622933f8543ac2f3b59248fb667f2adfa2263">LITM_CODE_ERROR_INVALID_BUS</a>,
+<a name="l00107"></a>00107                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622935220c97da0615dec2b888d62f937a7c8">LITM_CODE_ERROR_SWITCH_SENDER_EQUAL_CURRENT</a>,
+<a name="l00108"></a>00108                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293a973644706468eb1af25e07dff363b19">LITM_CODE_ERROR_SWITCH_NO_CURRENT</a>,
+<a name="l00109"></a>00109                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622934d8aae31a6e2d37e27001a7eb78883f6">LITM_CODE_ERROR_SWITCH_NEXT_NOT_FOUND</a>,
+<a name="l00110"></a>00110                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622939982f109e1fbfd1b3e0968a5ff51d438">LITM_CODE_ERROR_OUTPUT_QUEUING</a>,                                 <span class="comment">//can't send to the recipient</span>
+<a name="l00111"></a>00111                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622937355ba30364dfa3151df630f8e330e1c">LITM_CODE_BUSY_OUTPUT_QUEUE</a>,
+<a name="l00112"></a>00112                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622930aea3671c60548df5c630dfb89adf3bb">LITM_CODE_ERROR_INVALID_ENVELOPE</a>,
+<a name="l00113"></a>00113 
+<a name="l00114"></a>00114                 } <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a>;
 </pre></div>
 <p>
 
@@ -432,8 +434,13 @@ Here is the call graph for this function:</div>
 
 <p>
 Returns a copy of the pointer to the message.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>*envlp</em>&nbsp;</td><td>the envelope from which to extract the pointer to the message</td></tr>
+  </table>
+</dl>
 This function should be used instead of relying on the ``litm_envelope`` data structure.<p>
-** DO NOT** modify the message! 
+<b>** DO NOT** modify the message!</b> 
 <p>Definition at line <a class="el" href="litm_8c-source.html#l00113">113</a> of file <a class="el" href="litm_8c-source.html">litm.c</a>.</p>
 <div class="fragment"><pre class="fragment"><a name="l00113"></a>00113                                        {
 <a name="l00114"></a>00114 
@@ -474,7 +481,14 @@ This function should be used instead of relying on the ``litm_envelope`` data st
 <div class="memdoc">
 
 <p>
-Receives (non-blocking) from any ``bus`` 
+Receives (non-blocking) from any ``bus``<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>*conn</em>&nbsp;</td><td>connection reference </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>**envlp</em>&nbsp;</td><td>the pointer to received envelope </td></tr>
+  </table>
+</dl>
+
 <p>Definition at line <a class="el" href="litm_8c-source.html#l00082">82</a> of file <a class="el" href="litm_8c-source.html">litm.c</a>.</p>
 <div class="fragment"><pre class="fragment"><a name="l00082"></a>00082                                                               {
 <a name="l00083"></a>00083 
@@ -530,6 +544,12 @@ Here is the call graph for this function:</div>
 
 <p>
 Releases an ``envelope``<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>*conn</em>&nbsp;</td><td>connection reference </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>*envlp</em>&nbsp;</td><td>the pointer to received envelope to release</td></tr>
+  </table>
+</dl>
 Once the client has consumed the message ``contained`` in the envelope, the client **MUST** release it back to litm.<p>
 Release a message to LITM<p>
 This function should *ONLY* be used by client's as a result of finishing the processing of an envelope/message retrieved through ``litm_receive_nb''. 
@@ -690,7 +710,13 @@ Here is the call graph for this function:</div>
 <div class="memdoc">
 
 <p>
-Translates a code to a message pointer 
+Translates a code to a message pointer<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>code</em>&nbsp;</td><td>a <em>litm_code</em> to translate to a string version </td></tr>
+  </table>
+</dl>
+
 <p>Definition at line <a class="el" href="litm_8c-source.html#l00123">123</a> of file <a class="el" href="litm_8c-source.html">litm.c</a>.</p>
 <div class="fragment"><pre class="fragment"><a name="l00123"></a>00123                                     {
 <a name="l00124"></a>00124 
@@ -758,7 +784,7 @@ Here is the call graph for this function:</div>
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Tue Apr 28 09:37:08 2009 for LITM by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Tue Apr 28 10:16:03 2009 for LITM by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.6 </small></address>
 </body>
