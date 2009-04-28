@@ -1,13 +1,11 @@
 /*
- * test.c
+ * test3.c
  *
  *  Created on: 2009-04-27
  *      Author: Jean-Lou Dupont
  *
  *
- *
- *  Simple Test
- *
+ *  Subscription / Unsubscription Test
  *
  */
 
@@ -17,6 +15,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <sys/types.h>
+#include <time.h>
 
 typedef struct {
 
@@ -28,20 +27,31 @@ typedef struct {
 pthread_t threads[LITM_CONNECTION_MAX];
 litm_connection *conns[LITM_CONNECTION_MAX];
 
+volatile int _exit_threads = 0;
+
+
 void printMessage(litm_code code, char *header, char *message, ...);
 void printMessage2(char *message, ...);
 void create_threads(void);
 void create_connections(void);
 void *threadFunction(void *params);
+int my_random(void);
+void void_cleaner(void *msg);
 
 
 int main(int argc, char **argv) {
 	printf("#main: BEGIN\n");
 
+	srand(time(NULL));
+
 	create_connections();
 	create_threads();
 
-	sleep(5);
+	sleep(7);
+	_exit_threads = 1;
+	sleep(7);
+	litm_shutdown();
+	sleep(2);
 
 	printf("#main: END\n");
 	return 0;
@@ -76,28 +86,10 @@ void create_connections(void) {
 
 		code = litm_connect( &conns[i] );
 
-		printMessage(code, "* CREATED CONNECTION, code[%s]...","id[%u]\n", i );
+		printMessage(code, "* CREATED CONNECTION, code[%s] ...","id[%u] conn[%x]\n", i, conns[i] );
 	}
 
 }
-
-void *threadFunction(void *params) {
-
-	thread_params *tp = (thread_params *) params;
-
-	int thread_id;
-	litm_connection *conn = NULL;
-	litm_code code;
-
-	thread_id = tp->thread_id;
-	conn      = tp->conn;
-
-	printMessage2("Thread [%u] started\n", thread_id);
-
-	sleep(5);
-
-	printMessage2("Thread [%u] ENDING\n", thread_id);
-}//
 
 void printMessage(litm_code code, char *header, char *message, ...) {
 
@@ -139,3 +131,65 @@ void printMessage2(char *message, ...) {
 
 	printf( buffer2 );
 }//
+
+
+	int
+my_random(void) {
+
+	double r;
+
+	r = ((double)rand()/(double)RAND_MAX);
+
+	return (int) r;
+}
+
+// ===================================================================
+// ===================================================================
+
+
+
+void *threadFunction(void *params) {
+
+	thread_params *tp = (thread_params *) params;
+
+	int thread_id;
+	litm_connection *conn = NULL;
+	litm_code code;
+
+	thread_id = tp->thread_id;
+	conn      = tp->conn;
+
+	printMessage2("Thread [%u] started, conn[%x]\n", thread_id, conn);
+
+	code = litm_subscribe(conn, 1);
+	printMessage(code, "* Subscribed, code[%s]...","thread_id[%u]\n", thread_id );
+
+	char *message = "Message!";
+	char *msg;
+	litm_envelope *e;
+
+	code = litm_send( conn, 1, message, &void_cleaner );
+	printMessage(code, "* Sent, code[%s]...","thread_id[%u]\n", thread_id );
+
+
+	while (1!=_exit_threads) {
+
+		code = litm_receive_nb(conn, &e);
+		if (LITM_CODE_OK==code) {
+			printf("* thread[%u] received message!", thread_id);
+			litm_release(conn, e);
+		}
+
+		sleep(0.01);
+	}//while
+
+	code = litm_unsubscribe(conn, 1);
+	printMessage(code, "* Unsubscribed, code[%s]...","thread_id[%u]\n", thread_id );
+
+
+	printMessage2("Thread [%u] ENDING\n", thread_id);
+}//
+
+void void_cleaner(void *msg) {
+
+}

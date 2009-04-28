@@ -18,7 +18,7 @@
  */
 queue *queue_create(void) {
 
-	DEBUG_LOG(LOG_INFO, "queue_create: BEGIN");
+	//DEBUG_LOG(LOG_INFO, "queue_create: BEGIN");
 
 	// if this malloc fails,
 	//  there are much bigger problems that loom
@@ -33,7 +33,7 @@ queue *queue_create(void) {
 		q->mutex = mutex;
 	}
 
-	DEBUG_LOG(LOG_INFO, "queue_create: END");
+	//DEBUG_LOG(LOG_INFO, "queue_create: END");
 	return q;
 }// init
 
@@ -63,7 +63,9 @@ int queue_put(queue *q, void *msg) {
 		// if this malloc fails,
 		//  there are much bigger problems that loom
 		tmp = (queue_node *) malloc(sizeof(queue_node));
-		if (NULL==tmp) {
+		if (NULL!=tmp) {
+
+			DEBUG_LOG(LOG_DEBUG, "queue_put: queue ptr[%x] msg ptr[%x]", q, msg);
 
 			tmp->msg = msg;
 
@@ -106,7 +108,7 @@ int queue_put_nb(queue *q, void *msg) {
 	queue_node *tmp=NULL;
 	int code = 0;
 
-	DEBUG_LOG(LOG_DEBUG,"queue_put_nb: BEGIN");
+	//DEBUG_LOG(LOG_DEBUG,"queue_put_nb: BEGIN");
 
 	code = pthread_mutex_trylock( q->mutex );
 	if (EBUSY)
@@ -133,17 +135,20 @@ int queue_put_nb(queue *q, void *msg) {
 				//was the queue empty?
 				if (NULL==q->head)
 					q->head=tmp;
+
+			// success
+			code = 1;
 			//}
 
 		} else {
-			code = 0;
+			code = 0; // ERROR
 		}
 
 	pthread_mutex_unlock( q->mutex );
 
 	DEBUG_LOG(LOG_DEBUG,"queue_put_nb: END");
 
-	return 1;
+	return code;
 }//[/queue_put]
 
 /**
