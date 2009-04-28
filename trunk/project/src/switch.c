@@ -129,7 +129,7 @@ __switch_thread_function(void *params) {
 			continue;
 		}
 
-		DEBUG_LOG(LOG_INFO, "__switch_thread_function: GOT ENVELOPE");
+		//DEBUG_LOG(LOG_INFO, "__switch_thread_function: GOT ENVELOPE");
 
 		// The envelope contains the sender's connection ptr
 		//  as well as the ``current`` connection ptr.
@@ -164,7 +164,7 @@ __switch_thread_function(void *params) {
 
 			case LITM_CODE_OK:
 				DEBUG_LOG(LOG_DEBUG,"__switch_thread_function: MESSAGE DELIVERED, conn[%x]", current);
-
+				break;
 			case LITM_CODE_BUSY_OUTPUT_QUEUE:
 				DEBUG_LOG(LOG_DEBUG,"__switch_thread_function: MESSAGE ON HOLD, conn[%x]", current);
 				break;
@@ -214,7 +214,11 @@ __switch_thread_function(void *params) {
 		code = __switch_try_sending_or_requeue( next, e );
 		switch(code) {
 		case LITM_CODE_OK:
+			DEBUG_LOG(LOG_DEBUG, "__switch_thread_function: ENVELOPE NORMAL... Sent OK: next[%x]", next);
+			break;
+
 		case LITM_CODE_BUSY_OUTPUT_QUEUE:
+			DEBUG_LOG(LOG_DEBUG, "__switch_thread_function: ENVELOPE NORMAL... Busy for: next[%x]", next);
 			break;
 
 		default:
@@ -423,6 +427,8 @@ __switch_finalize(litm_envelope *envlp) {
 	if (NULL==envlp) {
 		return LITM_CODE_ERROR_INVALID_ENVELOPE;
 	}
+
+	DEBUG_LOG(LOG_DEBUG, "__switch_finalize: envelope[%x]", envlp );
 
 	void (*cleaner)(void *msg) = envlp->cleaner;
 

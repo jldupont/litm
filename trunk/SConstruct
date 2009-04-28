@@ -25,7 +25,7 @@ env_release = Environment(CPPPATH='#project/includes')
 SConscript('project/src/SConscript', build_dir='release', exports={'env':env_release})
 
 
-env_debug   = Environment(CPPPATH='#project/includes', CPPFLAGS="-D_DEBUG")
+env_debug   = Environment(CPPPATH='#project/includes', CPPFLAGS="-D_DEBUG -g")
 SConscript('project/src/SConscript', build_dir='debug', exports={'env':env_debug})
 
 # INSTALLING on LOCAL MACHINE

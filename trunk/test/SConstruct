@@ -12,7 +12,7 @@ Help("""\
    'scons' to build the program,
 """)
 
-env = Environment()
+env = Environment(CPPFLAGS="-D_DEBUG -g")
 Program('test',  Glob("src/test.c"),  LIBS=['litm_debug', 'pthread'] )
        
 Program('test2', Glob("src/test2.c"), LIBS=['litm_debug', 'pthread'] )

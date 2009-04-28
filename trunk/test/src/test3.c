@@ -47,9 +47,14 @@ int main(int argc, char **argv) {
 	create_connections();
 	create_threads();
 
-	sleep(7);
+	sleep(15);
+
+	printf("*** ASKING FOR THREAD EXIT ***\n");
 	_exit_threads = 1;
-	sleep(7);
+
+	sleep(15);
+
+	printf("*** ASKING FOR LITM SHUTDOWN ***\n");
 	litm_shutdown();
 	sleep(2);
 
@@ -71,7 +76,7 @@ void create_threads(void) {
 
 		pthread_create( &threads[i], NULL, &threadFunction, (void *) &tp );
 
-		printMessage2("* Thread started: %u \n", i);
+		//printMessage2("* Thread started: %u \n", i);
 	}
 
 
@@ -169,18 +174,20 @@ void *threadFunction(void *params) {
 	litm_envelope *e;
 
 	code = litm_send( conn, 1, message, &void_cleaner );
-	printMessage(code, "* Sent, code[%s]...","thread_id[%u]\n", thread_id );
+	printMessage(code, "* Sent, code[%s]...","thread_id[%u] conn[%x]\n", thread_id, conn );
 
 
-	while (1!=_exit_threads) {
+	while (0==_exit_threads) {
 
 		code = litm_receive_nb(conn, &e);
 		if (LITM_CODE_OK==code) {
-			printf("* thread[%u] received message!", thread_id);
-			litm_release(conn, e);
+			msg = e->msg;
+			printf("* thread[%u] received message, msg[%x] \n", thread_id, msg);
+			litm_release(conn, &e);
 		}
 
-		sleep(0.01);
+		//sleep(0.01);
+		//printf("Thread[%u] loop restart", thread_id);
 	}//while
 
 	code = litm_unsubscribe(conn, 1);
