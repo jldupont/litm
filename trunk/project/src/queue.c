@@ -184,7 +184,7 @@ void *queue_get_nb(queue *q) {
 	queue_node *tmp = NULL;
 	void *msg=NULL;
 
-	DEBUG_LOG(LOG_DEBUG,"queue_get_nb: BEGIN");
+	//DEBUG_LOG(LOG_DEBUG,"queue_get_nb: BEGIN");
 
 	int code = pthread_mutex_trylock( q->mutex );
 	if (EBUSY==code) {

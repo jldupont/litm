@@ -26,7 +26,9 @@ char *LITM_CODE_MESSAGES[] = {
 		"LITM_CODE_ERROR_SWITCH_NEXT_NOT_FOUND",
 		"LITM_CODE_ERROR_OUTPUT_QUEUING",
 		"LITM_CODE_BUSY_OUTPUT_QUEUE",
-		"LITM_CODE_ERROR_INVALID_ENVELOPE"
+		"LITM_CODE_ERROR_INVALID_ENVELOPE",
+		"LITM_CODE_ERROR_SUBSCRIPTION_NOT_FOUND",
+		"LITM_CODE_ERROR_BUS_FULL"
 };
 
 	litm_code
@@ -109,6 +111,13 @@ litm_release(litm_connection *conn, litm_envelope *envlp) {
 }//
 
 
+	void
+litm_shutdown(void) {
+
+	switch_shutdown();
+
+}
+
 	void *
 litm_get_message(litm_envelope *envlp) {
 
@@ -122,7 +131,7 @@ litm_get_message(litm_envelope *envlp) {
 	char *
 litm_translate_code(litm_code code) {
 
-	if ((sizeof(litm_code)/sizeof(int)) <= code )
+	if ((sizeof(LITM_CODE_MESSAGES)/sizeof(char *)) <= code )
 		return NULL;
 
 	return LITM_CODE_MESSAGES[code];
