@@ -106,12 +106,11 @@ int queue_put(queue *q, void *msg) {
 int queue_put_nb(queue *q, void *msg) {
 
 	queue_node *tmp=NULL;
-	int code = 0;
 
 	//DEBUG_LOG(LOG_DEBUG,"queue_put_nb: BEGIN");
 
-	code = pthread_mutex_trylock( q->mutex );
-	if (EBUSY)
+	int code = pthread_mutex_trylock( q->mutex );
+	if (EBUSY==code)
 		return -1;
 
 		// if this malloc fails,
@@ -138,6 +137,7 @@ int queue_put_nb(queue *q, void *msg) {
 
 			// success
 			code = 1;
+			DEBUG_LOG(LOG_DEBUG,"queue_put_nb: QUEUED q[%x] msg[%x]", q, msg);
 			//}
 
 		} else {
@@ -145,8 +145,6 @@ int queue_put_nb(queue *q, void *msg) {
 		}
 
 	pthread_mutex_unlock( q->mutex );
-
-	DEBUG_LOG(LOG_DEBUG,"queue_put_nb: END");
 
 	return code;
 }//[/queue_put]
@@ -202,7 +200,7 @@ void *queue_get_nb(queue *q) {
 			q->head = q->head->next;
 			msg = tmp->msg;
 			free(tmp);
-			DEBUG_LOG(LOG_DEBUG,"queue_get_nb: MESSAGE PRESENT");
+			DEBUG_LOG(LOG_DEBUG,"queue_get_nb: MESSAGE PRESENT, q[%x]", q);
 		}
 
 	pthread_mutex_unlock( q->mutex );
