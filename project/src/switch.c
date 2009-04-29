@@ -53,7 +53,7 @@ litm_code __switch_try_sending_to_recipient(	litm_connection *recipient, litm_en
 litm_code __switch_finalize(litm_envelope *envlp);
 litm_code __switch_try_sending_or_requeue(litm_connection *conn, litm_envelope *envlp);
 void __switch_init_tables(void);
-
+void __switch_handle_pending(litm_envelope *e);
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -104,6 +104,7 @@ switch_shutdown(void) {
 	void *
 __switch_thread_function(void *params) {
 
+	char *err_msg;
 	int pending, action;
 	litm_code code;
 	litm_envelope *e;
@@ -147,36 +148,11 @@ __switch_thread_function(void *params) {
 		// message was processed and just sits pending
 
 		if (1==e->routes.pending) {
-			DEBUG_LOG(LOG_INFO, "__switch_thread_function: ENVELOPE PENDING");
 
-			current = e->routes.current;
-			code = __switch_try_sending_or_requeue( current, e );
+			__switch_handle_pending(e);
+			continue; // <===================================================
 
-			// if the message was sent or requeued,
-			//  we are ok but anything else means something
-			//  went wrong (duh!) and since we are the owner
-			//  of the envelope/message, we will "recover"
-			//  by getting rid of the envelope+message.
-			//  REASON:  the probable cause of errors
-			//           stems from connection changes
-			//           and this is not a normal usage pattern.
-			switch(code) {
-
-			case LITM_CODE_OK:
-				DEBUG_LOG(LOG_DEBUG,"__switch_thread_function: MESSAGE DELIVERED, conn[%x]", current);
-				break;
-			case LITM_CODE_BUSY_OUTPUT_QUEUE:
-				DEBUG_LOG(LOG_DEBUG,"__switch_thread_function: MESSAGE ON HOLD, conn[%x]", current);
-				break;
-
-			default:
-				// TODO log error?
-				DEBUG_LOG(LOG_DEBUG,"__switch_thread_function: MESSAGE ERROR, conn[%x]", current);
-				__switch_finalize(e);
-				break;
-			}//switch
-			continue;  // <====================================
-		}//if
+		}
 
 		// FROM THIS POINT, the envelope was pending
 		//  so we need to figured out where to send it next.
@@ -197,9 +173,16 @@ __switch_thread_function(void *params) {
 												current,
 												bus_id);
 
-		if (LITM_CODE_OK!=code) {
-			// TODO log error?
-			DEBUG_LOG(LOG_DEBUG, "__switch_thread_function: ENVELOPE NORMAL... error->finalize message");
+		switch(code) {
+		case LITM_CODE_OK:
+			break;
+
+		case LITM_CODE_BUSY:
+			continue;  // <=====================================
+
+		default:
+			err_msg = litm_translate_code(code);
+			DEBUG_LOG(LOG_DEBUG, "__switch_thread_function: ENVELOPE NORMAL... error[%s], finalize message", err_msg);
 			__switch_finalize(e);
 			continue; // <=======================================
 		}
@@ -223,7 +206,8 @@ __switch_thread_function(void *params) {
 
 		default:
 			// TODO log error?
-			DEBUG_LOG(LOG_DEBUG, "__switch_thread_function: send/requeue... error->finalize message");
+			err_msg = litm_translate_code(code);
+			DEBUG_LOG(LOG_DEBUG, "__switch_thread_function: send/requeue... error [%s],finalize message", err_msg);
 			__switch_finalize(e);
 			break;
 		}
@@ -236,6 +220,46 @@ __switch_thread_function(void *params) {
 	return NULL;
 }//END THREAD
 
+/**
+ * Handle ``pending`` requests to sent
+ */
+	void
+__switch_handle_pending(litm_envelope *e) {
+	DEBUG_LOG(LOG_INFO, "__switch_handle_pending: BEGIN");
+
+	litm_connection *conn;
+	litm_code code;
+
+	conn = e->routes.current;
+	code = __switch_try_sending_or_requeue( conn, e );
+
+	// if the message was sent or requeued,
+	//  we are ok but anything else means something
+	//  went wrong (duh!) and since we are the owner
+	//  of the envelope/message, we will "recover"
+	//  by getting rid of the envelope+message.
+	//  REASON:  the probable cause of errors
+	//           stems from connection changes
+	//           and this is not a normal usage pattern.
+	static char *thisMsg = "__switch_handle_pending: conn[%x] code[%s]";
+	char *translated_code = litm_translate_code(code);
+
+	switch(code) {
+
+	case LITM_CODE_OK:
+	case LITM_CODE_BUSY_OUTPUT_QUEUE:
+	case LITM_CODE_BUSY_CONNECTIONS:
+	case LITM_CODE_ERROR_BAD_CONNECTION:
+		DEBUG_LOG(LOG_DEBUG, thisMsg, conn, translated_code);
+		break;
+
+	default:
+		DEBUG_LOG(LOG_DEBUG, thisMsg, conn, translated_code);
+		__switch_finalize(e);
+		break;
+	}//switch
+
+}//
 
 /**
  * A client has finished processing a message: send it
@@ -283,27 +307,27 @@ __switch_try_sending_or_requeue(litm_connection *conn, litm_envelope *envlp) {
 	if (NULL==envlp)
 		return LITM_CODE_ERROR_INVALID_ENVELOPE;
 
-	int code = _litm_connections_trylock();
-	if (EBUSY==code)
-		return LITM_CODE_BUSY_OUTPUT_QUEUE;
+	//int code = _litm_connections_trylock();
+	//if (EBUSY==code)
+	//	return LITM_CODE_BUSY_CONNECTIONS;
 
-	code = _litm_connection_validate_safe(conn);
-	if (1!=code) {
-		_litm_connections_unlock();
-		return LITM_CODE_ERROR_BAD_CONNECTION;
-	}
+	//code = _litm_connection_validate_safe(conn);
+	//if (1!=code) {
+	//	_litm_connections_unlock();
+	//	return LITM_CODE_ERROR_BAD_CONNECTION;
+	//}
 
 	litm_code result = __switch_try_sending_to_recipient(conn, envlp);
 
 	if (LITM_CODE_BUSY_OUTPUT_QUEUE==result) {
 
-		DEBUG_LOG(LOG_DEBUG,"__switch_try_sending_or_requeue: PENDING for conn[%x]", conn);
+
 
 		(envlp->routes).pending = 1;
 		queue_put( _switch_queue, envlp );
 	}
 
-	_litm_connections_unlock();
+	//_litm_connections_unlock();
 
 	return result;
 }//
@@ -352,9 +376,9 @@ switch_add_subscriber(litm_connection *conn, litm_bus bus_id) {
 	if (EBUSY==code)
 		return LITM_CODE_BUSY;
 
-	code =_litm_connections_trylock();
-	if (EBUSY==code)
-		return LITM_CODE_BUSY;
+	//code =_litm_connections_trylock();
+	//if (EBUSY==code)
+	//	return LITM_CODE_BUSY;
 
 
 	int result=LITM_CODE_ERROR_BUS_FULL;
@@ -367,7 +391,8 @@ switch_add_subscriber(litm_connection *conn, litm_bus bus_id) {
 		}
 	}
 
-	_litm_connections_unlock();
+	//_litm_connections_unlock();
+
 	pthread_mutex_unlock( &_subscribers_mutex );
 
 	return result;
@@ -388,9 +413,9 @@ switch_remove_subscriber(litm_connection *conn, litm_bus bus_id) {
 	if (EBUSY==code)
 		return LITM_CODE_BUSY;
 
-	code =_litm_connections_trylock();
-	if (EBUSY==code)
-		return LITM_CODE_BUSY;
+	//code =_litm_connections_trylock();
+	//if (EBUSY==code)
+	//	return LITM_CODE_BUSY;
 
 
 	int result=LITM_CODE_ERROR_SUBSCRIPTION_NOT_FOUND;
@@ -403,7 +428,7 @@ switch_remove_subscriber(litm_connection *conn, litm_bus bus_id) {
 		}
 	}
 
-	_litm_connections_unlock();
+	//_litm_connections_unlock();
 	pthread_mutex_unlock( &_subscribers_mutex );
 
 	return result;
@@ -473,6 +498,8 @@ __switch_finalize(litm_envelope *envlp) {
 	void (*cleaner)(void *msg) = envlp->cleaner;
 
 	if (NULL==cleaner) {
+		DEBUG_LOG(LOG_DEBUG, "__switch_finalize: envelope[%x] freeing", envlp );
+
 		free( envlp->msg );
 	} else {
 		(*cleaner)( (void *) envlp->msg );
@@ -531,7 +558,7 @@ __switch_get_next_subscriber(	litm_connection **result,
 
 		//DEBUG_LOG(LOG_DEBUG, "__switch_get_next_subscriber: BEGIN");
 
-		_litm_connections_lock();
+		//_litm_connections_lock();
 
 			// FIND FIRST {{
 			if (NULL==current) {
@@ -589,7 +616,9 @@ __switch_get_next_subscriber(	litm_connection **result,
 
 				}//foundMatch
 			}//bailOut
-		_litm_connections_unlock();
+
+		//_litm_connections_unlock();
+
 	pthread_mutex_unlock( &_subscribers_mutex );
 
 	//DEBUG_LOG(LOG_DEBUG, "__switch_get_next_subscriber: END");

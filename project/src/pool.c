@@ -26,6 +26,7 @@
 	// ======= //
 	litm_envelope * _stack[LITM_POOL_SIZE];   //LIFO stack
 
+	int _stack_initialized = 0; //FALSE
 	int _top_stack = 0;
 	int _created   = 0;
 	int _recycled  = 0;
@@ -45,7 +46,8 @@ __litm_pool_recycle( litm_envelope *envlp ) {
 
 	} else {
 		DEBUG_LOG(LOG_DEBUG, "__litm_pool_recycle: recycling envelope [%x]", envlp );
-		_stack[_top_stack++] = envlp;
+		_top_stack ++;
+		_stack[_top_stack] = envlp;
 
 		// statistics
 		_recycled ++;
@@ -61,9 +63,20 @@ __litm_pool_recycle( litm_envelope *envlp ) {
 	litm_envelope *
 __litm_pool_get(void) {
 
+	pthread_mutex_lock( &_pool_mutex );
+
+
+	// first time around?
+	if (0==_stack_initialized) {
+		_stack_initialized = 1;
+
+		int i;
+		for(i=0;i<LITM_POOL_SIZE;i++)
+			_stack[i] = NULL;
+	}//==============================
+
 	litm_envelope *e;
 
-	pthread_mutex_lock( &_pool_mutex );
 
 	// do we have a spare?
 	e = _stack[ _top_stack ];
@@ -104,12 +117,13 @@ __litm_pool_get(void) {
 
 	void
 __litm_pool_destroy( litm_envelope *envlp ) {
-	DEBUG_LOG_PTR( envlp, LOG_ERR, "__litm_pool_destroy: NULL");
 
+	if (NULL==envlp) {
+		DEBUG_LOG( LOG_ERR, "__litm_pool_destroy: NULL envelope");
+		return;
+	}
 	DEBUG_LOG(LOG_DEBUG, "__litm_pool_destroy: envelope [%x]", envlp );
 
-	// First, destroy the message
-	//free( envlp-> msg );
 	free( envlp );
 
 }//
@@ -120,7 +134,7 @@ __litm_pool_destroy( litm_envelope *envlp ) {
 __litm_pool_clean( litm_envelope *envlp ) {
 	DEBUG_LOG_PTR( envlp, LOG_ERR, "__litm_pool_clean: NULL");
 
-	DEBUG_LOG(LOG_DEBUG, "__litm_pool_clean: envelope [%x]", envlp );
+	//DEBUG_LOG(LOG_DEBUG, "__litm_pool_clean: envelope [%x]", envlp );
 
 	(envlp->routes).bus_id  = 0;
 	(envlp->routes).current = NULL;

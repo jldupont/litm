@@ -28,7 +28,8 @@ char *LITM_CODE_MESSAGES[] = {
 		"LITM_CODE_BUSY_OUTPUT_QUEUE",
 		"LITM_CODE_ERROR_INVALID_ENVELOPE",
 		"LITM_CODE_ERROR_SUBSCRIPTION_NOT_FOUND",
-		"LITM_CODE_ERROR_BUS_FULL"
+		"LITM_CODE_ERROR_BUS_FULL",
+		"LITM_CODE_BUSY_CONNECTIONS"
 };
 
 	litm_code
@@ -89,16 +90,16 @@ litm_receive_nb(litm_connection *conn, litm_envelope **envlp) {
 	}
 	int returnCode = LITM_CODE_OK; //optimistic
 
-	int code = _litm_connections_trylock();
-	if (EBUSY==code)
-		return LITM_CODE_BUSY;
+	//int code = _litm_connections_trylock();
+	//if (EBUSY==code)
+	//	return LITM_CODE_BUSY;
 
 		*envlp = queue_get_nb( conn->input_queue );
 		if (NULL==*envlp) {
 			returnCode=LITM_CODE_NO_MESSAGE;
 		}
 
-	_litm_connections_unlock();
+	//_litm_connections_unlock();
 
 	return returnCode;
 }//
