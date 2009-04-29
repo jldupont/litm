@@ -17,8 +17,16 @@
 <div class="contents">
 <h1>project/src/connection.c File Reference</h1><hr><a name="_details"></a><h2>Detailed Description</h2>
 <dl class="date" compact><dt><b>Date:</b></dt><dd>2009-04-24 </dd></dl>
-<dl class="author" compact><dt><b>Author:</b></dt><dd>Jean-Lou Dupont </dd></dl>
-
+<dl class="author" compact><dt><b>Author:</b></dt><dd>Jean-Lou Dupont</dd></dl>
+<h2><a class="anchor" name="Overview">
+Overview</a></h2>
+This module implements the ``connection`` aspect:<p>
+<ul>
+<li>opening</li><li>closing</li></ul>
+<p>
+A limited number of connections are supported at any point in time. When a connection is closed, it is queued for later deletion: the connection can not be used for any access from this point onwards.<h2><a class="anchor" name="Deletion">
+Deletion</a></h2>
+Connection deletion is performed in the following manner: 
 <p>Definition in file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
 
 <p>
@@ -91,7 +99,7 @@ Include dependency graph for connection.c:</div>
 
 <p>
 Verifies if a `spot` is available in the connection map OR -1 if none. 
-<p>Definition at line <a class="el" href="connection_8c-source.html#l00142">142</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00161">161</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -131,7 +139,7 @@ Here is the caller graph for this function:</div>
 
 <p>
 
-<p>Definition at line <a class="el" href="connection_8c-source.html#l00120">120</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00139">139</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
 
 </div>
 </div><p>
@@ -153,7 +161,7 @@ Here is the caller graph for this function:</div>
 
 <p>
 
-<p>Definition at line <a class="el" href="connection_8c-source.html#l00111">111</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00130">130</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
 
 </div>
 </div><p>
@@ -175,7 +183,7 @@ Here is the caller graph for this function:</div>
 
 <p>
 Returns -1 when BUSY, 1 for OK, 0 for ERROR 
-<p>Definition at line <a class="el" href="connection_8c-source.html#l00179">179</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00198">198</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -206,7 +214,7 @@ Here is the call graph for this function:</div>
 
 <p>
 Should only be used when holding the lock on the _connections. 
-<p>Definition at line <a class="el" href="connection_8c-source.html#l00201">201</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00220">220</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
 
 </div>
 </div><p>
@@ -228,7 +236,7 @@ Should only be used when holding the lock on the _connections.
 
 <p>
 
-<p>Definition at line <a class="el" href="connection_8c-source.html#l00157">157</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00176">176</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
 
 </div>
 </div><p>
@@ -250,7 +258,7 @@ Should only be used when holding the lock on the _connections.
 
 <p>
 
-<p>Definition at line <a class="el" href="connection_8c-source.html#l00163">163</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00182">182</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -281,7 +289,7 @@ Here is the caller graph for this function:</div>
 
 <p>
 
-<p>Definition at line <a class="el" href="connection_8c-source.html#l00170">170</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00189">189</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -312,7 +320,7 @@ Here is the caller graph for this function:</div>
 
 <p>
 Closes an opened connection 
-<p>Definition at line <a class="el" href="connection_8c-source.html#l00086">86</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00105">105</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -352,7 +360,7 @@ Here is the caller graph for this function:</div>
 
 <p>
 Opens (creates) a new connection 
-<p>Definition at line <a class="el" href="connection_8c-source.html#l00040">40</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00059">59</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -388,7 +396,7 @@ Here is the caller graph for this function:</div>
 
 <p>
 
-<p>Definition at line <a class="el" href="connection_8c-source.html#l00027">27</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00043">43</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
 
 </div>
 </div><p>
@@ -405,7 +413,7 @@ Here is the caller graph for this function:</div>
 
 <p>
 
-<p>Definition at line <a class="el" href="connection_8c-source.html#l00026">26</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00042">42</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
 
 </div>
 </div><p>
@@ -422,7 +430,7 @@ Here is the caller graph for this function:</div>
 
 <p>
 
-<p>Definition at line <a class="el" href="connection_8c-source.html#l00032">32</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00048">48</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
 
 </div>
 </div><p>
@@ -439,12 +447,12 @@ Here is the caller graph for this function:</div>
 
 <p>
 
-<p>Definition at line <a class="el" href="connection_8c-source.html#l00031">31</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00047">47</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
 
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Wed Apr 29 11:23:05 2009 for LITM by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Wed Apr 29 11:37:42 2009 for LITM by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.6 </small></address>
 </body>

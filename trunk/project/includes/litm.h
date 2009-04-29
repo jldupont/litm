@@ -64,11 +64,21 @@
 		typedef int litm_bus;
 
 		/**
+		 * ``Connection Status`` type
+		 */
+		typedef enum _litm_connection_status_codes {
+			LITM_CONNECTION_STATUS_INVALID = 0,
+			LITM_CONNECTION_STATUS_ACTIVE,
+			LITM_CONNECTION_STATUS_PENDING_DELETION
+		} litm_connection_status;
+
+		/**
 		 * ``Connection`` type
 		 *
 		 * @param input_queue the connection's input queue
 		 */
 		typedef struct _litm_connection {
+			litm_connection_status status;
 			queue *input_queue;
 		} litm_connection;
 
@@ -113,6 +123,7 @@
 			LITM_CODE_ERROR_SUBSCRIPTION_NOT_FOUND,
 			LITM_CODE_ERROR_BUS_FULL,
 			LITM_CODE_BUSY_CONNECTIONS,
+			LITM_CODE_ERROR_CONNECTION_NOT_ACTIVE
 
 		} litm_code;
 

@@ -95,39 +95,51 @@ int queue_put(queue *q, void *node) {
 		return 0;
 	}
 
-	int code = 1;
-	queue_node *tmp=NULL;
-
 	pthread_mutex_lock( q->mutex );
 
-		// if this malloc fails,
-		//  there are much bigger problems that loom
-		tmp = (queue_node *) malloc(sizeof(queue_node));
-		if (NULL!=tmp) {
+		int code = queue_put_safe( q, node );
 
-			tmp->node = node;
-			tmp->next = NULL;
-
-			// there is a tail... put at the end
-			if (NULL!=q->tail)
-				(q->tail)->next=tmp;
-
-			// point tail to the new element
-			q->tail = tmp;
-
-			// adjust head
-			if (NULL==q->head)
-				q->head=tmp;
-
-		} else {
-			code = 0;
-		}
 	pthread_mutex_unlock( q->mutex );
 
 	//DEBUG_LOG(LOG_DEBUG,"queue_put: END");
 
 	return code;
 }//[/queue_put]
+
+
+	int
+queue_put_safe( queue *q, void *node ) {
+
+	int code = 1;
+	queue_node *tmp=NULL;
+
+	// if this malloc fails,
+	//  there are much bigger problems that loom
+	tmp = (queue_node *) malloc(sizeof(queue_node));
+	if (NULL!=tmp) {
+
+		tmp->node = node;
+		tmp->next = NULL;
+
+		// there is a tail... put at the end
+		if (NULL!=q->tail)
+			(q->tail)->next=tmp;
+
+		// point tail to the new element
+		q->tail = tmp;
+
+		// adjust head
+		if (NULL==q->head)
+			q->head=tmp;
+
+	} else {
+
+		code = 0;
+	}
+
+	return code;
+}//
+
 
 
 /**
@@ -148,41 +160,13 @@ int queue_put_nb(queue *q, void *node) {
 	if (EBUSY == pthread_mutex_trylock( q->mutex ))
 		return -1;
 
-		int returnCode = 1; //optimistic
-		queue_node *tmp=NULL;
-
-		// if this malloc fails,
-		//  there are much bigger problems that loom
-		tmp = (queue_node *) malloc(sizeof(queue_node));
-		if (NULL!=tmp) {
-
-			tmp->node = node;
-			tmp->next = NULL;
-
-				//insert pointer to element first
-				if (NULL!=q->tail)
-					(q->tail)->next=tmp;
-
-				// insert element
-				q->tail = tmp;
-
-				//was the queue empty?
-				if (NULL==q->head)
-					q->head=tmp;
-
-				// success
-				returnCode = 1;
-				//DEBUG_LOG(LOG_DEBUG,"queue_put_nb: QUEUED q[%x] node[%x] queue_node[%x]", q, node, tmp);
-			//}
-
-		} else {
-			returnCode = 0; // ERROR
-		}
+		returnCode = queue_put_safe( q, node );
 
 	pthread_mutex_unlock( q->mutex );
 
 	return returnCode;
 }//[/queue_put]
+
 
 /**
  * Retrieves the next node from a queue
