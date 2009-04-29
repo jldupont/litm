@@ -54,7 +54,7 @@
 		 */
 		typedef struct {
 			pthread_mutex_t *mutex;
-			queue_node *head, *tail;
+			struct _queue_node *head, *tail;
 		} queue;
 
 
@@ -136,6 +136,8 @@
 		 */
 		typedef struct _litm_envelope {
 
+			int released_count;
+			int delivery_count;
 			void (*cleaner)(void *msg);
 			__litm_routing routes;
 			void *msg;

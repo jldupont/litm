@@ -14,6 +14,7 @@
  *
  */
 
+#include <pthread.h>
 #include <string.h>
 #include <stdlib.h>
 
@@ -30,22 +31,27 @@
 	int _recycled  = 0;
 	int _returned  = 0;
 
+	pthread_mutex_t  _pool_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 	void
 __litm_pool_recycle( litm_envelope *envlp ) {
+
+	pthread_mutex_lock( &_pool_mutex );
 
 	//can we recycle this one?
 	if ( _top_stack + 1 == LITM_POOL_SIZE ) {
 		DEBUG_LOG(LOG_DEBUG, "__litm_pool_recycle: destroying envelope [%x]", envlp );
 		__litm_pool_destroy( envlp );
-		return;
+
+	} else {
+		DEBUG_LOG(LOG_DEBUG, "__litm_pool_recycle: recycling envelope [%x]", envlp );
+		_stack[_top_stack++] = envlp;
+
+		// statistics
+		_recycled ++;
 	}
 
-	DEBUG_LOG(LOG_DEBUG, "__litm_pool_recycle: recycling envelope [%x]", envlp );
-	_stack[_top_stack++] = envlp;
-
-	// statistics
-	_recycled ++;
+	pthread_mutex_unlock( &_pool_mutex );
 
 }//
 
@@ -56,6 +62,8 @@ __litm_pool_recycle( litm_envelope *envlp ) {
 __litm_pool_get(void) {
 
 	litm_envelope *e;
+
+	pthread_mutex_lock( &_pool_mutex );
 
 	// do we have a spare?
 	e = _stack[ _top_stack ];
@@ -77,7 +85,9 @@ __litm_pool_get(void) {
 		// prepare a new one
 		e = malloc(sizeof(litm_envelope));
 		if (NULL!=e) {
-			bzero(e, sizeof(litm_envelope));
+
+			// prepare the envelope
+			__litm_pool_clean( e );
 
 			// statistics...
 			_created ++ ;
@@ -87,6 +97,7 @@ __litm_pool_get(void) {
 
 	}
 
+	pthread_mutex_unlock( &_pool_mutex );
 	return e;
 }//
 
@@ -109,7 +120,16 @@ __litm_pool_destroy( litm_envelope *envlp ) {
 __litm_pool_clean( litm_envelope *envlp ) {
 	DEBUG_LOG_PTR( envlp, LOG_ERR, "__litm_pool_clean: NULL");
 
-	// clear routing information
-	bzero( (char *) &envlp->routes, sizeof(__litm_routing) );
+	DEBUG_LOG(LOG_DEBUG, "__litm_pool_clean: envelope [%x]", envlp );
 
+	(envlp->routes).bus_id  = 0;
+	(envlp->routes).current = NULL;
+	(envlp->routes).sender  = NULL;
+	(envlp->routes).pending = 0;
+
+	envlp->cleaner = NULL;
+	envlp->msg     = NULL;
+
+	envlp->delivery_count = 0;
+	envlp->released_count = 0;
 }//
