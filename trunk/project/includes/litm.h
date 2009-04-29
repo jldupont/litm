@@ -1,17 +1,19 @@
 /**
  * @file   litm.h
  *
+ * @version $version$
+ *
  * @date   2009-04-24
  * @author Jean-Lou Dupont
  *
- * @mainpage Welcome to the documentation for the library LITM
+ * @mainpage Welcome to the documentation for the library LITM -- $version$
  *
  *           The library serves as a <b>Lightweight Inter-Thread Messaging</b> under Linux/Unix.
  *
  * \section Dependencies
  *
  *			<b>Mandatory</b>
-
+ *
  *          - libpthread
  *
  *          <b>Optional</b>
@@ -41,6 +43,10 @@
  *				 		//something is wrong...
  *				 		break;
  *				}
+ *				// if everything is OK, create our worker thread
+ *				params->conn = conn; // pass along the LITM connection identifier
+ *				pthread_t thread;
+ *				pthread_create( &thread, NULL, &thread_fnction, (void *) &params );
  *
  *			\endcode
  *
@@ -58,15 +64,24 @@
  *			\subsection Example_Sending Sending a message on a _bus_
  *
  *				\code
+ *				// litm connection should be passed through the thread params
+ *				void *thread_function(void *params) {
+ *
  *					void *message; // whatever structure
  *					litm_code code = litm_send(conn, bus_id, message, NULL);
  *					 ... check return code ...
+ *
+ *					...
+ *
+ *				}//thread_function
  *				\endcode
  *
  *
  *			\subsection Example_Receiving Receiving a message
  *
  *				\code
+ *					... inside the thread_function ...
+ *
  *					litm_envelope *envelope;
  *					litm_code code = litm_receive_nb(conn, &envelope);
  *					 ... check return code ...

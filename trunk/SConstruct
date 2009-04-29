@@ -14,9 +14,9 @@ except:
 
 Help("""\
  Type:	
-   'scons' to build the library,
+   'scons' to build the libraries (release and debug),
    'scons deb' to build the .deb package
-   'scons debug' to build the debug library
+   'scons install' to install on local machine
 """)
 
 
@@ -27,6 +27,8 @@ SConscript('project/src/SConscript', build_dir='release', exports={'env':env_rel
 
 env_debug   = Environment(CPPPATH='#project/includes', CPPFLAGS="-D_DEBUG -g")
 SConscript('project/src/SConscript', build_dir='debug', exports={'env':env_debug})
+
+
 
 # INSTALLING on LOCAL MACHINE
 if 'install' in COMMAND_LINE_TARGETS:
@@ -63,3 +65,33 @@ if 'deb' in COMMAND_LINE_TARGETS:
 		print "*** ERROR [%s] ***" % e
 	
 env_release.Command("deb", "/tmp/litm", "dpkg-deb --build $SOURCE")
+
+def read_version():
+	file = open('./project/VERSION')
+	version = file.read()
+	file.close()
+	return version
+
+
+# RELEASING
+#
+#  The 'deb' command is assumed to have been performed.
+#  The 'deb' package is assumed to be sitting in /tmp as litm.deb 
+#
+# =========
+if 'release' in COMMAND_LINE_TARGETS:
+
+	# extract "version"
+	version = read_version()
+	print "scons: RELEASING version %s" % version
+	
+	name = "litm_%s-1_i386.deb" % version
+	path = "/tmp/%s" % name
+	print "scons: renaming debian package: %s" % name
+	shutil.copy('/tmp/litm.deb', path)
+
+	print "scons: copying to repo in /tags"
+	shutil.copy(path, "../tags")
+
+#dummy target
+env_release.Command("release", "./project/VERSION", "cp $SOURCE ../tags/VERSION")
