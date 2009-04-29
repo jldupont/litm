@@ -137,14 +137,13 @@ int queue_put_nb(queue *q, void *msg) {
 		DEBUG_LOG(LOG_DEBUG, "queue_put_nb: NULL queue/msg ptr");
 		return 0;
 	}
-
-	queue_node *tmp=NULL;
-
 	//DEBUG_LOG(LOG_DEBUG,"queue_put_nb: BEGIN");
 
-	int code = pthread_mutex_trylock( q->mutex );
-	if (EBUSY==code)
+	if (EBUSY == pthread_mutex_trylock( q->mutex ))
 		return -1;
+
+		int returnCode = 1; //optimistic
+		queue_node *tmp=NULL;
 
 		// if this malloc fails,
 		//  there are much bigger problems that loom
@@ -169,17 +168,17 @@ int queue_put_nb(queue *q, void *msg) {
 					q->head=tmp;
 
 			// success
-			code = 1;
+				returnCode = 1;
 			DEBUG_LOG(LOG_DEBUG,"queue_put_nb: QUEUED q[%x] msg[%x] queue_node[%x]", q, msg, tmp);
 			//}
 
 		} else {
-			code = 0; // ERROR
+			returnCode = 0; // ERROR
 		}
 
 	pthread_mutex_unlock( q->mutex );
 
-	return code;
+	return returnCode;
 }//[/queue_put]
 
 /**

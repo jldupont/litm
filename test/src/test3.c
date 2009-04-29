@@ -167,7 +167,7 @@ void *threadFunction(void *params) {
 	//printMessage2("Thread [%u] started, conn[%x]\n", thread_id, conn);
 
 	code = litm_subscribe(conn, 1);
-	printMessage(code, "* Subscribed, code[%s]...","thread_id[%u]\n", thread_id );
+	//printMessage(code, "* Subscribed, code[%s]...","thread_id[%u]\n", thread_id );
 
 	char *message = "Message!";
 	char *msg;
@@ -191,8 +191,10 @@ void *threadFunction(void *params) {
 			litm_release(conn, e);
 		}
 
-		sleep(0.1);
+
+		//sleep(0.1);
 		//printf("Thread[%u] loop restart", thread_id);
+
 	}//while
 
 	code = litm_unsubscribe(conn, 1);
