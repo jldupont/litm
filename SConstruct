@@ -5,6 +5,7 @@ scons build file
 """
 import os
 import shutil
+from string import Template
 try:
 	from pyjld.os import recursive_chmod, safe_copytree
 except:
@@ -40,6 +41,29 @@ if 'install' in COMMAND_LINE_TARGETS:
 env_release.Command("install", "./release/liblitm.a", "cp $SOURCE /usr/lib")
 
 
+def read_version():
+	file = open('./project/VERSION')
+	version = file.read()
+	file.close()
+	return version
+
+def generate_control(version):
+	"""
+	Reads in ./project/control
+		updates the $version$ and
+		places the result in ./packages/debian/DEBIAN/control
+	"""
+	file_src=open("./project/control")
+	content = file_src.read()
+	file_src.close()
+	updated=Template(content)
+	c=updated.substitute(version=version)
+	
+	file_target=open("./packages/debian/DEBIAN/control","w")
+	file_target.write(c)
+	file_target.close()
+
+
 # BUILDING .deb PACKAGE
 # =====================
 if 'deb' in COMMAND_LINE_TARGETS:
@@ -54,24 +78,24 @@ if 'deb' in COMMAND_LINE_TARGETS:
 		
 		print """scons: removing /tmp/litm"""
 		shutil.rmtree('/tmp/litm', ignore_errors=True)
+
+		version = read_version()
+		print """scons: updating debian 'control' with version[%s]""" % version
+		generate_control(version)
 		
 		print """scons: cloning ./packages/debian to /tmp/litm"""
 		safe_copytree('./packages/debian', '/tmp/litm', skip_dirs=['.svn',], dir_mode=0775, make_dirs=True)
 		
 		print """scons: adjusting permissions for `dkpg-deb`"""
 		recursive_chmod("/tmp/litm", mode=0775)
-		
+
+
 	except Exception,e:
 		print "*** ERROR [%s] ***" % e
 	
 env_release.Command("deb", "/tmp/litm", "dpkg-deb --build $SOURCE")
 
-def read_version():
-	file = open('./project/VERSION')
-	version = file.read()
-	file.close()
-	return version
-
+	
 
 # RELEASING
 #
