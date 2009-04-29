@@ -49,120 +49,121 @@
 <a name="l00034"></a>00034                 <span class="stringliteral">"LITM_CODE_ERROR_INVALID_ENVELOPE"</span>,
 <a name="l00035"></a>00035                 <span class="stringliteral">"LITM_CODE_ERROR_SUBSCRIPTION_NOT_FOUND"</span>,
 <a name="l00036"></a>00036                 <span class="stringliteral">"LITM_CODE_ERROR_BUS_FULL"</span>,
-<a name="l00037"></a>00037                 <span class="stringliteral">"LITM_CODE_BUSY_CONNECTIONS"</span>
-<a name="l00038"></a>00038 };
-<a name="l00039"></a>00039 
-<a name="l00040"></a>00040         <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a>
-<a name="l00041"></a><a class="code" href="litm_8h.html#bc852d2eb14353e36adf21c33eab03a3">00041</a> <a class="code" href="litm_8c.html#bc852d2eb14353e36adf21c33eab03a3">litm_connect</a>(<a class="code" href="struct__litm__connection.html">litm_connection</a> **conn) {
-<a name="l00042"></a>00042 
-<a name="l00043"></a>00043         <a class="code" href="switch_8c.html#cf83bfcffad6990c781b1a668ec8209e">switch_init</a>();
-<a name="l00044"></a>00044 
-<a name="l00045"></a>00045         <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a> code = <a class="code" href="connection_8c.html#1c62b68cf084828184eed29d17c6498c">litm_connection_open</a>(conn);
-<a name="l00046"></a>00046         <span class="keywordflow">if</span> (<a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622930b651a4f84388b526d32980e3b43c4a2">LITM_CODE_OK</a>!=code) {
-<a name="l00047"></a>00047                 *conn = NULL;
-<a name="l00048"></a>00048                 <span class="keywordflow">return</span> code;
-<a name="l00049"></a>00049         }
-<a name="l00050"></a>00050 
-<a name="l00051"></a>00051         <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622930b651a4f84388b526d32980e3b43c4a2">LITM_CODE_OK</a>;
-<a name="l00052"></a>00052 
-<a name="l00053"></a>00053 }<span class="comment">//</span>
-<a name="l00054"></a>00054 
+<a name="l00037"></a>00037                 <span class="stringliteral">"LITM_CODE_BUSY_CONNECTIONS"</span>,
+<a name="l00038"></a>00038                 <span class="stringliteral">"LITM_CODE_ERROR_CONNECTION_NOT_ACTIVE"</span>
+<a name="l00039"></a>00039 };
+<a name="l00040"></a>00040 
+<a name="l00041"></a>00041         <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a>
+<a name="l00042"></a><a class="code" href="litm_8h.html#bc852d2eb14353e36adf21c33eab03a3">00042</a> <a class="code" href="litm_8c.html#bc852d2eb14353e36adf21c33eab03a3">litm_connect</a>(<a class="code" href="struct__litm__connection.html">litm_connection</a> **conn) {
+<a name="l00043"></a>00043 
+<a name="l00044"></a>00044         <a class="code" href="switch_8c.html#cf83bfcffad6990c781b1a668ec8209e">switch_init</a>();
+<a name="l00045"></a>00045 
+<a name="l00046"></a>00046         <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a> code = <a class="code" href="connection_8c.html#1c62b68cf084828184eed29d17c6498c">litm_connection_open</a>(conn);
+<a name="l00047"></a>00047         <span class="keywordflow">if</span> (<a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622930b651a4f84388b526d32980e3b43c4a2">LITM_CODE_OK</a>!=code) {
+<a name="l00048"></a>00048                 *conn = NULL;
+<a name="l00049"></a>00049                 <span class="keywordflow">return</span> code;
+<a name="l00050"></a>00050         }
+<a name="l00051"></a>00051 
+<a name="l00052"></a>00052         <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622930b651a4f84388b526d32980e3b43c4a2">LITM_CODE_OK</a>;
+<a name="l00053"></a>00053 
+<a name="l00054"></a>00054 }<span class="comment">//</span>
 <a name="l00055"></a>00055 
-<a name="l00056"></a>00056         <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a>
-<a name="l00057"></a><a class="code" href="litm_8h.html#11d169394b16263d121989e5ac965606">00057</a> <a class="code" href="litm_8c.html#11d169394b16263d121989e5ac965606">litm_disconnect</a>(<a class="code" href="struct__litm__connection.html">litm_connection</a> *conn) {
-<a name="l00058"></a>00058 
-<a name="l00059"></a>00059         <span class="keywordflow">return</span> <a class="code" href="connection_8c.html#8e4dadbbe89d174acfa60f3f44b66c00">litm_connection_close</a>(conn);
-<a name="l00060"></a>00060 }<span class="comment">//</span>
-<a name="l00061"></a>00061 
+<a name="l00056"></a>00056 
+<a name="l00057"></a>00057         <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a>
+<a name="l00058"></a><a class="code" href="litm_8h.html#11d169394b16263d121989e5ac965606">00058</a> <a class="code" href="litm_8c.html#11d169394b16263d121989e5ac965606">litm_disconnect</a>(<a class="code" href="struct__litm__connection.html">litm_connection</a> *conn) {
+<a name="l00059"></a>00059 
+<a name="l00060"></a>00060         <span class="keywordflow">return</span> <a class="code" href="connection_8c.html#8e4dadbbe89d174acfa60f3f44b66c00">litm_connection_close</a>(conn);
+<a name="l00061"></a>00061 }<span class="comment">//</span>
 <a name="l00062"></a>00062 
-<a name="l00063"></a>00063         <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a>
-<a name="l00064"></a><a class="code" href="litm_8h.html#1c8191e4aca778b346954933c7bdf3ff">00064</a> <a class="code" href="litm_8c.html#1c8191e4aca778b346954933c7bdf3ff">litm_subscribe</a>(<a class="code" href="struct__litm__connection.html">litm_connection</a> *conn, <a class="code" href="litm_8h.html#e7fcc1b5cd037f318d4fe40a2f9d30d3">litm_bus</a> bus_id) {
-<a name="l00065"></a>00065 
-<a name="l00066"></a>00066         <span class="keywordflow">return</span> <a class="code" href="switch_8c.html#c5408c5b37244e5d0fe17f55f1c3f89e">switch_add_subscriber</a>( conn, bus_id );
-<a name="l00067"></a>00067 }<span class="comment">//</span>
-<a name="l00068"></a>00068 
+<a name="l00063"></a>00063 
+<a name="l00064"></a>00064         <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a>
+<a name="l00065"></a><a class="code" href="litm_8h.html#1c8191e4aca778b346954933c7bdf3ff">00065</a> <a class="code" href="litm_8c.html#1c8191e4aca778b346954933c7bdf3ff">litm_subscribe</a>(<a class="code" href="struct__litm__connection.html">litm_connection</a> *conn, <a class="code" href="litm_8h.html#e7fcc1b5cd037f318d4fe40a2f9d30d3">litm_bus</a> bus_id) {
+<a name="l00066"></a>00066 
+<a name="l00067"></a>00067         <span class="keywordflow">return</span> <a class="code" href="switch_8c.html#c5408c5b37244e5d0fe17f55f1c3f89e">switch_add_subscriber</a>( conn, bus_id );
+<a name="l00068"></a>00068 }<span class="comment">//</span>
 <a name="l00069"></a>00069 
-<a name="l00070"></a>00070         <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a>
-<a name="l00071"></a><a class="code" href="litm_8h.html#50225024a2292b63a5eb95cca00f2545">00071</a> <a class="code" href="litm_8c.html#50225024a2292b63a5eb95cca00f2545">litm_unsubscribe</a>(<a class="code" href="struct__litm__connection.html">litm_connection</a> *conn, <a class="code" href="litm_8h.html#e7fcc1b5cd037f318d4fe40a2f9d30d3">litm_bus</a> bus_id) {
-<a name="l00072"></a>00072 
-<a name="l00073"></a>00073         <span class="keywordflow">return</span> <a class="code" href="switch_8c.html#a12d12ec55e370e7b2d960a67ab19078">switch_remove_subscriber</a>( conn, bus_id );
-<a name="l00074"></a>00074 }<span class="comment">//</span>
-<a name="l00075"></a>00075 
-<a name="l00076"></a>00076         <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a>
-<a name="l00077"></a><a class="code" href="litm_8h.html#bed13398c1bc31a6c81c3e50997e2f2c">00077</a> <a class="code" href="litm_8c.html#bed13398c1bc31a6c81c3e50997e2f2c">litm_send</a>(      <a class="code" href="struct__litm__connection.html">litm_connection</a> *conn,
-<a name="l00078"></a>00078                         <a class="code" href="litm_8h.html#e7fcc1b5cd037f318d4fe40a2f9d30d3">litm_bus</a> bus_id,
-<a name="l00079"></a>00079                         <span class="keywordtype">void</span> *msg,
-<a name="l00080"></a>00080                         <span class="keywordtype">void</span> (*cleaner)(<span class="keywordtype">void</span> *msg) ) {
-<a name="l00081"></a>00081 
-<a name="l00082"></a>00082         <span class="keywordflow">return</span> <a class="code" href="switch_8c.html#7ff2d602f713f81e854c172e842afcad">switch_send</a>(conn, bus_id, msg, cleaner);
-<a name="l00083"></a>00083 }<span class="comment">//</span>
-<a name="l00084"></a>00084 
+<a name="l00070"></a>00070 
+<a name="l00071"></a>00071         <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a>
+<a name="l00072"></a><a class="code" href="litm_8h.html#50225024a2292b63a5eb95cca00f2545">00072</a> <a class="code" href="litm_8c.html#50225024a2292b63a5eb95cca00f2545">litm_unsubscribe</a>(<a class="code" href="struct__litm__connection.html">litm_connection</a> *conn, <a class="code" href="litm_8h.html#e7fcc1b5cd037f318d4fe40a2f9d30d3">litm_bus</a> bus_id) {
+<a name="l00073"></a>00073 
+<a name="l00074"></a>00074         <span class="keywordflow">return</span> <a class="code" href="switch_8c.html#a12d12ec55e370e7b2d960a67ab19078">switch_remove_subscriber</a>( conn, bus_id );
+<a name="l00075"></a>00075 }<span class="comment">//</span>
+<a name="l00076"></a>00076 
+<a name="l00077"></a>00077         <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a>
+<a name="l00078"></a><a class="code" href="litm_8h.html#bed13398c1bc31a6c81c3e50997e2f2c">00078</a> <a class="code" href="litm_8c.html#bed13398c1bc31a6c81c3e50997e2f2c">litm_send</a>(      <a class="code" href="struct__litm__connection.html">litm_connection</a> *conn,
+<a name="l00079"></a>00079                         <a class="code" href="litm_8h.html#e7fcc1b5cd037f318d4fe40a2f9d30d3">litm_bus</a> bus_id,
+<a name="l00080"></a>00080                         <span class="keywordtype">void</span> *msg,
+<a name="l00081"></a>00081                         <span class="keywordtype">void</span> (*cleaner)(<span class="keywordtype">void</span> *msg) ) {
+<a name="l00082"></a>00082 
+<a name="l00083"></a>00083         <span class="keywordflow">return</span> <a class="code" href="switch_8c.html#7ff2d602f713f81e854c172e842afcad">switch_send</a>(conn, bus_id, msg, cleaner);
+<a name="l00084"></a>00084 }<span class="comment">//</span>
 <a name="l00085"></a>00085 
-<a name="l00086"></a>00086         <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a>
-<a name="l00087"></a><a class="code" href="litm_8h.html#2b6bffa08706c97ea5d9f6d670f8b359">00087</a> <a class="code" href="litm_8c.html#2b6bffa08706c97ea5d9f6d670f8b359">litm_receive_nb</a>(<a class="code" href="struct__litm__connection.html">litm_connection</a> *conn, <a class="code" href="struct__litm__envelope.html">litm_envelope</a> **envlp) {
-<a name="l00088"></a>00088 
-<a name="l00089"></a>00089         <span class="keywordflow">if</span> (NULL==conn) {
-<a name="l00090"></a>00090                 <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293030ffb6b9de7d729330056b0c40eeaa4">LITM_CODE_ERROR_BAD_CONNECTION</a>;
-<a name="l00091"></a>00091         }
-<a name="l00092"></a>00092         <span class="keywordtype">int</span> returnCode = <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622930b651a4f84388b526d32980e3b43c4a2">LITM_CODE_OK</a>; <span class="comment">//optimistic</span>
-<a name="l00093"></a>00093 
-<a name="l00094"></a>00094         <span class="comment">//int code = _litm_connections_trylock();</span>
-<a name="l00095"></a>00095         <span class="comment">//if (EBUSY==code)</span>
-<a name="l00096"></a>00096         <span class="comment">//      return LITM_CODE_BUSY;</span>
-<a name="l00097"></a>00097 
-<a name="l00098"></a>00098                 *envlp = <a class="code" href="queue_8c.html#819eed56d043a96499116f087d928057">queue_get_nb</a>( conn-&gt;<a class="code" href="struct__litm__connection.html#92412056140d8e635b20b0681fa32c9a">input_queue</a> );
-<a name="l00099"></a>00099                 <span class="keywordflow">if</span> (NULL==*envlp) {
-<a name="l00100"></a>00100                         returnCode=<a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293c4db0bf4a6b68b3ae976c9cbe323da3e">LITM_CODE_NO_MESSAGE</a>;
-<a name="l00101"></a>00101                 }
-<a name="l00102"></a>00102 
-<a name="l00103"></a>00103         <span class="comment">//_litm_connections_unlock();</span>
-<a name="l00104"></a>00104 
-<a name="l00105"></a>00105         <span class="keywordflow">return</span> returnCode;
-<a name="l00106"></a>00106 }<span class="comment">//</span>
-<a name="l00107"></a>00107 
-<a name="l00108"></a>00108 <span class="comment"></span>
-<a name="l00109"></a>00109 <span class="comment">/**</span>
-<a name="l00110"></a>00110 <span class="comment"> * Release a message to LITM</span>
-<a name="l00111"></a>00111 <span class="comment"> *</span>
-<a name="l00112"></a>00112 <span class="comment"> * This function should *ONLY* be used by client's</span>
-<a name="l00113"></a>00113 <span class="comment"> *  as a result of finishing the processing of an</span>
-<a name="l00114"></a>00114 <span class="comment"> *  envelope/message retrieved through ``litm_receive_nb''.</span>
-<a name="l00115"></a>00115 <span class="comment"> *</span>
-<a name="l00116"></a>00116 <span class="comment"> */</span>
-<a name="l00117"></a>00117         <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a>
-<a name="l00118"></a><a class="code" href="litm_8h.html#21def412c9b064fc929e0822f28d2a2a">00118</a> <a class="code" href="litm_8c.html#21def412c9b064fc929e0822f28d2a2a">litm_release</a>(<a class="code" href="struct__litm__connection.html">litm_connection</a> *conn, <a class="code" href="struct__litm__envelope.html">litm_envelope</a> *envlp) {
-<a name="l00119"></a>00119 
-<a name="l00120"></a>00120         <span class="keywordflow">return</span> <a class="code" href="switch_8c.html#2bab91639e612d51d0d7d8a3a64d0ace">switch_release</a>( conn, envlp );
-<a name="l00121"></a>00121 }<span class="comment">//</span>
-<a name="l00122"></a>00122 
+<a name="l00086"></a>00086 
+<a name="l00087"></a>00087         <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a>
+<a name="l00088"></a><a class="code" href="litm_8h.html#2b6bffa08706c97ea5d9f6d670f8b359">00088</a> <a class="code" href="litm_8c.html#2b6bffa08706c97ea5d9f6d670f8b359">litm_receive_nb</a>(<a class="code" href="struct__litm__connection.html">litm_connection</a> *conn, <a class="code" href="struct__litm__envelope.html">litm_envelope</a> **envlp) {
+<a name="l00089"></a>00089 
+<a name="l00090"></a>00090         <span class="keywordflow">if</span> (NULL==conn) {
+<a name="l00091"></a>00091                 <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293030ffb6b9de7d729330056b0c40eeaa4">LITM_CODE_ERROR_BAD_CONNECTION</a>;
+<a name="l00092"></a>00092         }
+<a name="l00093"></a>00093         <span class="keywordtype">int</span> returnCode = <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622930b651a4f84388b526d32980e3b43c4a2">LITM_CODE_OK</a>; <span class="comment">//optimistic</span>
+<a name="l00094"></a>00094 
+<a name="l00095"></a>00095         <span class="comment">//int code = _litm_connections_trylock();</span>
+<a name="l00096"></a>00096         <span class="comment">//if (EBUSY==code)</span>
+<a name="l00097"></a>00097         <span class="comment">//      return LITM_CODE_BUSY;</span>
+<a name="l00098"></a>00098 
+<a name="l00099"></a>00099                 *envlp = <a class="code" href="queue_8c.html#819eed56d043a96499116f087d928057">queue_get_nb</a>( conn-&gt;<a class="code" href="struct__litm__connection.html#92412056140d8e635b20b0681fa32c9a">input_queue</a> );
+<a name="l00100"></a>00100                 <span class="keywordflow">if</span> (NULL==*envlp) {
+<a name="l00101"></a>00101                         returnCode=<a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293c4db0bf4a6b68b3ae976c9cbe323da3e">LITM_CODE_NO_MESSAGE</a>;
+<a name="l00102"></a>00102                 }
+<a name="l00103"></a>00103 
+<a name="l00104"></a>00104         <span class="comment">//_litm_connections_unlock();</span>
+<a name="l00105"></a>00105 
+<a name="l00106"></a>00106         <span class="keywordflow">return</span> returnCode;
+<a name="l00107"></a>00107 }<span class="comment">//</span>
+<a name="l00108"></a>00108 
+<a name="l00109"></a>00109 <span class="comment"></span>
+<a name="l00110"></a>00110 <span class="comment">/**</span>
+<a name="l00111"></a>00111 <span class="comment"> * Release a message to LITM</span>
+<a name="l00112"></a>00112 <span class="comment"> *</span>
+<a name="l00113"></a>00113 <span class="comment"> * This function should *ONLY* be used by client's</span>
+<a name="l00114"></a>00114 <span class="comment"> *  as a result of finishing the processing of an</span>
+<a name="l00115"></a>00115 <span class="comment"> *  envelope/message retrieved through ``litm_receive_nb''.</span>
+<a name="l00116"></a>00116 <span class="comment"> *</span>
+<a name="l00117"></a>00117 <span class="comment"> */</span>
+<a name="l00118"></a>00118         <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a>
+<a name="l00119"></a><a class="code" href="litm_8h.html#21def412c9b064fc929e0822f28d2a2a">00119</a> <a class="code" href="litm_8c.html#21def412c9b064fc929e0822f28d2a2a">litm_release</a>(<a class="code" href="struct__litm__connection.html">litm_connection</a> *conn, <a class="code" href="struct__litm__envelope.html">litm_envelope</a> *envlp) {
+<a name="l00120"></a>00120 
+<a name="l00121"></a>00121         <span class="keywordflow">return</span> <a class="code" href="switch_8c.html#2bab91639e612d51d0d7d8a3a64d0ace">switch_release</a>( conn, envlp );
+<a name="l00122"></a>00122 }<span class="comment">//</span>
 <a name="l00123"></a>00123 
-<a name="l00124"></a>00124         <span class="keywordtype">void</span>
-<a name="l00125"></a><a class="code" href="litm_8h.html#4a5e0afddfcac684951623218de962b9">00125</a> <a class="code" href="litm_8c.html#4a5e0afddfcac684951623218de962b9">litm_shutdown</a>(<span class="keywordtype">void</span>) {
-<a name="l00126"></a>00126 
-<a name="l00127"></a>00127         <a class="code" href="switch_8c.html#fae3098df985d2dfb04f4fa646b0e771">switch_shutdown</a>();
-<a name="l00128"></a>00128 
-<a name="l00129"></a>00129 }
-<a name="l00130"></a>00130 
-<a name="l00131"></a>00131         <span class="keywordtype">void</span> *
-<a name="l00132"></a><a class="code" href="litm_8h.html#aeb4655eae7753e131a710ff5a64b9f7">00132</a> <a class="code" href="litm_8c.html#aeb4655eae7753e131a710ff5a64b9f7">litm_get_message</a>(<a class="code" href="struct__litm__envelope.html">litm_envelope</a> *envlp) {
-<a name="l00133"></a>00133 
-<a name="l00134"></a>00134         <span class="keywordflow">if</span> (NULL==envlp) {
-<a name="l00135"></a>00135                 <span class="keywordflow">return</span> NULL;
-<a name="l00136"></a>00136         }
-<a name="l00137"></a>00137 
-<a name="l00138"></a>00138         <span class="keywordflow">return</span> envlp-&gt;<a class="code" href="struct__litm__envelope.html#5ed18526b98cb26460fdb273ea2178ac">msg</a>;
-<a name="l00139"></a>00139 }<span class="comment">//</span>
-<a name="l00140"></a>00140 
-<a name="l00141"></a>00141         <span class="keywordtype">char</span> *
-<a name="l00142"></a><a class="code" href="litm_8h.html#76f700b9bb8531fd8baf8931e67c4604">00142</a> <a class="code" href="litm_8c.html#76f700b9bb8531fd8baf8931e67c4604">litm_translate_code</a>(<a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a> code) {
-<a name="l00143"></a>00143 
-<a name="l00144"></a>00144         <span class="keywordflow">if</span> ((<span class="keyword">sizeof</span>(<a class="code" href="litm_8c.html#9ee7e0b55262f024b08cdf1f5d446dfb">LITM_CODE_MESSAGES</a>)/<span class="keyword">sizeof</span>(<span class="keywordtype">char</span> *)) &lt;= code )
-<a name="l00145"></a>00145                 <span class="keywordflow">return</span> NULL;
-<a name="l00146"></a>00146 
-<a name="l00147"></a>00147         <span class="keywordflow">return</span> <a class="code" href="litm_8c.html#9ee7e0b55262f024b08cdf1f5d446dfb">LITM_CODE_MESSAGES</a>[code];
-<a name="l00148"></a>00148 }<span class="comment">//</span>
+<a name="l00124"></a>00124 
+<a name="l00125"></a>00125         <span class="keywordtype">void</span>
+<a name="l00126"></a><a class="code" href="litm_8h.html#4a5e0afddfcac684951623218de962b9">00126</a> <a class="code" href="litm_8c.html#4a5e0afddfcac684951623218de962b9">litm_shutdown</a>(<span class="keywordtype">void</span>) {
+<a name="l00127"></a>00127 
+<a name="l00128"></a>00128         <a class="code" href="switch_8c.html#fae3098df985d2dfb04f4fa646b0e771">switch_shutdown</a>();
+<a name="l00129"></a>00129 
+<a name="l00130"></a>00130 }
+<a name="l00131"></a>00131 
+<a name="l00132"></a>00132         <span class="keywordtype">void</span> *
+<a name="l00133"></a><a class="code" href="litm_8h.html#aeb4655eae7753e131a710ff5a64b9f7">00133</a> <a class="code" href="litm_8c.html#aeb4655eae7753e131a710ff5a64b9f7">litm_get_message</a>(<a class="code" href="struct__litm__envelope.html">litm_envelope</a> *envlp) {
+<a name="l00134"></a>00134 
+<a name="l00135"></a>00135         <span class="keywordflow">if</span> (NULL==envlp) {
+<a name="l00136"></a>00136                 <span class="keywordflow">return</span> NULL;
+<a name="l00137"></a>00137         }
+<a name="l00138"></a>00138 
+<a name="l00139"></a>00139         <span class="keywordflow">return</span> envlp-&gt;<a class="code" href="struct__litm__envelope.html#5ed18526b98cb26460fdb273ea2178ac">msg</a>;
+<a name="l00140"></a>00140 }<span class="comment">//</span>
+<a name="l00141"></a>00141 
+<a name="l00142"></a>00142         <span class="keywordtype">char</span> *
+<a name="l00143"></a><a class="code" href="litm_8h.html#76f700b9bb8531fd8baf8931e67c4604">00143</a> <a class="code" href="litm_8c.html#76f700b9bb8531fd8baf8931e67c4604">litm_translate_code</a>(<a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a> code) {
+<a name="l00144"></a>00144 
+<a name="l00145"></a>00145         <span class="keywordflow">if</span> ((<span class="keyword">sizeof</span>(<a class="code" href="litm_8c.html#9ee7e0b55262f024b08cdf1f5d446dfb">LITM_CODE_MESSAGES</a>)/<span class="keyword">sizeof</span>(<span class="keywordtype">char</span> *)) &lt;= code )
+<a name="l00146"></a>00146                 <span class="keywordflow">return</span> NULL;
+<a name="l00147"></a>00147 
+<a name="l00148"></a>00148         <span class="keywordflow">return</span> <a class="code" href="litm_8c.html#9ee7e0b55262f024b08cdf1f5d446dfb">LITM_CODE_MESSAGES</a>[code];
+<a name="l00149"></a>00149 }<span class="comment">//</span>
 </pre></div></div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Wed Apr 29 11:37:41 2009 for LITM by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Wed Apr 29 13:18:18 2009 for LITM by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.6 </small></address>
 </body>

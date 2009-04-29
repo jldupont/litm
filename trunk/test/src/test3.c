@@ -47,7 +47,7 @@ int main(int argc, char **argv) {
 	create_connections();
 	create_threads();
 
-	sleep(15);
+	sleep(20);
 
 	printf("*** ASKING FOR THREAD EXIT ***\n");
 	_exit_threads = 1;
@@ -160,6 +160,7 @@ void *threadFunction(void *params) {
 	int thread_id, delivery=0, released=0;
 	litm_connection *conn = NULL;
 	litm_code code;
+	int subscribed = 0;
 
 	thread_id = tp->thread_id;
 	conn      = tp->conn;
@@ -167,7 +168,9 @@ void *threadFunction(void *params) {
 	//printMessage2("Thread [%u] started, conn[%x]\n", thread_id, conn);
 
 	code = litm_subscribe(conn, 1);
-	//printMessage(code, "* Subscribed, code[%s]...","thread_id[%u]\n", thread_id );
+	printMessage(code, "* Subscribed, code[%s]...","thread_id[%u]\n", thread_id );
+	if (LITM_CODE_OK==code)
+		subscribed = 1;
 
 	char message[255];
 	sprintf( message, "message from [%u]", thread_id );
@@ -180,6 +183,7 @@ void *threadFunction(void *params) {
 		printMessage(code, "* Sent, code[%s]...","msg[%x] thread_id[%u] conn[%x]\n", message, thread_id, conn );
 		if (LITM_CODE_OK==code)
 			break;
+		sleep(1);
 	}
 
 	while (0==_exit_threads) {
@@ -199,8 +203,12 @@ void *threadFunction(void *params) {
 
 	}//while
 
-	code = litm_unsubscribe(conn, 1);
-	printMessage(code, "* Unsubscribed, code[%s]...","thread_id[%u]\n", thread_id );
+	if (1==subscribed) {
+		code = litm_unsubscribe(conn, 1);
+		printMessage(code, "* Unsubscribed, code[%s]...","thread_id[%u]\n", thread_id );
+	} else {
+		printf("Thread [%u] wasn't subscribed\n", thread_id);
+	}
 
 
 	printMessage2("Thread [%u] ENDING\n", thread_id);

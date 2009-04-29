@@ -50,8 +50,107 @@ This graph shows which files directly or indirectly include this file:</div>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="connection_8h.html#200b813c910cd4a83c36aa907bd52dbe">_litm_connection_validate_safe</a> (<a class="el" href="struct__litm__connection.html">litm_connection</a> *conn)</td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="connection_8h.html#845538cd477e83b01381c22198ca318f">_litm_connection_lock</a> (<a class="el" href="struct__litm__connection.html">litm_connection</a> *conn)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="connection_8h.html#1bbcee336581803f8ff367f55fca7363">_litm_connection_unlock</a> (<a class="el" href="struct__litm__connection.html">litm_connection</a> *conn)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="litm_8h.html#02e9069eb37674bf44c1f0888dc64896">litm_connection_status</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="connection_8h.html#86230c9edffe9b05ec0ff384b1706716">_litm_connection_get_status</a> (<a class="el" href="struct__litm__connection.html">litm_connection</a> *conn)</td></tr>
+
 </table>
 <hr><h2>Function Documentation</h2>
+<a class="anchor" name="86230c9edffe9b05ec0ff384b1706716"></a><!-- doxytag: member="connection.h::_litm_connection_get_status" ref="86230c9edffe9b05ec0ff384b1706716" args="(litm_connection *conn)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="litm_8h.html#02e9069eb37674bf44c1f0888dc64896">litm_connection_status</a> _litm_connection_get_status           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct__litm__connection.html">litm_connection</a> *&nbsp;</td>
+          <td class="paramname"> <em>conn</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00277">277</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+
+<p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dynsection">
+<p><center><img src="connection_8h_86230c9edffe9b05ec0ff384b1706716_icgraph.png" border="0" usemap="#connection_8h_86230c9edffe9b05ec0ff384b1706716_icgraph_map" alt=""></center>
+<map name="connection_8h_86230c9edffe9b05ec0ff384b1706716_icgraph_map">
+<area shape="rect" href="switch_8c.html#1025953257d7d23c8473d945dbf0c9db" title="__switch_try_sending_to_recipient" alt="" coords="244,31,463,58"><area shape="rect" href="switch_8c.html#a915fa62ee3a445f9acac19e744005e3" title="__switch_try_sending_or_requeue" alt="" coords="513,31,729,58"><area shape="rect" href="switch_8c.html#195303a03d0b0c2a3f44951a38b2b0f6" title="__switch_handle_pending" alt="" coords="780,6,948,32"><area shape="rect" href="switch_8c.html#99ec0a50e5e594cb656f9ea1f7d39554" title="__switch_thread_function" alt="" coords="997,31,1165,58"><area shape="rect" href="switch_8h.html#cf83bfcffad6990c781b1a668ec8209e" title="switch_init" alt="" coords="1213,31,1296,58"><area shape="rect" href="litm_8h.html#bc852d2eb14353e36adf21c33eab03a3" title="litm_connect" alt="" coords="1344,31,1440,58"></map>
+</div>
+
+</div>
+</div><p>
+<a class="anchor" name="845538cd477e83b01381c22198ca318f"></a><!-- doxytag: member="connection.h::_litm_connection_lock" ref="845538cd477e83b01381c22198ca318f" args="(litm_connection *conn)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void _litm_connection_lock           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct__litm__connection.html">litm_connection</a> *&nbsp;</td>
+          <td class="paramname"> <em>conn</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00264">264</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+
+<p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dynsection">
+<p><center><img src="connection_8h_845538cd477e83b01381c22198ca318f_icgraph.png" border="0" usemap="#connection_8h_845538cd477e83b01381c22198ca318f_icgraph_map" alt=""></center>
+<map name="connection_8h_845538cd477e83b01381c22198ca318f_icgraph_map">
+<area shape="rect" href="switch_8c.html#1025953257d7d23c8473d945dbf0c9db" title="__switch_try_sending_to_recipient" alt="" coords="207,31,425,58"><area shape="rect" href="switch_8c.html#a915fa62ee3a445f9acac19e744005e3" title="__switch_try_sending_or_requeue" alt="" coords="476,31,692,58"><area shape="rect" href="switch_8c.html#195303a03d0b0c2a3f44951a38b2b0f6" title="__switch_handle_pending" alt="" coords="743,6,911,32"><area shape="rect" href="switch_8c.html#99ec0a50e5e594cb656f9ea1f7d39554" title="__switch_thread_function" alt="" coords="960,31,1128,58"><area shape="rect" href="switch_8h.html#cf83bfcffad6990c781b1a668ec8209e" title="switch_init" alt="" coords="1176,31,1259,58"><area shape="rect" href="litm_8h.html#bc852d2eb14353e36adf21c33eab03a3" title="litm_connect" alt="" coords="1307,31,1403,58"></map>
+</div>
+
+</div>
+</div><p>
+<a class="anchor" name="1bbcee336581803f8ff367f55fca7363"></a><!-- doxytag: member="connection.h::_litm_connection_unlock" ref="1bbcee336581803f8ff367f55fca7363" args="(litm_connection *conn)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void _litm_connection_unlock           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct__litm__connection.html">litm_connection</a> *&nbsp;</td>
+          <td class="paramname"> <em>conn</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00271">271</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+
+<p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dynsection">
+<p><center><img src="connection_8h_1bbcee336581803f8ff367f55fca7363_icgraph.png" border="0" usemap="#connection_8h_1bbcee336581803f8ff367f55fca7363_icgraph_map" alt=""></center>
+<map name="connection_8h_1bbcee336581803f8ff367f55fca7363_icgraph_map">
+<area shape="rect" href="switch_8c.html#1025953257d7d23c8473d945dbf0c9db" title="__switch_try_sending_to_recipient" alt="" coords="220,31,439,58"><area shape="rect" href="switch_8c.html#a915fa62ee3a445f9acac19e744005e3" title="__switch_try_sending_or_requeue" alt="" coords="489,31,705,58"><area shape="rect" href="switch_8c.html#195303a03d0b0c2a3f44951a38b2b0f6" title="__switch_handle_pending" alt="" coords="756,6,924,32"><area shape="rect" href="switch_8c.html#99ec0a50e5e594cb656f9ea1f7d39554" title="__switch_thread_function" alt="" coords="973,31,1141,58"><area shape="rect" href="switch_8h.html#cf83bfcffad6990c781b1a668ec8209e" title="switch_init" alt="" coords="1189,31,1272,58"><area shape="rect" href="litm_8h.html#bc852d2eb14353e36adf21c33eab03a3" title="litm_connect" alt="" coords="1320,31,1416,58"></map>
+</div>
+
+</div>
+</div><p>
 <a class="anchor" name="0f0edb76ffefb926f35e8edb5393f11b"></a><!-- doxytag: member="connection.h::_litm_connection_validate" ref="0f0edb76ffefb926f35e8edb5393f11b" args="(litm_connection *conn)" -->
 <div class="memitem">
 <div class="memproto">
@@ -69,8 +168,9 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="memdoc">
 
 <p>
-Returns -1 when BUSY, 1 for OK, 0 for ERROR 
-<p>Definition at line <a class="el" href="connection_8c-source.html#l00198">198</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="connection_8h.html#200b813c910cd4a83c36aa907bd52dbe">_litm_connection_validate_safe</a> </dd></dl>
+
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00230">230</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -78,7 +178,7 @@ Here is the call graph for this function:</div>
 <div class="dynsection">
 <p><center><img src="connection_8h_0f0edb76ffefb926f35e8edb5393f11b_cgraph.png" border="0" usemap="#connection_8h_0f0edb76ffefb926f35e8edb5393f11b_cgraph_map" alt=""></center>
 <map name="connection_8h_0f0edb76ffefb926f35e8edb5393f11b_cgraph_map">
-<area shape="rect" href="connection_8c.html#6b2986abb5453019ea29678d1d75383f" title="_litm_connections_trylock" alt="" coords="228,5,399,32"></map>
+<area shape="rect" href="connection_8c.html#200b813c910cd4a83c36aa907bd52dbe" title="_litm_connection_validate_safe" alt="" coords="228,6,431,32"><area shape="rect" href="connection_8c.html#6b2986abb5453019ea29678d1d75383f" title="_litm_connections_trylock" alt="" coords="244,56,415,83"><area shape="rect" href="connection_8c.html#c75b4b0413d3523574bda13549715447" title="_litm_connections_unlock" alt="" coords="244,107,415,134"></map>
 </div>
 
 </div>
@@ -100,8 +200,20 @@ Here is the call graph for this function:</div>
 <div class="memdoc">
 
 <p>
-Should only be used when holding the lock on the _connections. 
-<p>Definition at line <a class="el" href="connection_8c-source.html#l00220">220</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+Connection validation<p>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>0 =&gt; not active <p>
+1 =&gt; active </dd></dl>
+
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00250">250</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+
+<p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dynsection">
+<p><center><img src="connection_8h_200b813c910cd4a83c36aa907bd52dbe_icgraph.png" border="0" usemap="#connection_8h_200b813c910cd4a83c36aa907bd52dbe_icgraph_map" alt=""></center>
+<map name="connection_8h_200b813c910cd4a83c36aa907bd52dbe_icgraph_map">
+<area shape="rect" href="switch_8c.html#1025953257d7d23c8473d945dbf0c9db" title="__switch_try_sending_to_recipient" alt="" coords="260,30,479,57"><area shape="rect" href="connection_8h.html#0f0edb76ffefb926f35e8edb5393f11b" title="_litm_connection_validate" alt="" coords="284,81,455,108"><area shape="rect" href="switch_8c.html#a915fa62ee3a445f9acac19e744005e3" title="__switch_try_sending_or_requeue" alt="" coords="529,30,745,57"><area shape="rect" href="switch_8c.html#195303a03d0b0c2a3f44951a38b2b0f6" title="__switch_handle_pending" alt="" coords="796,5,964,32"><area shape="rect" href="switch_8c.html#99ec0a50e5e594cb656f9ea1f7d39554" title="__switch_thread_function" alt="" coords="1013,30,1181,57"><area shape="rect" href="switch_8h.html#cf83bfcffad6990c781b1a668ec8209e" title="switch_init" alt="" coords="1229,30,1312,57"><area shape="rect" href="litm_8h.html#bc852d2eb14353e36adf21c33eab03a3" title="litm_connect" alt="" coords="1360,30,1456,57"></map>
+</div>
 
 </div>
 </div><p>
@@ -123,7 +235,16 @@ Should only be used when holding the lock on the _connections.
 
 <p>
 
-<p>Definition at line <a class="el" href="connection_8c-source.html#l00176">176</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00207">207</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+
+<p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dynsection">
+<p><center><img src="connection_8h_9e582b29253857b58f87ba89f8a6526f_icgraph.png" border="0" usemap="#connection_8h_9e582b29253857b58f87ba89f8a6526f_icgraph_map" alt=""></center>
+<map name="connection_8h_9e582b29253857b58f87ba89f8a6526f_icgraph_map">
+<area shape="rect" href="switch_8c.html#1025953257d7d23c8473d945dbf0c9db" title="__switch_try_sending_to_recipient" alt="" coords="212,31,431,58"><area shape="rect" href="switch_8c.html#a915fa62ee3a445f9acac19e744005e3" title="__switch_try_sending_or_requeue" alt="" coords="481,31,697,58"><area shape="rect" href="switch_8c.html#195303a03d0b0c2a3f44951a38b2b0f6" title="__switch_handle_pending" alt="" coords="748,6,916,32"><area shape="rect" href="switch_8c.html#99ec0a50e5e594cb656f9ea1f7d39554" title="__switch_thread_function" alt="" coords="965,31,1133,58"><area shape="rect" href="switch_8h.html#cf83bfcffad6990c781b1a668ec8209e" title="switch_init" alt="" coords="1181,31,1264,58"><area shape="rect" href="litm_8h.html#bc852d2eb14353e36adf21c33eab03a3" title="litm_connect" alt="" coords="1312,31,1408,58"></map>
+</div>
 
 </div>
 </div><p>
@@ -145,7 +266,7 @@ Should only be used when holding the lock on the _connections.
 
 <p>
 
-<p>Definition at line <a class="el" href="connection_8c-source.html#l00182">182</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00213">213</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -176,7 +297,7 @@ Here is the caller graph for this function:</div>
 
 <p>
 
-<p>Definition at line <a class="el" href="connection_8c-source.html#l00189">189</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00220">220</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -184,7 +305,7 @@ Here is the caller graph for this function:</div>
 <div class="dynsection">
 <p><center><img src="connection_8h_c75b4b0413d3523574bda13549715447_icgraph.png" border="0" usemap="#connection_8h_c75b4b0413d3523574bda13549715447_icgraph_map" alt=""></center>
 <map name="connection_8h_c75b4b0413d3523574bda13549715447_icgraph_map">
-<area shape="rect" href="switch_8h.html#c5408c5b37244e5d0fe17f55f1c3f89e" title="switch_add_subscriber" alt="" coords="239,5,391,32"><area shape="rect" href="switch_8h.html#a12d12ec55e370e7b2d960a67ab19078" title="switch_remove_subscriber" alt="" coords="227,56,403,83"><area shape="rect" href="litm_8h.html#1c8191e4aca778b346954933c7bdf3ff" title="litm_subscribe" alt="" coords="459,5,563,32"><area shape="rect" href="litm_8h.html#50225024a2292b63a5eb95cca00f2545" title="litm_unsubscribe" alt="" coords="451,56,571,83"></map>
+<area shape="rect" href="switch_8c.html#1025953257d7d23c8473d945dbf0c9db" title="__switch_try_sending_to_recipient" alt="" coords="228,31,447,58"><area shape="rect" href="connection_8h.html#0f0edb76ffefb926f35e8edb5393f11b" title="_litm_connection_validate" alt="" coords="252,82,423,108"><area shape="rect" href="switch_8h.html#c5408c5b37244e5d0fe17f55f1c3f89e" title="switch_add_subscriber" alt="" coords="261,132,413,159"><area shape="rect" href="switch_8h.html#a12d12ec55e370e7b2d960a67ab19078" title="switch_remove_subscriber" alt="" coords="249,183,425,210"><area shape="rect" href="switch_8c.html#a915fa62ee3a445f9acac19e744005e3" title="__switch_try_sending_or_requeue" alt="" coords="497,31,713,58"><area shape="rect" href="switch_8c.html#195303a03d0b0c2a3f44951a38b2b0f6" title="__switch_handle_pending" alt="" coords="764,6,932,32"><area shape="rect" href="switch_8c.html#99ec0a50e5e594cb656f9ea1f7d39554" title="__switch_thread_function" alt="" coords="981,31,1149,58"><area shape="rect" href="switch_8h.html#cf83bfcffad6990c781b1a668ec8209e" title="switch_init" alt="" coords="1197,31,1280,58"><area shape="rect" href="litm_8h.html#bc852d2eb14353e36adf21c33eab03a3" title="litm_connect" alt="" coords="1328,31,1424,58"><area shape="rect" href="litm_8h.html#1c8191e4aca778b346954933c7bdf3ff" title="litm_subscribe" alt="" coords="553,132,657,159"><area shape="rect" href="litm_8h.html#50225024a2292b63a5eb95cca00f2545" title="litm_unsubscribe" alt="" coords="545,183,665,210"></map>
 </div>
 
 </div>
@@ -207,7 +328,7 @@ Here is the caller graph for this function:</div>
 
 <p>
 Closes an opened connection 
-<p>Definition at line <a class="el" href="connection_8c-source.html#l00105">105</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00129">129</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -246,8 +367,9 @@ Here is the caller graph for this function:</div>
 <div class="memdoc">
 
 <p>
-Opens (creates) a new connection 
-<p>Definition at line <a class="el" href="connection_8c-source.html#l00059">59</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+Opens (creates) a new connection<p>
+Opens a ``connection`` 
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00082">82</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -270,7 +392,7 @@ Here is the caller graph for this function:</div>
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Wed Apr 29 11:37:42 2009 for LITM by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Wed Apr 29 13:18:18 2009 for LITM by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.6 </small></address>
 </body>
