@@ -44,8 +44,67 @@ This graph shows which files directly or indirectly include this file:</div>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="connection_8h.html#c75b4b0413d3523574bda13549715447">_litm_connections_unlock</a> (void)</td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="connection_8h.html#6b2986abb5453019ea29678d1d75383f">_litm_connections_trylock</a> (void)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="connection_8h.html#0f0edb76ffefb926f35e8edb5393f11b">_litm_connection_validate</a> (<a class="el" href="struct__litm__connection.html">litm_connection</a> *conn)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="connection_8h.html#200b813c910cd4a83c36aa907bd52dbe">_litm_connection_validate_safe</a> (<a class="el" href="struct__litm__connection.html">litm_connection</a> *conn)</td></tr>
+
 </table>
 <hr><h2>Function Documentation</h2>
+<a class="anchor" name="0f0edb76ffefb926f35e8edb5393f11b"></a><!-- doxytag: member="connection.h::_litm_connection_validate" ref="0f0edb76ffefb926f35e8edb5393f11b" args="(litm_connection *conn)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int _litm_connection_validate           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct__litm__connection.html">litm_connection</a> *&nbsp;</td>
+          <td class="paramname"> <em>conn</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Returns -1 when BUSY, 1 for OK, 0 for ERROR 
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00179">179</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+
+<p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dynsection">
+<p><center><img src="connection_8h_0f0edb76ffefb926f35e8edb5393f11b_cgraph.png" border="0" usemap="#connection_8h_0f0edb76ffefb926f35e8edb5393f11b_cgraph_map" alt=""></center>
+<map name="connection_8h_0f0edb76ffefb926f35e8edb5393f11b_cgraph_map">
+<area shape="rect" href="connection_8c.html#6b2986abb5453019ea29678d1d75383f" title="_litm_connections_trylock" alt="" coords="228,5,399,32"></map>
+</div>
+
+</div>
+</div><p>
+<a class="anchor" name="200b813c910cd4a83c36aa907bd52dbe"></a><!-- doxytag: member="connection.h::_litm_connection_validate_safe" ref="200b813c910cd4a83c36aa907bd52dbe" args="(litm_connection *conn)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int _litm_connection_validate_safe           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct__litm__connection.html">litm_connection</a> *&nbsp;</td>
+          <td class="paramname"> <em>conn</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Should only be used when holding the lock on the _connections. 
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00201">201</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+
+</div>
+</div><p>
 <a class="anchor" name="9e582b29253857b58f87ba89f8a6526f"></a><!-- doxytag: member="connection.h::_litm_connections_lock" ref="9e582b29253857b58f87ba89f8a6526f" args="(void)" -->
 <div class="memitem">
 <div class="memproto">
@@ -63,6 +122,39 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="memdoc">
 
 <p>
+
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00157">157</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="6b2986abb5453019ea29678d1d75383f"></a><!-- doxytag: member="connection.h::_litm_connections_trylock" ref="6b2986abb5453019ea29678d1d75383f" args="(void)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int _litm_connections_trylock           </td>
+          <td>(</td>
+          <td class="paramtype">void&nbsp;</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00163">163</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+
+<p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dynsection">
+<p><center><img src="connection_8h_6b2986abb5453019ea29678d1d75383f_icgraph.png" border="0" usemap="#connection_8h_6b2986abb5453019ea29678d1d75383f_icgraph_map" alt=""></center>
+<map name="connection_8h_6b2986abb5453019ea29678d1d75383f_icgraph_map">
+<area shape="rect" href="connection_8h.html#0f0edb76ffefb926f35e8edb5393f11b" title="_litm_connection_validate" alt="" coords="229,6,400,32"><area shape="rect" href="switch_8h.html#c5408c5b37244e5d0fe17f55f1c3f89e" title="switch_add_subscriber" alt="" coords="239,56,391,83"><area shape="rect" href="switch_8h.html#a12d12ec55e370e7b2d960a67ab19078" title="switch_remove_subscriber" alt="" coords="227,107,403,134"><area shape="rect" href="litm_8h.html#1c8191e4aca778b346954933c7bdf3ff" title="litm_subscribe" alt="" coords="459,56,563,83"><area shape="rect" href="litm_8h.html#50225024a2292b63a5eb95cca00f2545" title="litm_unsubscribe" alt="" coords="451,107,571,134"></map>
+</div>
 
 </div>
 </div><p>
@@ -84,6 +176,17 @@ This graph shows which files directly or indirectly include this file:</div>
 
 <p>
 
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00170">170</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+
+<p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dynsection">
+<p><center><img src="connection_8h_c75b4b0413d3523574bda13549715447_icgraph.png" border="0" usemap="#connection_8h_c75b4b0413d3523574bda13549715447_icgraph_map" alt=""></center>
+<map name="connection_8h_c75b4b0413d3523574bda13549715447_icgraph_map">
+<area shape="rect" href="switch_8h.html#c5408c5b37244e5d0fe17f55f1c3f89e" title="switch_add_subscriber" alt="" coords="239,5,391,32"><area shape="rect" href="switch_8h.html#a12d12ec55e370e7b2d960a67ab19078" title="switch_remove_subscriber" alt="" coords="227,56,403,83"><area shape="rect" href="litm_8h.html#1c8191e4aca778b346954933c7bdf3ff" title="litm_subscribe" alt="" coords="459,5,563,32"><area shape="rect" href="litm_8h.html#50225024a2292b63a5eb95cca00f2545" title="litm_unsubscribe" alt="" coords="451,56,571,83"></map>
+</div>
+
 </div>
 </div><p>
 <a class="anchor" name="8e4dadbbe89d174acfa60f3f44b66c00"></a><!-- doxytag: member="connection.h::litm_connection_close" ref="8e4dadbbe89d174acfa60f3f44b66c00" args="(litm_connection *conn)" -->
@@ -104,43 +207,7 @@ This graph shows which files directly or indirectly include this file:</div>
 
 <p>
 Closes an opened connection 
-<p>Definition at line <a class="el" href="connection_8c-source.html#l00087">87</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
-<div class="fragment"><pre class="fragment"><a name="l00087"></a>00087                                              {
-<a name="l00088"></a>00088 
-<a name="l00089"></a>00089         <span class="keywordflow">if</span> (NULL==conn) {
-<a name="l00090"></a>00090                 <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293030ffb6b9de7d729330056b0c40eeaa4">LITM_CODE_ERROR_BAD_CONNECTION</a>;
-<a name="l00091"></a>00091         }
-<a name="l00092"></a>00092 
-<a name="l00093"></a>00093         <span class="keywordtype">int</span> code = pthread_mutex_trylock( &amp;<a class="code" href="connection_8c.html#49a325832a4b73d61fa0ed570f6b3c27">_connections_mutex</a> );
-<a name="l00094"></a>00094         <span class="keywordflow">if</span> (EBUSY==code) {
-<a name="l00095"></a>00095                 <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622939fd144765aaaf968cb7a7b7fa847a278">LITM_CODE_BUSY</a>;
-<a name="l00096"></a>00096         }
-<a name="l00097"></a>00097 
-<a name="l00098"></a>00098         <span class="comment">//is it really a connection?</span>
-<a name="l00099"></a>00099         <span class="keywordtype">int</span> index = <a class="code" href="connection_8c.html#7ccfa58f4fc175e9b4f4400e5a275baf">__litm_connection_get_index</a>(conn);
-<a name="l00100"></a>00100 
-<a name="l00101"></a>00101         <span class="keywordflow">if</span> (-1 == index) {
-<a name="l00102"></a>00102                 pthread_mutex_unlock( &amp;<a class="code" href="connection_8c.html#49a325832a4b73d61fa0ed570f6b3c27">_connections_mutex</a> );
-<a name="l00103"></a>00103                 <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293030ffb6b9de7d729330056b0c40eeaa4">LITM_CODE_ERROR_BAD_CONNECTION</a>;
-<a name="l00104"></a>00104         }
-<a name="l00105"></a>00105 
-<a name="l00106"></a>00106         <a class="code" href="connection_8c.html#d496dab32a583a505f1d168f1ded64e6">_connections</a>[index] = NULL;
-<a name="l00107"></a>00107 
-<a name="l00108"></a>00108         <span class="comment">// don't need to hold the mutex for the last part</span>
-<a name="l00109"></a>00109         <span class="comment">// of the operation: the connection isn't part of</span>
-<a name="l00110"></a>00110         <span class="comment">// the protected table anymore AND we stand less</span>
-<a name="l00111"></a>00111         <span class="comment">// chances for a livelock since we would be holding</span>
-<a name="l00112"></a>00112         <span class="comment">// another mutex when calling ``queue_destroy``</span>
-<a name="l00113"></a>00113         pthread_mutex_unlock( &amp;<a class="code" href="connection_8c.html#49a325832a4b73d61fa0ed570f6b3c27">_connections_mutex</a> );
-<a name="l00114"></a>00114 
-<a name="l00115"></a>00115         <a class="code" href="queue_8c.html#21d75708e816b8fc3299ac8e6f7109eb">queue_destroy</a>( conn-&gt;<a class="code" href="struct__litm__connection.html#92412056140d8e635b20b0681fa32c9a">input_queue</a> );
-<a name="l00116"></a>00116         free( conn );
-<a name="l00117"></a>00117 
-<a name="l00118"></a>00118 
-<a name="l00119"></a>00119         <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622930b651a4f84388b526d32980e3b43c4a2">LITM_CODE_OK</a>;
-<a name="l00120"></a>00120 }<span class="comment">//</span>
-</pre></div>
-<p>
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00086">86</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -148,7 +215,7 @@ Here is the call graph for this function:</div>
 <div class="dynsection">
 <p><center><img src="connection_8h_8e4dadbbe89d174acfa60f3f44b66c00_cgraph.png" border="0" usemap="#connection_8h_8e4dadbbe89d174acfa60f3f44b66c00_cgraph_map" alt=""></center>
 <map name="connection_8h_8e4dadbbe89d174acfa60f3f44b66c00_cgraph_map">
-<area shape="rect" href="connection_8c.html#7ccfa58f4fc175e9b4f4400e5a275baf" title="__litm_connection_get_index" alt="" coords="205,5,395,32"><area shape="rect" href="queue_8c.html#21d75708e816b8fc3299ac8e6f7109eb" title="queue_destroy" alt="" coords="247,56,353,83"></map>
+<area shape="rect" href="connection_8c.html#720256527350db29d5e743a32d908151" title="__litm_connection_get_free_index" alt="" coords="205,5,424,32"></map>
 </div>
 
 <p>
@@ -180,49 +247,7 @@ Here is the caller graph for this function:</div>
 
 <p>
 Opens (creates) a new connection 
-<p>Definition at line <a class="el" href="connection_8c-source.html#l00043">43</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
-<div class="fragment"><pre class="fragment"><a name="l00043"></a>00043                                              {
-<a name="l00044"></a>00044 
-<a name="l00045"></a>00045         <a class="code" href="logger_8h.html#21a2c7330a04ac78200a986f66609369">DEBUG_LOG</a>(LOG_INFO, <span class="stringliteral">"litm_connection_open: BEGIN"</span>);
-<a name="l00046"></a>00046 
-<a name="l00047"></a>00047         <span class="keywordtype">int</span> target_index, code;
-<a name="l00048"></a>00048 
-<a name="l00049"></a>00049         code = pthread_mutex_trylock( &amp;<a class="code" href="connection_8c.html#49a325832a4b73d61fa0ed570f6b3c27">_connections_mutex</a> );
-<a name="l00050"></a>00050         <span class="keywordflow">if</span> (EBUSY==code) {
-<a name="l00051"></a>00051                 <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622939fd144765aaaf968cb7a7b7fa847a278">LITM_CODE_BUSY</a>;
-<a name="l00052"></a>00052         }
-<a name="l00053"></a>00053 
-<a name="l00054"></a>00054         target_index = <a class="code" href="connection_8c.html#c09329988a145a7768cf33731e7d3e81">__litm_connection_get_free_index</a>();
-<a name="l00055"></a>00055         <span class="keywordflow">if</span> (-1 == target_index) {
-<a name="l00056"></a>00056                 pthread_mutex_unlock( &amp;<a class="code" href="connection_8c.html#49a325832a4b73d61fa0ed570f6b3c27">_connections_mutex</a> );
-<a name="l00057"></a>00057                 <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622939aeb836e2cf171cef63d14d898c847da">LITM_CODE_ERROR_NO_MORE_CONNECTIONS</a>;
-<a name="l00058"></a>00058         }
-<a name="l00059"></a>00059 
-<a name="l00060"></a>00060         *conn=malloc(<span class="keyword">sizeof</span>(<a class="code" href="struct__litm__connection.html">litm_connection</a>));
-<a name="l00061"></a>00061         <span class="keywordflow">if</span> (NULL==*conn) {
-<a name="l00062"></a>00062                 pthread_mutex_unlock( &amp;<a class="code" href="connection_8c.html#49a325832a4b73d61fa0ed570f6b3c27">_connections_mutex</a> );
-<a name="l00063"></a>00063                 <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d6229369f5e764faddb58449c77b25df30dfc6">LITM_CODE_ERROR_MALLOC</a>;
-<a name="l00064"></a>00064         }
-<a name="l00065"></a>00065 
-<a name="l00066"></a>00066         <a class="code" href="structqueue.html">queue</a> *q = <a class="code" href="queue_8c.html#404f283e7764be86026fda0714b6b7b6">queue_create</a>();
-<a name="l00067"></a>00067         <span class="keywordflow">if</span> (NULL==q) {
-<a name="l00068"></a>00068                 free(*conn);
-<a name="l00069"></a>00069                 pthread_mutex_unlock( &amp;<a class="code" href="connection_8c.html#49a325832a4b73d61fa0ed570f6b3c27">_connections_mutex</a> );
-<a name="l00070"></a>00070                 <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d6229369f5e764faddb58449c77b25df30dfc6">LITM_CODE_ERROR_MALLOC</a>;
-<a name="l00071"></a>00071         }
-<a name="l00072"></a>00072 
-<a name="l00073"></a>00073         <a class="code" href="logger_8h.html#21a2c7330a04ac78200a986f66609369">DEBUG_LOG</a>(LOG_INFO, <span class="stringliteral">"litm_connection_open: OPENED"</span>);
-<a name="l00074"></a>00074 
-<a name="l00075"></a>00075         <a class="code" href="connection_8c.html#d496dab32a583a505f1d168f1ded64e6">_connections</a>[target_index] = *conn;
-<a name="l00076"></a>00076         (*conn)-&gt;<a class="code" href="struct__litm__connection.html#92412056140d8e635b20b0681fa32c9a">input_queue</a> = q;
-<a name="l00077"></a>00077 
-<a name="l00078"></a>00078         pthread_mutex_unlock( &amp;<a class="code" href="connection_8c.html#49a325832a4b73d61fa0ed570f6b3c27">_connections_mutex</a> );
-<a name="l00079"></a>00079 
-<a name="l00080"></a>00080         <a class="code" href="logger_8h.html#21a2c7330a04ac78200a986f66609369">DEBUG_LOG</a>(LOG_INFO, <span class="stringliteral">"litm_connection_open: END"</span>);
-<a name="l00081"></a>00081         <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622930b651a4f84388b526d32980e3b43c4a2">LITM_CODE_OK</a>;
-<a name="l00082"></a>00082 }<span class="comment">//</span>
-</pre></div>
-<p>
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00040">40</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -230,7 +255,7 @@ Here is the call graph for this function:</div>
 <div class="dynsection">
 <p><center><img src="connection_8h_1c62b68cf084828184eed29d17c6498c_cgraph.png" border="0" usemap="#connection_8h_1c62b68cf084828184eed29d17c6498c_cgraph_map" alt=""></center>
 <map name="connection_8h_1c62b68cf084828184eed29d17c6498c_cgraph_map">
-<area shape="rect" href="connection_8c.html#c09329988a145a7768cf33731e7d3e81" title="__litm_connection_get_free_index" alt="" coords="203,5,421,32"><area shape="rect" href="queue_8c.html#404f283e7764be86026fda0714b6b7b6" title="queue_create" alt="" coords="263,56,361,83"></map>
+<area shape="rect" href="connection_8c.html#720256527350db29d5e743a32d908151" title="__litm_connection_get_free_index" alt="" coords="203,5,421,32"><area shape="rect" href="queue_8c.html#404f283e7764be86026fda0714b6b7b6" title="queue_create" alt="" coords="263,56,361,83"></map>
 </div>
 
 <p>
@@ -245,7 +270,7 @@ Here is the caller graph for this function:</div>
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Tue Apr 28 10:26:36 2009 for LITM by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Wed Apr 29 11:23:05 2009 for LITM by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.6 </small></address>
 </body>

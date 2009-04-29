@@ -41,7 +41,7 @@
 		 * @param next: pointer to the ``next`` queue_node entry
 		 */
 		typedef struct _queue_node {
-			void *msg;
+			void *node;
 			struct _queue_node *next;
 		} queue_node;
 
@@ -158,6 +158,19 @@
 		/**
 		 * Disconnects from the ``switch``
 		 *
+		 * Once a client calls this function, no more access
+		 * with the connection is permitted to any of the
+		 * following functions:
+		 *
+		 *  - litm_subscribe
+		 *  - litm_unsubscribe
+		 *  - litm_receive_nb
+		 *  - litm_send
+		 *  - litm_release
+		 *
+		 * Be sure to release any message in the client's
+		 * care before disconnecting.
+		 *
 		 * @param *conn connection reference
 		 */
 		litm_code litm_disconnect(litm_connection *conn);
@@ -165,6 +178,8 @@
 
 		/**
 		 * Subscribe to a ``bus``
+		 *
+		 * @see litm_disconnect
 		 *
 		 * @param *conn connection reference
 		 * @param bus_id the ``bus`` identifier to subscribe to
@@ -176,6 +191,8 @@
 		/**
 		 * Unsubscribe from a ``bus``
 		 *
+		 * @see litm_disconnect
+		 *
 		 * @param *conn connection reference
 		 * @param bus_id the ``bus`` identifier to unsubscribe from
 		 */
@@ -184,6 +201,8 @@
 
 		/**
 		 * Send message on a ``bus``
+		 *
+		 * @see litm_disconnect
 		 *
 		 * @param *conn connection reference
 		 * @param bus_id the ``bus`` to send the message onto
@@ -211,6 +230,8 @@
 		/**
 		 * Receives (non-blocking) from any ``bus``
 		 *
+		 * @see litm_disconnect
+		 *
 		 * @param *conn connection reference
 		 * @param **envlp the pointer to received envelope
 		 *
@@ -220,6 +241,8 @@
 
 		/**
 		 * Releases an ``envelope``
+		 *
+		 * @see litm_disconnect
 		 *
 		 * @param *conn connection reference
 		 * @param *envlp the pointer to received envelope to release

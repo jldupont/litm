@@ -134,38 +134,11 @@ This graph shows which files directly or indirectly include this file:</div>
 <p>
 Crude logging function 
 <p>Definition at line <a class="el" href="logger_8c-source.html#l00017">17</a> of file <a class="el" href="logger_8c-source.html">logger.c</a>.</p>
-<div class="fragment"><pre class="fragment"><a name="l00017"></a>00017                                              {
-<a name="l00018"></a>00018 
-<a name="l00019"></a>00019         openlog(<a class="code" href="logger_8c.html#a4c3f800cd36a7cab78e6e26def1a1ea">_LOGGER_IDENTITY</a>, LOG_PID, LOG_LOCAL1);
-<a name="l00020"></a>00020 
-<a name="l00021"></a>00021         <span class="keywordtype">char</span> buffer[2048];
-<a name="l00022"></a>00022         va_list ap;
-<a name="l00023"></a>00023 
-<a name="l00024"></a>00024         va_start(ap, message);
-<a name="l00025"></a>00025                 vsnprintf (buffer, <span class="keyword">sizeof</span>(buffer), message, ap);
-<a name="l00026"></a>00026         va_end(ap);
-<a name="l00027"></a>00027 
-<a name="l00028"></a>00028         syslog(priority, buffer, NULL);
-<a name="l00029"></a>00029 
-<a name="l00030"></a>00030         closelog();
-<a name="l00031"></a>00031 
-<a name="l00032"></a>00032 }
-</pre></div>
-<p>
-
-<p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dynsection">
-<p><center><img src="logger_8h_7380c33fa7a012bfb1b5dc892228d0e4_icgraph.png" border="0" usemap="#logger_8h_7380c33fa7a012bfb1b5dc892228d0e4_icgraph_map" alt=""></center>
-<map name="logger_8h_7380c33fa7a012bfb1b5dc892228d0e4_icgraph_map">
-<area shape="rect" href="queue_8h.html#d27389bec0979099c38222da98b9cade" title="queue_get" alt="" coords="111,5,191,32"></map>
-</div>
 
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Tue Apr 28 10:26:36 2009 for LITM by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Wed Apr 29 11:23:05 2009 for LITM by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.6 </small></address>
 </body>

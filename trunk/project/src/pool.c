@@ -1,16 +1,14 @@
-/*
- * pool.c
+/**
+ * @file pool.c
  *
- *  Created on: 2009-04-24
- *      Author: Jean-Lou Dupont
+ * @date   2009-04-24
+ * @author Jean-Lou Dupont
  *
  * Handles pooling / recycling of ``envelopes``
  *
  *  FOR MORE INFORMATION, CONSULT   ``pool.h``
  *
- *
- * NOTE: This module assumes it is executing in a thread-safe environment.
- * ----
+ * This module is thread-safe.
  *
  */
 
@@ -34,6 +32,17 @@
 
 	pthread_mutex_t  _pool_mutex = PTHREAD_MUTEX_INITIALIZER;
 
+/**
+ * Recyles an ``envelope`` by either:
+ * - putting it on a stack for later recall
+ * - destroying it if there is no more place on the stack
+ *
+ * NOTE: it is the responsibility of the client of this
+ *       module to dispose of properly of the internal
+ *       structure (ie. the ``msg`` member) of the
+ *       ``envelope`` **before** using this recycling facility.
+ *
+ */
 	void
 __litm_pool_recycle( litm_envelope *envlp ) {
 
@@ -58,7 +67,15 @@ __litm_pool_recycle( litm_envelope *envlp ) {
 }//
 
 
-
+/**
+ * Retrieves an ``envelope`` from either:
+ * - the stack if one is available
+ * - the heap
+ *
+ * Either case, the ``envelope`` is initialized
+ * before returning it to the client.
+ *
+ */
 
 	litm_envelope *
 __litm_pool_get(void) {
@@ -115,6 +132,14 @@ __litm_pool_get(void) {
 }//
 
 
+/**
+ * Destroys an ``envelope`` ie. just use free()
+ *
+ * A client of this module **must** dispose of
+ * the internal structure of the ``envelope``
+ * (ie. the ``msg`` member) before using this function.
+ *
+ */
 	void
 __litm_pool_destroy( litm_envelope *envlp ) {
 
@@ -129,7 +154,12 @@ __litm_pool_destroy( litm_envelope *envlp ) {
 }//
 
 
-
+/**
+ * Cleans an ``envelope``
+ *
+ * NOTE: use with care i.e. the ``msg`` member is just
+ *       NULLed.
+ */
 	void
 __litm_pool_clean( litm_envelope *envlp ) {
 	DEBUG_LOG_PTR( envlp, LOG_ERR, "__litm_pool_clean: NULL");

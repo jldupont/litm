@@ -1,5 +1,6 @@
-<area shape="rect" href="$connection_8c.html" title="project/src/connection.c" alt="" coords="5,80,165,107">
-<area shape="rect" href="$litm_8c.html" title="project/src/litm.c" alt="" coords="189,80,307,107">
-<area shape="rect" href="$pool_8c.html" title="project/src/pool.c" alt="" coords="331,80,451,107">
-<area shape="rect" href="$queue_8c.html" title="project/src/queue.c" alt="" coords="475,80,605,107">
-<area shape="rect" href="$switch_8c.html" title="project/src/switch.c" alt="" coords="629,80,763,107">
+<area shape="rect" href="$connection_8c.html" title="project/src/connection.c" alt="" coords="5,155,165,182">
+<area shape="rect" href="$litm_8c.html" title="project/src/litm.c" alt="" coords="189,155,307,182">
+<area shape="rect" href="$pool_8c.html" title="project/src/pool.c" alt="" coords="528,80,648,107">
+<area shape="rect" href="$queue_8c.html" title="project/src/queue.c" alt="" coords="331,155,461,182">
+<area shape="rect" href="$switch_8c.html" title="project/src/switch.c" alt="" coords="485,155,619,182">
+<area shape="rect" href="$queue_8h.html" title="project/includes/queue.h" alt="" coords="240,80,403,107">

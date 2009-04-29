@@ -84,17 +84,10 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="memdoc">
 
 <p>
-Clean-up an ``envelope`` for reuse 
-<p>Definition at line <a class="el" href="pool_8c-source.html#l00101">101</a> of file <a class="el" href="pool_8c-source.html">pool.c</a>.</p>
-<div class="fragment"><pre class="fragment"><a name="l00101"></a>00101                                           {
-<a name="l00102"></a>00102         <a class="code" href="logger_8h.html#5e74f7a89e89b195bba421ac1ed9a496">DEBUG_LOG_PTR</a>( envlp, LOG_ERR, <span class="stringliteral">"__litm_pool_clean: NULL"</span>);
-<a name="l00103"></a>00103 
-<a name="l00104"></a>00104         <span class="comment">// clear routing information</span>
-<a name="l00105"></a>00105         bzero( (<span class="keywordtype">char</span> *) &amp;envlp-&gt;<a class="code" href="struct__litm__envelope.html#7c7a351b72e9b4d084e526a00787a44f">routes</a>, <span class="keyword">sizeof</span>(<a class="code" href="struct____litm__routing.html">__litm_routing</a>) );
-<a name="l00106"></a>00106 
-<a name="l00107"></a>00107 }<span class="comment">//</span>
-</pre></div>
-<p>
+Clean-up an ``envelope`` for reuse<p>
+Cleans an ``envelope``<p>
+NOTE: use with care i.e. the ``msg`` member is just NULLed. 
+<p>Definition at line <a class="el" href="pool_8c-source.html#l00164">164</a> of file <a class="el" href="pool_8c-source.html">pool.c</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -125,18 +118,10 @@ Here is the caller graph for this function:</div>
 
 <p>
 Destroys an ``envelope``<p>
-(probably because we have no more place on the stack) 
-<p>Definition at line <a class="el" href="pool_8c-source.html#l00089">89</a> of file <a class="el" href="pool_8c-source.html">pool.c</a>.</p>
-<div class="fragment"><pre class="fragment"><a name="l00089"></a>00089                                             {
-<a name="l00090"></a>00090         <a class="code" href="logger_8h.html#5e74f7a89e89b195bba421ac1ed9a496">DEBUG_LOG_PTR</a>( envlp, LOG_ERR, <span class="stringliteral">"__litm_pool_destroy: NULL"</span>);
-<a name="l00091"></a>00091 
-<a name="l00092"></a>00092         <span class="comment">// First, destroy the message</span>
-<a name="l00093"></a>00093         free( envlp-&gt; msg );
-<a name="l00094"></a>00094         free( envlp );
-<a name="l00095"></a>00095 
-<a name="l00096"></a>00096 }<span class="comment">//</span>
-</pre></div>
-<p>
+(probably because we have no more place on the stack)<p>
+Destroys an ``envelope`` ie. just use free()<p>
+A client of this module **must** dispose of the internal structure of the ``envelope`` (ie. the ``msg`` member) before using this function. 
+<p>Definition at line <a class="el" href="pool_8c-source.html#l00144">144</a> of file <a class="el" href="pool_8c-source.html">pool.c</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -144,7 +129,7 @@ Here is the caller graph for this function:</div>
 <div class="dynsection">
 <p><center><img src="pool_8h_2f844d6f6d2a471a5a93c3c49c28eef2_icgraph.png" border="0" usemap="#pool_8h_2f844d6f6d2a471a5a93c3c49c28eef2_icgraph_map" alt=""></center>
 <map name="pool_8h_2f844d6f6d2a471a5a93c3c49c28eef2_icgraph_map">
-<area shape="rect" href="pool_8h.html#1266647a6ed7c20e9c5d08f4bef09dd3" title="__litm_pool_recycle" alt="" coords="192,82,328,108"><area shape="rect" href="switch_8c.html#149e07f06e61c0daee8f4cf38200dff2" title="__switch_finalize" alt="" coords="376,56,496,83"><area shape="rect" href="switch_8h.html#7ff2d602f713f81e854c172e842afcad" title="switch_send" alt="" coords="389,107,483,134"><area shape="rect" href="switch_8c.html#99ec0a50e5e594cb656f9ea1f7d39554" title="__switch_thread_function" alt="" coords="544,6,712,32"><area shape="rect" href="switch_8h.html#2bab91639e612d51d0d7d8a3a64d0ace" title="switch_release" alt="" coords="575,56,681,83"><area shape="rect" href="switch_8h.html#cf83bfcffad6990c781b1a668ec8209e" title="switch_init" alt="" coords="765,6,848,32"><area shape="rect" href="litm_8h.html#bc852d2eb14353e36adf21c33eab03a3" title="litm_connect" alt="" coords="901,6,997,32"><area shape="rect" href="litm_8h.html#21def412c9b064fc929e0822f28d2a2a" title="litm_release" alt="" coords="761,56,852,83"><area shape="rect" href="litm_8h.html#bed13398c1bc31a6c81c3e50997e2f2c" title="litm_send" alt="" coords="589,107,667,134"></map>
+<area shape="rect" href="pool_8h.html#1266647a6ed7c20e9c5d08f4bef09dd3" title="__litm_pool_recycle" alt="" coords="192,101,328,128"><area shape="rect" href="switch_8c.html#149e07f06e61c0daee8f4cf38200dff2" title="__switch_finalize" alt="" coords="376,69,496,96"><area shape="rect" href="switch_8h.html#7ff2d602f713f81e854c172e842afcad" title="switch_send" alt="" coords="389,132,483,158"><area shape="rect" href="switch_8c.html#195303a03d0b0c2a3f44951a38b2b0f6" title="__switch_handle_pending" alt="" coords="545,5,713,32"><area shape="rect" href="switch_8c.html#99ec0a50e5e594cb656f9ea1f7d39554" title="__switch_thread_function" alt="" coords="763,30,931,57"><area shape="rect" href="switch_8h.html#2bab91639e612d51d0d7d8a3a64d0ace" title="switch_release" alt="" coords="576,106,683,133"><area shape="rect" href="switch_8h.html#cf83bfcffad6990c781b1a668ec8209e" title="switch_init" alt="" coords="979,30,1061,57"><area shape="rect" href="litm_8h.html#bc852d2eb14353e36adf21c33eab03a3" title="litm_connect" alt="" coords="1109,30,1205,57"><area shape="rect" href="litm_8h.html#21def412c9b064fc929e0822f28d2a2a" title="litm_release" alt="" coords="801,106,892,133"><area shape="rect" href="litm_8h.html#bed13398c1bc31a6c81c3e50997e2f2c" title="litm_send" alt="" coords="591,157,668,184"></map>
 </div>
 
 </div>
@@ -166,42 +151,12 @@ Here is the caller graph for this function:</div>
 <div class="memdoc">
 
 <p>
-Gets an ``envelope`` from the pool or creates a new one 
-<p>Definition at line <a class="el" href="pool_8c-source.html#l00054">54</a> of file <a class="el" href="pool_8c-source.html">pool.c</a>.</p>
-<div class="fragment"><pre class="fragment"><a name="l00054"></a>00054                       {
-<a name="l00055"></a>00055 
-<a name="l00056"></a>00056         <a class="code" href="struct__litm__envelope.html">litm_envelope</a> *e;
-<a name="l00057"></a>00057 
-<a name="l00058"></a>00058         <span class="comment">// do we have a spare?</span>
-<a name="l00059"></a>00059         e = <a class="code" href="pool_8c.html#3413f86bf4ea5a68449ece4bb26352c8">_stack</a>[ <a class="code" href="pool_8c.html#2e55d0fea0e1bfdcd9cad770a70e2afe">_top_stack</a> ];
-<a name="l00060"></a>00060         <span class="keywordflow">if</span> (NULL!=e) {
-<a name="l00061"></a>00061 
-<a name="l00062"></a>00062                 <a class="code" href="pool_8c.html#3413f86bf4ea5a68449ece4bb26352c8">_stack</a>[<a class="code" href="pool_8c.html#2e55d0fea0e1bfdcd9cad770a70e2afe">_top_stack</a>] = NULL;
-<a name="l00063"></a>00063                 <a class="code" href="pool_8c.html#ad0b7166470e29cb5024efeca7d035af">__litm_pool_clean</a>( e );
-<a name="l00064"></a>00064 
-<a name="l00065"></a>00065                 <span class="comment">// statistics...</span>
-<a name="l00066"></a>00066                 <a class="code" href="pool_8c.html#e388cd19bca797abf0835dea71037f44">_returned</a> ++;
-<a name="l00067"></a>00067 
-<a name="l00068"></a>00068                 <span class="keywordflow">if</span> (0!=<a class="code" href="pool_8c.html#2e55d0fea0e1bfdcd9cad770a70e2afe">_top_stack</a>)
-<a name="l00069"></a>00069                         <a class="code" href="pool_8c.html#2e55d0fea0e1bfdcd9cad770a70e2afe">_top_stack</a>-- ;
-<a name="l00070"></a>00070 
-<a name="l00071"></a>00071         } <span class="keywordflow">else</span> {
-<a name="l00072"></a>00072 
-<a name="l00073"></a>00073                 <span class="comment">// prepare a new one</span>
-<a name="l00074"></a>00074                 e = malloc(<span class="keyword">sizeof</span>(<a class="code" href="struct__litm__envelope.html">litm_envelope</a>));
-<a name="l00075"></a>00075                 <span class="keywordflow">if</span> (NULL!=e) {
-<a name="l00076"></a>00076                         bzero(e, <span class="keyword">sizeof</span>(<a class="code" href="struct__litm__envelope.html">litm_envelope</a>));
-<a name="l00077"></a>00077 
-<a name="l00078"></a>00078                         <span class="comment">// statistics...</span>
-<a name="l00079"></a>00079                         <a class="code" href="pool_8c.html#9acc85c1d61a1322b66e9a6dec848ea3">_created</a> ++ ;
-<a name="l00080"></a>00080                 }
-<a name="l00081"></a>00081 
-<a name="l00082"></a>00082         }
-<a name="l00083"></a>00083 
-<a name="l00084"></a>00084         <span class="keywordflow">return</span> e;
-<a name="l00085"></a>00085 }<span class="comment">//</span>
-</pre></div>
+Gets an ``envelope`` from the pool or creates a new one<p>
+Retrieves an ``envelope`` from either:<ul>
+<li>the stack if one is available</li><li>the heap</li></ul>
 <p>
+Either case, the ``envelope`` is initialized before returning it to the client. 
+<p>Definition at line <a class="el" href="pool_8c-source.html#l00081">81</a> of file <a class="el" href="pool_8c-source.html">pool.c</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -241,24 +196,12 @@ Here is the caller graph for this function:</div>
 
 <p>
 Recycles an ``envelope``<p>
-NOTE: We only keep up to LITM_POOL_SIZE ----- messages in the stack. 
-<p>Definition at line <a class="el" href="pool_8c-source.html#l00035">35</a> of file <a class="el" href="pool_8c-source.html">pool.c</a>.</p>
-<div class="fragment"><pre class="fragment"><a name="l00035"></a>00035                                             {
-<a name="l00036"></a>00036 
-<a name="l00037"></a>00037         <span class="comment">//can we recycle this one?</span>
-<a name="l00038"></a>00038         <span class="keywordflow">if</span> ( <a class="code" href="pool_8c.html#2e55d0fea0e1bfdcd9cad770a70e2afe">_top_stack</a> + 1 == <a class="code" href="pool_8h.html#82f68d9a84b4cd46e13dc7adf193a7eb">LITM_POOL_SIZE</a> ) {
-<a name="l00039"></a>00039                 <a class="code" href="pool_8c.html#2f844d6f6d2a471a5a93c3c49c28eef2">__litm_pool_destroy</a>( envlp );
-<a name="l00040"></a>00040                 <span class="keywordflow">return</span>;
-<a name="l00041"></a>00041         }
-<a name="l00042"></a>00042 
-<a name="l00043"></a>00043         <a class="code" href="pool_8c.html#3413f86bf4ea5a68449ece4bb26352c8">_stack</a>[<a class="code" href="pool_8c.html#2e55d0fea0e1bfdcd9cad770a70e2afe">_top_stack</a>++] = envlp;
-<a name="l00044"></a>00044 
-<a name="l00045"></a>00045         <span class="comment">// statistics</span>
-<a name="l00046"></a>00046         <a class="code" href="pool_8c.html#60d30e96a1ea1ffb7b4efc8c269a5674">_recycled</a> ++;
-<a name="l00047"></a>00047 
-<a name="l00048"></a>00048 }<span class="comment">//</span>
-</pre></div>
+NOTE: We only keep up to LITM_POOL_SIZE ----- messages in the stack.<p>
+Recyles an ``envelope`` by either:<ul>
+<li>putting it on a stack for later recall</li><li>destroying it if there is no more place on the stack</li></ul>
 <p>
+NOTE: it is the responsibility of the client of this module to dispose of properly of the internal structure (ie. the ``msg`` member) of the ``envelope`` **before** using this recycling facility. 
+<p>Definition at line <a class="el" href="pool_8c-source.html#l00047">47</a> of file <a class="el" href="pool_8c-source.html">pool.c</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -275,13 +218,13 @@ Here is the caller graph for this function:</div>
 <div class="dynsection">
 <p><center><img src="pool_8h_1266647a6ed7c20e9c5d08f4bef09dd3_icgraph.png" border="0" usemap="#pool_8h_1266647a6ed7c20e9c5d08f4bef09dd3_icgraph_map" alt=""></center>
 <map name="pool_8h_1266647a6ed7c20e9c5d08f4bef09dd3_icgraph_map">
-<area shape="rect" href="switch_8c.html#149e07f06e61c0daee8f4cf38200dff2" title="__switch_finalize" alt="" coords="189,56,309,83"><area shape="rect" href="switch_8h.html#7ff2d602f713f81e854c172e842afcad" title="switch_send" alt="" coords="203,107,296,134"><area shape="rect" href="switch_8c.html#99ec0a50e5e594cb656f9ea1f7d39554" title="__switch_thread_function" alt="" coords="357,6,525,32"><area shape="rect" href="switch_8h.html#2bab91639e612d51d0d7d8a3a64d0ace" title="switch_release" alt="" coords="388,56,495,83"><area shape="rect" href="switch_8h.html#cf83bfcffad6990c781b1a668ec8209e" title="switch_init" alt="" coords="579,6,661,32"><area shape="rect" href="litm_8h.html#bc852d2eb14353e36adf21c33eab03a3" title="litm_connect" alt="" coords="715,6,811,32"><area shape="rect" href="litm_8h.html#21def412c9b064fc929e0822f28d2a2a" title="litm_release" alt="" coords="575,56,665,83"><area shape="rect" href="litm_8h.html#bed13398c1bc31a6c81c3e50997e2f2c" title="litm_send" alt="" coords="403,107,480,134"></map>
+<area shape="rect" href="switch_8c.html#149e07f06e61c0daee8f4cf38200dff2" title="__switch_finalize" alt="" coords="189,69,309,96"><area shape="rect" href="switch_8h.html#7ff2d602f713f81e854c172e842afcad" title="switch_send" alt="" coords="203,132,296,158"><area shape="rect" href="switch_8c.html#195303a03d0b0c2a3f44951a38b2b0f6" title="__switch_handle_pending" alt="" coords="359,5,527,32"><area shape="rect" href="switch_8c.html#99ec0a50e5e594cb656f9ea1f7d39554" title="__switch_thread_function" alt="" coords="576,30,744,57"><area shape="rect" href="switch_8h.html#2bab91639e612d51d0d7d8a3a64d0ace" title="switch_release" alt="" coords="389,106,496,133"><area shape="rect" href="switch_8h.html#cf83bfcffad6990c781b1a668ec8209e" title="switch_init" alt="" coords="792,30,875,57"><area shape="rect" href="litm_8h.html#bc852d2eb14353e36adf21c33eab03a3" title="litm_connect" alt="" coords="923,30,1019,57"><area shape="rect" href="litm_8h.html#21def412c9b064fc929e0822f28d2a2a" title="litm_release" alt="" coords="615,106,705,133"><area shape="rect" href="litm_8h.html#bed13398c1bc31a6c81c3e50997e2f2c" title="litm_send" alt="" coords="404,157,481,184"></map>
 </div>
 
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Tue Apr 28 10:26:36 2009 for LITM by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Wed Apr 29 11:23:05 2009 for LITM by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.6 </small></address>
 </body>
