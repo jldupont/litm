@@ -22,6 +22,68 @@
  *          - python package "pyjld.os" (available through <i>easy_install</i>)
  *
  *
+ * \section	Example_Usage Example Usage:
+ *
+ *			\subsection Example_Opening Opening a connection
+ *
+ *			\code
+ *
+ *				litm_connection *conn;
+ *				litm_code code = litm_connection_open( &conn );
+ *				switch(code) {
+ *				 case LITM_CODE_OK:
+ *				 		// can start using the connection
+ *				 		break;
+ *				 case LITM_CODE_BUSY:
+ *				 		// better try again later
+ *				 		break;
+ *				 default:
+ *				 		//something is wrong...
+ *				 		break;
+ *				}
+ *
+ *			\endcode
+ *
+ *
+ *			\subsection Example_Subscribing Subscribing to a _bus_
+ *
+ *				\code
+ *				// subscribing to bus #1
+ *				litm_code code = litm_subscribe(conn, 1);
+ *				  ... check return code ...
+ *
+ *				\endcode
+ *
+ *
+ *			\subsection Example_Sending Sending a message on a _bus_
+ *
+ *				\code
+ *					void *message; // whatever structure
+ *					litm_code code = litm_send(conn, bus_id, message, NULL);
+ *					 ... check return code ...
+ *				\endcode
+ *
+ *
+ *			\subsection Example_Receiving Receiving a message
+ *
+ *				\code
+ *					litm_envelope *envelope;
+ *					litm_code code = litm_receive_nb(conn, &envelope);
+ *					 ... check return code ...
+ *
+ *					void *msg;
+ *					msg = litm_get_message( envelope );
+ *
+ *					 ... process message WITHOUT MODIFYING IT ...
+ *
+ *					// return the envelope to LITM
+ *					code = litm_release(conn, envelope);
+ *
+ *				\endcode
+ *
+ * \todo Better shutdown system
+ * \todo Better connection close
+ *
  */
 
 #ifndef LITM_H_

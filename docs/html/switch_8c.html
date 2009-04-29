@@ -9,6 +9,7 @@
   <div class="tabs">
     <ul>
       <li><a href="main.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
       <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
     </ul>
@@ -298,7 +299,7 @@ Here is the caller graph for this function:</div>
 
 <p>
 Handle ``pending`` requests to sent 
-<p>Definition at line <a class="el" href="switch_8c-source.html#l00241">241</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
+<p>Definition at line <a class="el" href="switch_8c-source.html#l00238">238</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -369,7 +370,7 @@ Here is the caller graph for this function:</div>
 
 <p>
 The switch thread dequeues messages from the ``input queue`` and dispatches them to the next connection <a class="el" href="structqueue.html">queue</a>. 
-<p>Definition at line <a class="el" href="switch_8c-source.html#l00107">107</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
+<p>Definition at line <a class="el" href="switch_8c-source.html#l00104">104</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -419,7 +420,7 @@ Here is the caller graph for this function:</div>
 <p>
 Tries sending the envelope along BUT requeue if this is not possible at this juncture.<p>
 The call to __switch_try_sending_to_recipient is connection safe. 
-<p>Definition at line <a class="el" href="switch_8c-source.html#l00319">319</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
+<p>Definition at line <a class="el" href="switch_8c-source.html#l00316">316</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -469,7 +470,7 @@ Here is the caller graph for this function:</div>
 <p>
 Try sending the message to the recipient.<p>
 This function does not block waiting for the recipient. This function should only be called by ''__switch_try_sending_or_requeue''. 
-<p>Definition at line <a class="el" href="switch_8c-source.html#l00354">354</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
+<p>Definition at line <a class="el" href="switch_8c-source.html#l00351">351</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -518,7 +519,7 @@ Here is the caller graph for this function:</div>
 
 <p>
 
-<p>Definition at line <a class="el" href="switch_8c-source.html#l00411">411</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
+<p>Definition at line <a class="el" href="switch_8c-source.html#l00408">408</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -607,7 +608,7 @@ Here is the caller graph for this function:</div>
 
 <p>
 A client has finished processing a message: send it through through the ``input_queue`` and if all intended recipients have processed it already, it will be finalized. 
-<p>Definition at line <a class="el" href="switch_8c-source.html#l00285">285</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
+<p>Definition at line <a class="el" href="switch_8c-source.html#l00282">282</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -656,7 +657,7 @@ Here is the caller graph for this function:</div>
 
 <p>
 
-<p>Definition at line <a class="el" href="switch_8c-source.html#l00448">448</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
+<p>Definition at line <a class="el" href="switch_8c-source.html#l00446">446</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -757,8 +758,8 @@ Here is the caller graph for this function:</div>
 <div class="memdoc">
 
 <p>
-TODO implement switch shutdown 
-<p>Definition at line <a class="el" href="switch_8c-source.html#l00093">93</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
+
+<p>Definition at line <a class="el" href="switch_8c-source.html#l00090">90</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -875,7 +876,7 @@ Here is the caller graph for this function:</div>
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Wed Apr 29 13:18:19 2009 for LITM by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Wed Apr 29 14:37:59 2009 for LITM by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.6 </small></address>
 </body>
