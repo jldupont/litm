@@ -157,7 +157,7 @@ void *threadFunction(void *params) {
 
 	thread_params *tp = (thread_params *) params;
 
-	int thread_id;
+	int thread_id, delivery=0, released=0;
 	litm_connection *conn = NULL;
 	litm_code code;
 
@@ -173,17 +173,22 @@ void *threadFunction(void *params) {
 	char *msg;
 	litm_envelope *e;
 
-	code = litm_send( conn, 1, message, &void_cleaner );
-	printMessage(code, "* Sent, code[%s]...","thread_id[%u] conn[%x]\n", thread_id, conn );
-
+	while(1) {
+		code = litm_send( conn, 1, message, &void_cleaner );
+		printMessage(code, "* Sent, code[%s]...","thread_id[%u] conn[%x]\n", thread_id, conn );
+		if (LITM_CODE_OK==code)
+			break;
+	}
 
 	while (0==_exit_threads) {
 
 		code = litm_receive_nb(conn, &e);
 		if (LITM_CODE_OK==code) {
 			msg = e->msg;
-			printf("* thread[%u] received message, msg[%x] \n", thread_id, msg);
-			litm_release(conn, &e);
+			delivery = e->delivery_count;
+			released = e->released_count;
+			printf("* thread[%u] received message, msg[%x] envelope[%x] delivery[%u] released[%u] \n", thread_id, msg, e, delivery, released);
+			litm_release(conn, e);
 		}
 
 		//sleep(0.01);

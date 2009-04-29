@@ -25,9 +25,6 @@ int	__litm_connection_get_index(litm_connection *conn);
  */
 litm_connection *__litm_connection_get_ptr(int connection_index);
 
-void _litm_connections_lock(void);
-void _litm_connections_unlock(void);
-
 
 // PRIVATE VARIABLES
 // -----------------
@@ -112,17 +109,9 @@ litm_connection_close(litm_connection *conn) {
 
 	queue_destroy( q );
 	_connections[index] = NULL;
-
-	// don't need to hold the mutex for the last part
-	// of the operation: the connection isn't part of
-	// the protected table anymore AND we stand less
-	// chances for a livelock since we would be holding
-	// another mutex when calling ``queue_destroy``
-	pthread_mutex_unlock( &_connections_mutex );
-
-	queue_destroy( conn->input_queue );
 	free( conn );
 
+	pthread_mutex_unlock( &_connections_mutex );
 
 	return LITM_CODE_OK;
 }//
@@ -178,8 +167,54 @@ _litm_connections_lock(void) {
 	pthread_mutex_lock( &_connections_mutex );
 }//
 
+	int
+_litm_connections_trylock(void) {
+
+	return pthread_mutex_trylock( &_connections_mutex );
+}//
+
+
 	void
 _litm_connections_unlock(void) {
 
 	pthread_mutex_unlock( &_connections_mutex );
 }//
+
+/**
+ * Returns -1 when BUSY, 1 for OK, 0 for ERROR
+ */
+	int
+_litm_connection_validate(litm_connection *conn) {
+
+	int code = _litm_connections_trylock();
+	if (EBUSY==code) {
+		return -1;
+	}
+
+	int i, returnCode = 0;
+	for (i=1;i<=LITM_CONNECTION_MAX;i++)
+		if ( conn== _connections[i] ) {
+			returnCode = 1;
+			break;
+		}
+
+	return returnCode;
+}
+
+/**
+ * Should only be used when holding
+ * the lock on the _connections.
+ */
+	int
+_litm_connection_validate_safe(litm_connection *conn) {
+
+		int i, returnCode = 0;
+		for (i=1;i<=LITM_CONNECTION_MAX;i++)
+			if ( conn == _connections[i] ) {
+				returnCode = 1;
+				break;
+			}
+
+		return returnCode;
+
+}

@@ -23,5 +23,8 @@
 	// PRIVATE
 	void _litm_connections_lock(void);
 	void _litm_connections_unlock(void);
+	int _litm_connections_trylock(void);
+	int _litm_connection_validate(litm_connection *conn);
+	int _litm_connection_validate_safe(litm_connection *conn);
 
 #endif /* CONNECTION_H_ */

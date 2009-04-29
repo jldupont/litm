@@ -38,12 +38,21 @@ queue *queue_create(void) {
 }// init
 
 /**
- * Safely destroys a queue
+ * Destroys a queue
+ *  _but_ isn't aware of the potential
+ *  messages inside it...
+ *
+ *  TODO make more robust
  */
 void queue_destroy(queue *q) {
 
-	if (NULL!=q)
+	if (NULL==q)
+		return;
+
+	pthread_mutex_lock( q->mutex );
 		free(q);
+		q=NULL;
+	pthread_mutex_unlock( q->mutex );
 }
 
 /**
@@ -164,10 +173,11 @@ void *queue_get(queue *q) {
 
 		tmp = q->head;
 		if (tmp!=NULL) {
-			q->head = q->head->next;
+			q->head = (q->head)->next;
 			msg = tmp->msg;
-			free(tmp);
 			doLog(LOG_DEBUG,"queue_get: MESSAGE PRESENT");
+			free(tmp);
+			tmp = NULL;
 		}
 
 	pthread_mutex_unlock( q->mutex );
@@ -196,11 +206,12 @@ void *queue_get_nb(queue *q) {
 	}
 
 		tmp = q->head;
-		if (tmp!=NULL) {
-			q->head = q->head->next;
+		if (NULL!=tmp) {
+			q->head = (q->head)->next;
 			msg = tmp->msg;
-			free(tmp);
 			DEBUG_LOG(LOG_DEBUG,"queue_get_nb: MESSAGE PRESENT, q[%x]", q);
+			free(tmp);
+			tmp=NULL;
 		}
 
 	pthread_mutex_unlock( q->mutex );

@@ -18,14 +18,15 @@ void doLog(int priority, char *message, ...) {
 
 	openlog(_LOGGER_IDENTITY, LOG_PID, LOG_LOCAL1);
 
-	char buffer[2048];
+	//char buffer[2048];
 	va_list ap;
 
 	va_start(ap, message);
-		vsnprintf (buffer, sizeof(buffer), message, ap);
+		vsyslog( priority, message, ap);
+		//vsnprintf (buffer, sizeof(buffer), message, ap);
 	va_end(ap);
 
-	syslog(priority, buffer, NULL);
+	//syslog(priority, buffer, NULL);
 
 	closelog();
 

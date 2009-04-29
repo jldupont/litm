@@ -4,7 +4,7 @@
  *  Created on: 2009-04-24
  *      Author: Jean-Lou Dupont
  */
-
+#include <errno.h>
 
 #include "litm.h"
 #include "connection.h"
@@ -87,13 +87,20 @@ litm_receive_nb(litm_connection *conn, litm_envelope **envlp) {
 	if (NULL==conn) {
 		return LITM_CODE_ERROR_BAD_CONNECTION;
 	}
+	int returnCode = LITM_CODE_OK; //optimistic
 
-	*envlp = queue_get_nb( conn->input_queue );
-	if (NULL==*envlp) {
-		return LITM_CODE_NO_MESSAGE;
-	}
+	int code = _litm_connections_trylock();
+	if (EBUSY==code)
+		return LITM_CODE_BUSY;
 
-	return LITM_CODE_OK;
+		*envlp = queue_get_nb( conn->input_queue );
+		if (NULL==*envlp) {
+			returnCode=LITM_CODE_NO_MESSAGE;
+		}
+
+	_litm_connections_unlock();
+
+	return returnCode;
 }//
 
 
