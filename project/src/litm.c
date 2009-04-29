@@ -84,6 +84,14 @@ litm_send(	litm_connection *conn,
 }//
 
 
+/**
+ * Receive (non-blocking) function for clients
+ *
+ * \note It is the responsibility of the client
+ *       to _not_ use this function once a
+ *       connection is closed.
+ *
+ */
 	litm_code
 litm_receive_nb(litm_connection *conn, litm_envelope **envlp) {
 
@@ -92,16 +100,10 @@ litm_receive_nb(litm_connection *conn, litm_envelope **envlp) {
 	}
 	int returnCode = LITM_CODE_OK; //optimistic
 
-	//int code = _litm_connections_trylock();
-	//if (EBUSY==code)
-	//	return LITM_CODE_BUSY;
-
-		*envlp = queue_get_nb( conn->input_queue );
-		if (NULL==*envlp) {
-			returnCode=LITM_CODE_NO_MESSAGE;
-		}
-
-	//_litm_connections_unlock();
+	*envlp = queue_get_nb( conn->input_queue );
+	if (NULL==*envlp) {
+		returnCode=LITM_CODE_NO_MESSAGE;
+	}
 
 	return returnCode;
 }//

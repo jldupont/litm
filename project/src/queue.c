@@ -106,7 +106,15 @@ int queue_put(queue *q, void *node) {
 	return code;
 }//[/queue_put]
 
-
+/**
+ * Queue_put_safe
+ *
+ * Lock is not handled
+ *
+ * @return 0 => error
+ * @return 1 => success
+ *
+ */
 	int
 queue_put_safe( queue *q, void *node ) {
 
@@ -160,7 +168,7 @@ int queue_put_nb(queue *q, void *node) {
 	if (EBUSY == pthread_mutex_trylock( q->mutex ))
 		return -1;
 
-		returnCode = queue_put_safe( q, node );
+		int returnCode = queue_put_safe( q, node );
 
 	pthread_mutex_unlock( q->mutex );
 

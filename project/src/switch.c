@@ -201,6 +201,25 @@ __switch_thread_function(void *params) {
 			DEBUG_LOG(LOG_DEBUG, thisMsg, next, err_msg);
 			break;
 
+			/*
+			 * Attempting to send to an ``inactive``
+			 *  connection
+			 */
+		case LITM_CODE_ERROR_CONNECTION_NOT_ACTIVE:
+			DEBUG_LOG(LOG_DEBUG, thisMsg, next, err_msg);
+
+			// remove connection and try sending back
+			// to head of switch_queue: maybe other
+			// recipients are still to be serviced.
+
+			// Putting NULL in the field ``current``
+			// will restart the process of finding
+			// a ``next`` recipient for the envelope.
+			(e->routes).pending = 0;
+			(e->routes).current = NULL;
+			queue_put( _switch_queue, e );
+			break;
+
 		default:
 			DEBUG_LOG(LOG_DEBUG, thisMsg, next, err_msg);
 			__switch_finalize(e);
@@ -349,14 +368,25 @@ __switch_try_sending_to_recipient(	litm_connection *conn,
 	litm_code returnCode = LITM_CODE_OK;
 	int code = 0;
 
-	_litm_connection_lock(conn);
-		status = _litm_connection_get_status( conn );
-		if (LITM_CONNECTION_STATUS_ACTIVE!=status) {
-			code = 2;
+	_litm_connections_lock();
+
+		code = _litm_connection_validate_safe(conn);
+		if (1==code) {
+
+			_litm_connection_lock(conn);
+				status = _litm_connection_get_status( conn );
+				if (LITM_CONNECTION_STATUS_ACTIVE!=status) {
+					code = 2;
+				} else {
+					code = queue_put_safe( conn->input_queue, (void *) env);
+				}
+			_litm_connection_unlock(conn);
+
 		} else {
-			code = queue_put_safe( conn->input_queue, (void *) env);
+			code = 2;
 		}
-	_litm_connection_unlock(conn);
+
+	_litm_connections_unlock();
 
 	switch(code) {
 	case 0: //error
@@ -392,22 +422,23 @@ switch_add_subscriber(litm_connection *conn, litm_bus bus_id) {
 	if (EBUSY==code)
 		return LITM_CODE_BUSY;
 
-	code =_litm_connections_trylock();
-	if (EBUSY==code)
-		return LITM_CODE_BUSY;
-
-
-	int result=LITM_CODE_ERROR_BUS_FULL;
-	int index;
-	for (index=1; index<=LITM_CONNECTION_MAX; index++) {
-		if (NULL==_subscribers[bus_id][index]) {
-			_subscribers[bus_id][index] = conn;
-			result = LITM_CODE_OK;
-			break;
+		code =_litm_connections_trylock();
+		if (EBUSY==code) {
+			pthread_mutex_unlock( &_subscribers_mutex );
+			return LITM_CODE_BUSY;
 		}
-	}
 
-	_litm_connections_unlock();
+			int result=LITM_CODE_ERROR_BUS_FULL;
+			int index;
+			for (index=1; index<=LITM_CONNECTION_MAX; index++) {
+				if (NULL==_subscribers[bus_id][index]) {
+					_subscribers[bus_id][index] = conn;
+					result = LITM_CODE_OK;
+					break;
+				}
+			}
+
+		_litm_connections_unlock();
 
 	pthread_mutex_unlock( &_subscribers_mutex );
 
@@ -429,22 +460,24 @@ switch_remove_subscriber(litm_connection *conn, litm_bus bus_id) {
 	if (EBUSY==code)
 		return LITM_CODE_BUSY;
 
-	code =_litm_connections_trylock();
-	if (EBUSY==code)
-		return LITM_CODE_BUSY;
-
-
-	int result=LITM_CODE_ERROR_SUBSCRIPTION_NOT_FOUND;
-	int index;
-	for (index=1; index<=LITM_CONNECTION_MAX; index++) {
-		if (conn==_subscribers[bus_id][index]) {
-			_subscribers[bus_id][index] = NULL;
-			result = LITM_CODE_OK;
-			break;
+		code =_litm_connections_trylock();
+		if (EBUSY==code) {
+			pthread_mutex_unlock( &_subscribers_mutex );
+			return LITM_CODE_BUSY;
 		}
-	}
 
-	_litm_connections_unlock();
+			int result=LITM_CODE_ERROR_SUBSCRIPTION_NOT_FOUND;
+			int index;
+			for (index=1; index<=LITM_CONNECTION_MAX; index++) {
+				if (conn==_subscribers[bus_id][index]) {
+					_subscribers[bus_id][index] = NULL;
+					result = LITM_CODE_OK;
+					break;
+				}
+			}
+
+		_litm_connections_unlock();
+
 	pthread_mutex_unlock( &_subscribers_mutex );
 
 	return result;

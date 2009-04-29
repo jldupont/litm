@@ -1,0 +1,12 @@
+<area shape="rect" href="$switch_8c.html#1025953257d7d23c8473d945dbf0c9db" title="__switch_try_sending_to_recipient" alt="" coords="169,56,388,83">
+<area shape="rect" href="$queue_8h.html#3d346fcf3a730d9e52e0b27359de6256" title="queue_put" alt="" coords="239,107,319,133">
+<area shape="rect" href="$queue_8h.html#8cd65d2ab7ec27b19a655e9835de832c" title="queue_put_nb" alt="" coords="228,157,329,184">
+<area shape="rect" href="$switch_8c.html#a915fa62ee3a445f9acac19e744005e3" title="__switch_try_sending_or_requeue" alt="" coords="439,56,655,83">
+<area shape="rect" href="$switch_8c.html#195303a03d0b0c2a3f44951a38b2b0f6" title="__switch_handle_pending" alt="" coords="705,5,873,32">
+<area shape="rect" href="$switch_8c.html#99ec0a50e5e594cb656f9ea1f7d39554" title="__switch_thread_function" alt="" coords="923,56,1091,83">
+<area shape="rect" href="$switch_8h.html#cf83bfcffad6990c781b1a668ec8209e" title="switch_init" alt="" coords="1139,56,1221,83">
+<area shape="rect" href="$litm_8h.html#bc852d2eb14353e36adf21c33eab03a3" title="litm_connect" alt="" coords="1269,56,1365,83">
+<area shape="rect" href="$switch_8h.html#2bab91639e612d51d0d7d8a3a64d0ace" title="switch_release" alt="" coords="493,157,600,184">
+<area shape="rect" href="$switch_8h.html#7ff2d602f713f81e854c172e842afcad" title="switch_send" alt="" coords="500,208,593,235">
+<area shape="rect" href="$litm_8h.html#21def412c9b064fc929e0822f28d2a2a" title="litm_release" alt="" coords="744,157,835,184">
+<area shape="rect" href="$litm_8h.html#bed13398c1bc31a6c81c3e50997e2f2c" title="litm_send" alt="" coords="751,208,828,235">

@@ -1,3 +1,9 @@
-<area shape="rect" href="$switch_8c.html#1025953257d7d23c8473d945dbf0c9db" title="__switch_try_sending_to_recipient" alt="" coords="273,5,492,32">
-<area shape="rect" href="$queue_8c.html#e8939dc8316290db7846b56d38c7ff90" title="queue_put" alt="" coords="343,56,423,83">
-<area shape="rect" href="$queue_8c.html#ad63e2d2e97a079465ca5651b5b7c36e" title="queue_put_nb" alt="" coords="543,5,644,32">
+<area shape="rect" href="$switch_8c.html#1025953257d7d23c8473d945dbf0c9db" title="__switch_try_sending_to_recipient" alt="" coords="273,182,492,209">
+<area shape="rect" href="$queue_8c.html#e8939dc8316290db7846b56d38c7ff90" title="queue_put" alt="" coords="343,258,423,285">
+<area shape="rect" href="$connection_8c.html#86230c9edffe9b05ec0ff384b1706716" title="_litm_connection_get_status" alt="" coords="551,5,737,32">
+<area shape="rect" href="$connection_8c.html#845538cd477e83b01381c22198ca318f" title="_litm_connection_lock" alt="" coords="569,56,719,82">
+<area shape="rect" href="$connection_8c.html#1bbcee336581803f8ff367f55fca7363" title="_litm_connection_unlock" alt="" coords="563,106,725,133">
+<area shape="rect" href="$connection_8c.html#200b813c910cd4a83c36aa907bd52dbe" title="_litm_connection_validate_safe" alt="" coords="543,157,745,184">
+<area shape="rect" href="$connection_8c.html#9e582b29253857b58f87ba89f8a6526f" title="_litm_connections_lock" alt="" coords="565,208,723,234">
+<area shape="rect" href="$connection_8c.html#c75b4b0413d3523574bda13549715447" title="_litm_connections_unlock" alt="" coords="559,258,729,285">
+<area shape="rect" href="$queue_8c.html#24e3c9aaef201f1f66bcd8591b1e4c15" title="queue_put_safe" alt="" coords="588,309,700,336">

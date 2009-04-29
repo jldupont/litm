@@ -15,6 +15,24 @@
  *			later deletion: the connection can not be used for any
  *			access from this point onwards.
  *
+ * \section Connections
+ *
+ * 			From a client operation point of view, the connection table
+ * 			is only locked whilst performing:
+ *
+ * 			- ``open`` and ``close`` connection operations
+ * 			- ``add`` and ``remove`` subscription operations
+ *
+ * 			at which times the return code LITM_CODE_BUSY might be used
+ * 			to signal to the client to try again later. This behavior is
+ * 			necessary in order for the ``switch`` to be in control
+ * 			position, thus simplifying the architecture and API.
+ *
+ *			Since the ``switch`` is in control, the connection table
+ *			is also held in locked state whilst dispatching envelopes
+ *			to clients.
+ *
+ *
  * \section Deletion
  *
  * 			Connection deletion is performed in the following manner:
@@ -205,43 +223,42 @@ _litm_connections_unlock(void) {
 }//
 
 /**
- * Returns -1 when BUSY, 1 for OK, 0 for ERROR
+ * @see _litm_connection_validate_safe
+ *
  */
 	int
 _litm_connection_validate(litm_connection *conn) {
 
-	int code = _litm_connections_trylock();
-	if (EBUSY==code) {
+	if (EBUSY==_litm_connections_trylock())
 		return -1;
-	}
 
-	int i, returnCode = 0;
-	for (i=1;i<=LITM_CONNECTION_MAX;i++)
-		if ( conn== _connections[i] ) {
-			returnCode = 1;
-			break;
-		}
+		int returnCode = _litm_connection_validate_safe( conn );
+
+	_litm_connections_unlock();
 
 	return returnCode;
 }
 
 /**
- * Should only be used when holding
- * the lock on the _connections.
+ * Connection validation
+ *
+ * @return 0 => not active
+ * @return 1 => active
+ *
  */
 	int
 _litm_connection_validate_safe(litm_connection *conn) {
 
-		int i, returnCode = 0;
-		for (i=1;i<=LITM_CONNECTION_MAX;i++)
-			if ( conn == _connections[i] ) {
-				returnCode = 1;
-				break;
-			}
+	int i, returnCode = 0;
+	for (i=1;i<=LITM_CONNECTION_MAX;i++) {
+		if ( conn == _connections[i] ) {
+			returnCode = 1;
+			break;
+		}
+	}
 
-		return returnCode;
-
-}
+	return returnCode;
+}//
 
 	void
 _litm_connection_lock(litm_connection *conn) {
