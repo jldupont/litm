@@ -1,14 +1,23 @@
-/*
- * queue.c
+/**
+ * @file queue.c
  *
- *  Created on: 2009-04-24
- *      Author: Jean-Lou Dupont
+ * @date 2009-04-24
+ * @author: Jean-Lou Dupont
+ *
+ *
+ * The _queue_ module isn't aware of its elements
+ * and thus it is the responsibility of the clients
+ * to properly dispose of the _nodes_ once retrieved.
+ *
+ * The term ``node`` is used generically to refer
+ * to a node element inside a queue.
+ *
  */
 
 #include <pthread.h>
 #include <errno.h>
 
-#include "../includes/logger.h"
+#include "logger.h"
 #include "litm.h"
 #include "queue.h"
 
@@ -17,8 +26,6 @@
  * Creates a queue
  */
 queue *queue_create(void) {
-
-	//DEBUG_LOG(LOG_INFO, "queue_create: BEGIN");
 
 	// if this malloc fails,
 	//  there are much bigger problems that loom
@@ -39,23 +46,25 @@ queue *queue_create(void) {
 
 		if (NULL!=q)
 			free(q);
+
 		if (NULL!=mutex)
 			free(mutex);
 	}
 
-	//DEBUG_LOG(LOG_INFO, "queue_create: END");
 	return q;
 }// init
 
 /**
  * Destroys a queue
- *  _but_ isn't aware of the potential
- *  messages inside it...
  *
- *  TODO make more robust
+ * This function is **not** aware of the
+ *  message(s) potentially inside the queue,
+ *  thus, the queue must be drained **before**
+ *  using this function.
  *
- *  The ``cleaner`` agent should be registered
- *  along with the queue...
+ * The queue can be drained by:
+ * - stopping the thread that ``puts``
+ * - ``getting`` until NULL is returned
  *
  */
 void queue_destroy(queue *q) {
@@ -73,21 +82,21 @@ void queue_destroy(queue *q) {
 }
 
 /**
- * Queues a message in the communication queue
+ * Queues a node (blocking)
  *
- * Returns 1 on success, 0 on error
- */
-int queue_put(queue *q, void *message) {
+ * @return 1 => success
+ * @return 0 => error
+ *
+  */
+int queue_put(queue *q, void *node) {
 
-	if ((NULL==q) || (NULL==message)) {
-		DEBUG_LOG(LOG_DEBUG, "queue_destroy: NULL queue/msg ptr");
+	if ((NULL==q) || (NULL==node)) {
+		DEBUG_LOG(LOG_DEBUG, "queue_destroy: NULL queue/node ptr");
 		return 0;
 	}
 
 	int code = 1;
 	queue_node *tmp=NULL;
-
-	//DEBUG_LOG(LOG_DEBUG,"queue_put: BEGIN");
 
 	pthread_mutex_lock( q->mutex );
 
@@ -96,9 +105,7 @@ int queue_put(queue *q, void *message) {
 		tmp = (queue_node *) malloc(sizeof(queue_node));
 		if (NULL!=tmp) {
 
-			DEBUG_LOG(LOG_DEBUG, "queue_put: q[%x] message[%x]", q, message);
-
-			tmp->msg  = message;
+			tmp->node = node;
 			tmp->next = NULL;
 
 			// there is a tail... put at the end
@@ -124,20 +131,19 @@ int queue_put(queue *q, void *message) {
 
 
 /**
- * Queues a message (non-blocking)
- *  in the communication queue
+ * Queues a node (non-blocking)
  *
- * Returns	1 on success,
- * 			0 on error
- * 			-1 on busy
+ * @return 1  => success
+ * @return 0  => error
+ * @return -1 => busy
+ *
  */
-int queue_put_nb(queue *q, void *msg) {
+int queue_put_nb(queue *q, void *node) {
 
-	if ((NULL==q) || (NULL==msg)) {
-		DEBUG_LOG(LOG_DEBUG, "queue_put_nb: NULL queue/msg ptr");
+	if ((NULL==q) || (NULL==node)) {
+		DEBUG_LOG(LOG_DEBUG, "queue_put_nb: NULL queue/node ptr");
 		return 0;
 	}
-	//DEBUG_LOG(LOG_DEBUG,"queue_put_nb: BEGIN");
 
 	if (EBUSY == pthread_mutex_trylock( q->mutex ))
 		return -1;
@@ -150,11 +156,8 @@ int queue_put_nb(queue *q, void *msg) {
 		tmp = (queue_node *) malloc(sizeof(queue_node));
 		if (NULL!=tmp) {
 
-			tmp->msg = msg;
-
-			//perform the ''put'' operation {
-				//no next yet...
-				tmp->next=NULL;
+			tmp->node = node;
+			tmp->next = NULL;
 
 				//insert pointer to element first
 				if (NULL!=q->tail)
@@ -167,9 +170,9 @@ int queue_put_nb(queue *q, void *msg) {
 				if (NULL==q->head)
 					q->head=tmp;
 
-			// success
+				// success
 				returnCode = 1;
-			DEBUG_LOG(LOG_DEBUG,"queue_put_nb: QUEUED q[%x] msg[%x] queue_node[%x]", q, msg, tmp);
+				//DEBUG_LOG(LOG_DEBUG,"queue_put_nb: QUEUED q[%x] node[%x] queue_node[%x]", q, node, tmp);
 			//}
 
 		} else {
@@ -182,8 +185,10 @@ int queue_put_nb(queue *q, void *msg) {
 }//[/queue_put]
 
 /**
- * Retrieves the next message from the communication queue
- * Returns NULL if none.
+ * Retrieves the next node from a queue
+ *
+ * @return NULL if none.
+ *
  */
 void *queue_get(queue *q) {
 
@@ -193,9 +198,7 @@ void *queue_get(queue *q) {
 	}
 
 	queue_node *tmp = NULL;
-	void *msg=NULL;
-
-	//DEBUG_LOG(LOG_DEBUG,"queue_get: BEGIN");
+	void *node=NULL;
 
 	pthread_mutex_lock( q->mutex );
 
@@ -211,26 +214,23 @@ void *queue_get(queue *q) {
 			// adjust head : next pointer is already set
 			//  to NULL in queue_put
 			q->head = (q->head)->next;
-			msg = tmp->msg;
 
+			node = tmp->node;
 
-
-			DEBUG_LOG(LOG_DEBUG,"queue_get: MESSAGE PRESENT, freeing queue_node[%x]", tmp);
-
+			//DEBUG_LOG(LOG_DEBUG,"queue_get: MESSAGE PRESENT, freeing queue_node[%x]", tmp);
 			free(tmp);
-
-			tmp = NULL;
 		}
 
 	pthread_mutex_unlock( q->mutex );
 
-	//DEBUG_LOG(LOG_DEBUG,"queue_get: END");
-
-	return msg;
+	return node;
 }//[/queue_get]
 
 /**
- * Returns NULL if NONE / BUSY
+ * Retrieves the next node from a queue (non-blocking)
+ *
+ * @return NULL => No node OR BUSY
+ *
  */
 void *queue_get_nb(queue *q) {
 
@@ -239,16 +239,10 @@ void *queue_get_nb(queue *q) {
 		return NULL;
 	}
 
-	//DEBUG_LOG_PTR(q, LOG_ERR, "queue_get_nb: NULL");
-
 	queue_node *tmp = NULL;
-	void *msg=NULL;
+	void *node=NULL;
 
-	//DEBUG_LOG(LOG_DEBUG,"queue_get_nb: BEGIN");
-
-	int code = pthread_mutex_trylock( q->mutex );
-	if (EBUSY==code) {
-		//DEBUG_LOG(LOG_DEBUG,"queue_get_nb: BUSY");
+	if (EBUSY==pthread_mutex_trylock( q->mutex )) {
 		return NULL;
 	}
 
@@ -261,29 +255,26 @@ void *queue_get_nb(queue *q) {
 				q->tail = NULL;
 			}
 
-
 			q->head = (q->head)->next;
-			msg = tmp->msg;
+			node = tmp->node;
 
-			DEBUG_LOG(LOG_DEBUG,"queue_get_nb: MESSAGE PRESENT, q[%x] envlp[%x], freeing queue_node[%x]", q, msg, tmp);
-
+			//DEBUG_LOG(LOG_DEBUG,"queue_get_nb: NODE PRESENT, q[%x] envlp[%x], freeing queue_node[%x]", q, node, tmp);
 			free(tmp);
-			tmp=NULL;
+
 		}
 
 	pthread_mutex_unlock( q->mutex );
 
-	//DEBUG_LOG(LOG_DEBUG,"queue_get_nb: END");
-
-	return msg;
+	return node;
 }//[/queue_get]
 
 /**
  * Verifies if a message is present
  *
- * Returns 1 if at least 1 message is present,
- *  0 if NONE
- *  -1 on ERROR
+ * @return 1 if at least 1 message is present,
+ * @return 0  if NONE
+ * @return -1 on ERROR
+ *
  */
 int queue_peek(queue *q) {
 
@@ -295,16 +286,12 @@ int queue_peek(queue *q) {
 	queue_node *tmp = NULL;
 	int result = 0;
 
-	//DEBUG_LOG(LOG_DEBUG,"queue_peek: BEGIN");
-
 	pthread_mutex_lock( q->mutex );
 
 		tmp = q->head;
 		result = (tmp!=NULL);
 
 	pthread_mutex_unlock( q->mutex );
-
-	//DEBUG_LOG(LOG_DEBUG,"queue_peek: END");
 
 	return result;
 } // queue_peek

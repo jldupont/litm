@@ -1,0 +1,8 @@
+<area shape="rect" href="$switch_8c.html#149e07f06e61c0daee8f4cf38200dff2" title="__switch_finalize" alt="" coords="273,6,393,32">
+<area shape="rect" href="$switch_8c.html#a915fa62ee3a445f9acac19e744005e3" title="__switch_try_sending_or_requeue" alt="" coords="225,56,441,83">
+<area shape="rect" href="$litm_8c.html#76f700b9bb8531fd8baf8931e67c4604" title="litm_translate_code" alt="" coords="267,107,400,134">
+<area shape="rect" href="$pool_8c.html#1266647a6ed7c20e9c5d08f4bef09dd3" title="__litm_pool_recycle" alt="" coords="533,6,669,32">
+<area shape="rect" href="$pool_8c.html#2f844d6f6d2a471a5a93c3c49c28eef2" title="__litm_pool_destroy" alt="" coords="761,6,897,32">
+<area shape="rect" href="$switch_8c.html#1025953257d7d23c8473d945dbf0c9db" title="__switch_try_sending_to_recipient" alt="" coords="492,56,711,83">
+<area shape="rect" href="$queue_8c.html#e8939dc8316290db7846b56d38c7ff90" title="queue_put" alt="" coords="561,107,641,134">
+<area shape="rect" href="$queue_8c.html#ad63e2d2e97a079465ca5651b5b7c36e" title="queue_put_nb" alt="" coords="779,56,880,83">

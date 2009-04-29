@@ -13,115 +13,187 @@
       <li class="current"><a href="files.html"><span>Files</span></a></li>
     </ul>
   </div>
-<h1>project/src/pool.c</h1><a href="pool_8c.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/*</span>
-<a name="l00002"></a>00002 <span class="comment"> * pool.c</span>
+<h1>project/src/pool.c</h1><a href="pool_8c.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="comment">/**</span>
+<a name="l00002"></a>00002 <span class="comment"> * @file pool.c</span>
 <a name="l00003"></a>00003 <span class="comment"> *</span>
-<a name="l00004"></a>00004 <span class="comment"> *  Created on: 2009-04-24</span>
-<a name="l00005"></a>00005 <span class="comment"> *      Author: Jean-Lou Dupont</span>
+<a name="l00004"></a>00004 <span class="comment"> * @date   2009-04-24</span>
+<a name="l00005"></a>00005 <span class="comment"> * @author Jean-Lou Dupont</span>
 <a name="l00006"></a>00006 <span class="comment"> *</span>
 <a name="l00007"></a>00007 <span class="comment"> * Handles pooling / recycling of ``envelopes``</span>
 <a name="l00008"></a>00008 <span class="comment"> *</span>
 <a name="l00009"></a>00009 <span class="comment"> *  FOR MORE INFORMATION, CONSULT   ``pool.h``</span>
 <a name="l00010"></a>00010 <span class="comment"> *</span>
-<a name="l00011"></a>00011 <span class="comment"> *</span>
-<a name="l00012"></a>00012 <span class="comment"> * NOTE: This module assumes it is executing in a thread-safe environment.</span>
-<a name="l00013"></a>00013 <span class="comment"> * ----</span>
-<a name="l00014"></a>00014 <span class="comment"> *</span>
-<a name="l00015"></a>00015 <span class="comment"> */</span>
-<a name="l00016"></a>00016 
-<a name="l00017"></a>00017 <span class="preprocessor">#include &lt;string.h&gt;</span>
-<a name="l00018"></a>00018 <span class="preprocessor">#include &lt;stdlib.h&gt;</span>
-<a name="l00019"></a>00019 
-<a name="l00020"></a>00020 <span class="preprocessor">#include "<a class="code" href="litm_8h.html">litm.h</a>"</span>
-<a name="l00021"></a>00021 <span class="preprocessor">#include "<a class="code" href="pool_8h.html">pool.h</a>"</span>
-<a name="l00022"></a>00022 <span class="preprocessor">#include "<a class="code" href="logger_8h.html">logger.h</a>"</span>
-<a name="l00023"></a>00023 
-<a name="l00024"></a>00024         <span class="comment">// PRIVATE //</span>
-<a name="l00025"></a>00025         <span class="comment">// ======= //</span>
-<a name="l00026"></a><a class="code" href="pool_8c.html#3413f86bf4ea5a68449ece4bb26352c8">00026</a>         <a class="code" href="struct__litm__envelope.html">litm_envelope</a> * <a class="code" href="pool_8c.html#3413f86bf4ea5a68449ece4bb26352c8">_stack</a>[<a class="code" href="pool_8h.html#82f68d9a84b4cd46e13dc7adf193a7eb">LITM_POOL_SIZE</a>];   <span class="comment">//LIFO stack</span>
-<a name="l00027"></a>00027 
+<a name="l00011"></a>00011 <span class="comment"> * This module is thread-safe.</span>
+<a name="l00012"></a>00012 <span class="comment"> *</span>
+<a name="l00013"></a>00013 <span class="comment"> */</span>
+<a name="l00014"></a>00014 
+<a name="l00015"></a>00015 <span class="preprocessor">#include &lt;pthread.h&gt;</span>
+<a name="l00016"></a>00016 <span class="preprocessor">#include &lt;string.h&gt;</span>
+<a name="l00017"></a>00017 <span class="preprocessor">#include &lt;stdlib.h&gt;</span>
+<a name="l00018"></a>00018 
+<a name="l00019"></a>00019 <span class="preprocessor">#include "<a class="code" href="litm_8h.html">litm.h</a>"</span>
+<a name="l00020"></a>00020 <span class="preprocessor">#include "<a class="code" href="pool_8h.html">pool.h</a>"</span>
+<a name="l00021"></a>00021 <span class="preprocessor">#include "<a class="code" href="logger_8h.html">logger.h</a>"</span>
+<a name="l00022"></a>00022 
+<a name="l00023"></a>00023         <span class="comment">// PRIVATE //</span>
+<a name="l00024"></a>00024         <span class="comment">// ======= //</span>
+<a name="l00025"></a><a class="code" href="pool_8c.html#3413f86bf4ea5a68449ece4bb26352c8">00025</a>         <a class="code" href="struct__litm__envelope.html">litm_envelope</a> * <a class="code" href="pool_8c.html#3413f86bf4ea5a68449ece4bb26352c8">_stack</a>[<a class="code" href="pool_8h.html#82f68d9a84b4cd46e13dc7adf193a7eb">LITM_POOL_SIZE</a>];   <span class="comment">//LIFO stack</span>
+<a name="l00026"></a>00026 
+<a name="l00027"></a><a class="code" href="pool_8c.html#1f524019938414f3343b234da6e3738f">00027</a>         <span class="keywordtype">int</span> <a class="code" href="pool_8c.html#1f524019938414f3343b234da6e3738f">_stack_initialized</a> = 0; <span class="comment">//FALSE</span>
 <a name="l00028"></a><a class="code" href="pool_8c.html#2e55d0fea0e1bfdcd9cad770a70e2afe">00028</a>         <span class="keywordtype">int</span> <a class="code" href="pool_8c.html#2e55d0fea0e1bfdcd9cad770a70e2afe">_top_stack</a> = 0;
 <a name="l00029"></a><a class="code" href="pool_8c.html#9acc85c1d61a1322b66e9a6dec848ea3">00029</a>         <span class="keywordtype">int</span> <a class="code" href="pool_8c.html#9acc85c1d61a1322b66e9a6dec848ea3">_created</a>   = 0;
 <a name="l00030"></a><a class="code" href="pool_8c.html#60d30e96a1ea1ffb7b4efc8c269a5674">00030</a>         <span class="keywordtype">int</span> <a class="code" href="pool_8c.html#60d30e96a1ea1ffb7b4efc8c269a5674">_recycled</a>  = 0;
 <a name="l00031"></a><a class="code" href="pool_8c.html#e388cd19bca797abf0835dea71037f44">00031</a>         <span class="keywordtype">int</span> <a class="code" href="pool_8c.html#e388cd19bca797abf0835dea71037f44">_returned</a>  = 0;
 <a name="l00032"></a>00032 
-<a name="l00033"></a>00033 
-<a name="l00034"></a>00034         <span class="keywordtype">void</span>
-<a name="l00035"></a><a class="code" href="pool_8h.html#1266647a6ed7c20e9c5d08f4bef09dd3">00035</a> <a class="code" href="pool_8c.html#1266647a6ed7c20e9c5d08f4bef09dd3">__litm_pool_recycle</a>( <a class="code" href="struct__litm__envelope.html">litm_envelope</a> *envlp ) {
-<a name="l00036"></a>00036 
-<a name="l00037"></a>00037         <span class="comment">//can we recycle this one?</span>
-<a name="l00038"></a>00038         <span class="keywordflow">if</span> ( <a class="code" href="pool_8c.html#2e55d0fea0e1bfdcd9cad770a70e2afe">_top_stack</a> + 1 == <a class="code" href="pool_8h.html#82f68d9a84b4cd46e13dc7adf193a7eb">LITM_POOL_SIZE</a> ) {
-<a name="l00039"></a>00039                 <a class="code" href="pool_8c.html#2f844d6f6d2a471a5a93c3c49c28eef2">__litm_pool_destroy</a>( envlp );
-<a name="l00040"></a>00040                 <span class="keywordflow">return</span>;
-<a name="l00041"></a>00041         }
-<a name="l00042"></a>00042 
-<a name="l00043"></a>00043         _stack[<a class="code" href="pool_8c.html#2e55d0fea0e1bfdcd9cad770a70e2afe">_top_stack</a>++] = envlp;
-<a name="l00044"></a>00044 
-<a name="l00045"></a>00045         <span class="comment">// statistics</span>
-<a name="l00046"></a>00046         <a class="code" href="pool_8c.html#60d30e96a1ea1ffb7b4efc8c269a5674">_recycled</a> ++;
-<a name="l00047"></a>00047 
-<a name="l00048"></a>00048 }<span class="comment">//</span>
-<a name="l00049"></a>00049 
+<a name="l00033"></a><a class="code" href="pool_8c.html#d06122921905f71cafca1e4b4fe74a71">00033</a>         pthread_mutex_t  <a class="code" href="pool_8c.html#d06122921905f71cafca1e4b4fe74a71">_pool_mutex</a> = PTHREAD_MUTEX_INITIALIZER;
+<a name="l00034"></a>00034 <span class="comment"></span>
+<a name="l00035"></a>00035 <span class="comment">/**</span>
+<a name="l00036"></a>00036 <span class="comment"> * Recyles an ``envelope`` by either:</span>
+<a name="l00037"></a>00037 <span class="comment"> * - putting it on a stack for later recall</span>
+<a name="l00038"></a>00038 <span class="comment"> * - destroying it if there is no more place on the stack</span>
+<a name="l00039"></a>00039 <span class="comment"> *</span>
+<a name="l00040"></a>00040 <span class="comment"> * NOTE: it is the responsibility of the client of this</span>
+<a name="l00041"></a>00041 <span class="comment"> *       module to dispose of properly of the internal</span>
+<a name="l00042"></a>00042 <span class="comment"> *       structure (ie. the ``msg`` member) of the</span>
+<a name="l00043"></a>00043 <span class="comment"> *       ``envelope`` **before** using this recycling facility.</span>
+<a name="l00044"></a>00044 <span class="comment"> *</span>
+<a name="l00045"></a>00045 <span class="comment"> */</span>
+<a name="l00046"></a>00046         <span class="keywordtype">void</span>
+<a name="l00047"></a><a class="code" href="pool_8h.html#1266647a6ed7c20e9c5d08f4bef09dd3">00047</a> <a class="code" href="pool_8c.html#1266647a6ed7c20e9c5d08f4bef09dd3">__litm_pool_recycle</a>( <a class="code" href="struct__litm__envelope.html">litm_envelope</a> *envlp ) {
+<a name="l00048"></a>00048 
+<a name="l00049"></a>00049         pthread_mutex_lock( &amp;<a class="code" href="pool_8c.html#d06122921905f71cafca1e4b4fe74a71">_pool_mutex</a> );
 <a name="l00050"></a>00050 
-<a name="l00051"></a>00051 
-<a name="l00052"></a>00052 
-<a name="l00053"></a>00053         <a class="code" href="struct__litm__envelope.html">litm_envelope</a> *
-<a name="l00054"></a><a class="code" href="pool_8h.html#5a3eeccda0cfcf633af7177fad20c783">00054</a> <a class="code" href="pool_8c.html#5a3eeccda0cfcf633af7177fad20c783">__litm_pool_get</a>(<span class="keywordtype">void</span>) {
+<a name="l00051"></a>00051         <span class="comment">//can we recycle this one?</span>
+<a name="l00052"></a>00052         <span class="keywordflow">if</span> ( <a class="code" href="pool_8c.html#2e55d0fea0e1bfdcd9cad770a70e2afe">_top_stack</a> + 1 == <a class="code" href="pool_8h.html#82f68d9a84b4cd46e13dc7adf193a7eb">LITM_POOL_SIZE</a> ) {
+<a name="l00053"></a>00053                 <a class="code" href="logger_8h.html#21a2c7330a04ac78200a986f66609369">DEBUG_LOG</a>(LOG_DEBUG, <span class="stringliteral">"__litm_pool_recycle: destroying envelope [%x]"</span>, envlp );
+<a name="l00054"></a>00054                 <a class="code" href="pool_8c.html#2f844d6f6d2a471a5a93c3c49c28eef2">__litm_pool_destroy</a>( envlp );
 <a name="l00055"></a>00055 
-<a name="l00056"></a>00056         <a class="code" href="struct__litm__envelope.html">litm_envelope</a> *e;
-<a name="l00057"></a>00057 
-<a name="l00058"></a>00058         <span class="comment">// do we have a spare?</span>
-<a name="l00059"></a>00059         e = _stack[ <a class="code" href="pool_8c.html#2e55d0fea0e1bfdcd9cad770a70e2afe">_top_stack</a> ];
-<a name="l00060"></a>00060         <span class="keywordflow">if</span> (NULL!=e) {
-<a name="l00061"></a>00061 
-<a name="l00062"></a>00062                 _stack[<a class="code" href="pool_8c.html#2e55d0fea0e1bfdcd9cad770a70e2afe">_top_stack</a>] = NULL;
-<a name="l00063"></a>00063                 <a class="code" href="pool_8c.html#ad0b7166470e29cb5024efeca7d035af">__litm_pool_clean</a>( e );
+<a name="l00056"></a>00056         } <span class="keywordflow">else</span> {
+<a name="l00057"></a>00057                 <a class="code" href="logger_8h.html#21a2c7330a04ac78200a986f66609369">DEBUG_LOG</a>(LOG_DEBUG, <span class="stringliteral">"__litm_pool_recycle: recycling envelope [%x]"</span>, envlp );
+<a name="l00058"></a>00058                 <a class="code" href="pool_8c.html#2e55d0fea0e1bfdcd9cad770a70e2afe">_top_stack</a> ++;
+<a name="l00059"></a>00059                 _stack[<a class="code" href="pool_8c.html#2e55d0fea0e1bfdcd9cad770a70e2afe">_top_stack</a>] = envlp;
+<a name="l00060"></a>00060 
+<a name="l00061"></a>00061                 <span class="comment">// statistics</span>
+<a name="l00062"></a>00062                 <a class="code" href="pool_8c.html#60d30e96a1ea1ffb7b4efc8c269a5674">_recycled</a> ++;
+<a name="l00063"></a>00063         }
 <a name="l00064"></a>00064 
-<a name="l00065"></a>00065                 <span class="comment">// statistics...</span>
-<a name="l00066"></a>00066                 <a class="code" href="pool_8c.html#e388cd19bca797abf0835dea71037f44">_returned</a> ++;
-<a name="l00067"></a>00067 
-<a name="l00068"></a>00068                 <span class="keywordflow">if</span> (0!=<a class="code" href="pool_8c.html#2e55d0fea0e1bfdcd9cad770a70e2afe">_top_stack</a>)
-<a name="l00069"></a>00069                         <a class="code" href="pool_8c.html#2e55d0fea0e1bfdcd9cad770a70e2afe">_top_stack</a>-- ;
-<a name="l00070"></a>00070 
-<a name="l00071"></a>00071         } <span class="keywordflow">else</span> {
-<a name="l00072"></a>00072 
-<a name="l00073"></a>00073                 <span class="comment">// prepare a new one</span>
-<a name="l00074"></a>00074                 e = malloc(<span class="keyword">sizeof</span>(<a class="code" href="struct__litm__envelope.html">litm_envelope</a>));
-<a name="l00075"></a>00075                 <span class="keywordflow">if</span> (NULL!=e) {
-<a name="l00076"></a>00076                         bzero(e, <span class="keyword">sizeof</span>(<a class="code" href="struct__litm__envelope.html">litm_envelope</a>));
-<a name="l00077"></a>00077 
-<a name="l00078"></a>00078                         <span class="comment">// statistics...</span>
-<a name="l00079"></a>00079                         <a class="code" href="pool_8c.html#9acc85c1d61a1322b66e9a6dec848ea3">_created</a> ++ ;
-<a name="l00080"></a>00080                 }
-<a name="l00081"></a>00081 
-<a name="l00082"></a>00082         }
-<a name="l00083"></a>00083 
-<a name="l00084"></a>00084         <span class="keywordflow">return</span> e;
-<a name="l00085"></a>00085 }<span class="comment">//</span>
-<a name="l00086"></a>00086 
-<a name="l00087"></a>00087 
-<a name="l00088"></a>00088         <span class="keywordtype">void</span>
-<a name="l00089"></a><a class="code" href="pool_8h.html#2f844d6f6d2a471a5a93c3c49c28eef2">00089</a> <a class="code" href="pool_8c.html#2f844d6f6d2a471a5a93c3c49c28eef2">__litm_pool_destroy</a>( <a class="code" href="struct__litm__envelope.html">litm_envelope</a> *envlp ) {
-<a name="l00090"></a>00090         <a class="code" href="logger_8h.html#5e74f7a89e89b195bba421ac1ed9a496">DEBUG_LOG_PTR</a>( envlp, LOG_ERR, <span class="stringliteral">"__litm_pool_destroy: NULL"</span>);
-<a name="l00091"></a>00091 
-<a name="l00092"></a>00092         <span class="comment">// First, destroy the message</span>
-<a name="l00093"></a>00093         free( envlp-&gt; msg );
-<a name="l00094"></a>00094         free( envlp );
-<a name="l00095"></a>00095 
-<a name="l00096"></a>00096 }<span class="comment">//</span>
+<a name="l00065"></a>00065         pthread_mutex_unlock( &amp;<a class="code" href="pool_8c.html#d06122921905f71cafca1e4b4fe74a71">_pool_mutex</a> );
+<a name="l00066"></a>00066 
+<a name="l00067"></a>00067 }<span class="comment">//</span>
+<a name="l00068"></a>00068 
+<a name="l00069"></a>00069 <span class="comment"></span>
+<a name="l00070"></a>00070 <span class="comment">/**</span>
+<a name="l00071"></a>00071 <span class="comment"> * Retrieves an ``envelope`` from either:</span>
+<a name="l00072"></a>00072 <span class="comment"> * - the stack if one is available</span>
+<a name="l00073"></a>00073 <span class="comment"> * - the heap</span>
+<a name="l00074"></a>00074 <span class="comment"> *</span>
+<a name="l00075"></a>00075 <span class="comment"> * Either case, the ``envelope`` is initialized</span>
+<a name="l00076"></a>00076 <span class="comment"> * before returning it to the client.</span>
+<a name="l00077"></a>00077 <span class="comment"> *</span>
+<a name="l00078"></a>00078 <span class="comment"> */</span>
+<a name="l00079"></a>00079 
+<a name="l00080"></a>00080         <a class="code" href="struct__litm__envelope.html">litm_envelope</a> *
+<a name="l00081"></a><a class="code" href="pool_8h.html#5a3eeccda0cfcf633af7177fad20c783">00081</a> <a class="code" href="pool_8c.html#5a3eeccda0cfcf633af7177fad20c783">__litm_pool_get</a>(<span class="keywordtype">void</span>) {
+<a name="l00082"></a>00082 
+<a name="l00083"></a>00083         pthread_mutex_lock( &amp;<a class="code" href="pool_8c.html#d06122921905f71cafca1e4b4fe74a71">_pool_mutex</a> );
+<a name="l00084"></a>00084 
+<a name="l00085"></a>00085 
+<a name="l00086"></a>00086         <span class="comment">// first time around?</span>
+<a name="l00087"></a>00087         <span class="keywordflow">if</span> (0==<a class="code" href="pool_8c.html#1f524019938414f3343b234da6e3738f">_stack_initialized</a>) {
+<a name="l00088"></a>00088                 <a class="code" href="pool_8c.html#1f524019938414f3343b234da6e3738f">_stack_initialized</a> = 1;
+<a name="l00089"></a>00089 
+<a name="l00090"></a>00090                 <span class="keywordtype">int</span> i;
+<a name="l00091"></a>00091                 <span class="keywordflow">for</span>(i=0;i&lt;<a class="code" href="pool_8h.html#82f68d9a84b4cd46e13dc7adf193a7eb">LITM_POOL_SIZE</a>;i++)
+<a name="l00092"></a>00092                         _stack[i] = NULL;
+<a name="l00093"></a>00093         }<span class="comment">//==============================</span>
+<a name="l00094"></a>00094 
+<a name="l00095"></a>00095         <a class="code" href="struct__litm__envelope.html">litm_envelope</a> *e;
+<a name="l00096"></a>00096 
 <a name="l00097"></a>00097 
-<a name="l00098"></a>00098 
-<a name="l00099"></a>00099 
-<a name="l00100"></a>00100         <span class="keywordtype">void</span>
-<a name="l00101"></a><a class="code" href="pool_8h.html#ad0b7166470e29cb5024efeca7d035af">00101</a> <a class="code" href="pool_8c.html#ad0b7166470e29cb5024efeca7d035af">__litm_pool_clean</a>( <a class="code" href="struct__litm__envelope.html">litm_envelope</a> *envlp ) {
-<a name="l00102"></a>00102         <a class="code" href="logger_8h.html#5e74f7a89e89b195bba421ac1ed9a496">DEBUG_LOG_PTR</a>( envlp, LOG_ERR, <span class="stringliteral">"__litm_pool_clean: NULL"</span>);
-<a name="l00103"></a>00103 
-<a name="l00104"></a>00104         <span class="comment">// clear routing information</span>
-<a name="l00105"></a>00105         bzero( (<span class="keywordtype">char</span> *) &amp;envlp-&gt;<a class="code" href="struct__litm__envelope.html#7c7a351b72e9b4d084e526a00787a44f">routes</a>, <span class="keyword">sizeof</span>(<a class="code" href="struct____litm__routing.html">__litm_routing</a>) );
-<a name="l00106"></a>00106 
-<a name="l00107"></a>00107 }<span class="comment">//</span>
+<a name="l00098"></a>00098         <span class="comment">// do we have a spare?</span>
+<a name="l00099"></a>00099         e = _stack[ <a class="code" href="pool_8c.html#2e55d0fea0e1bfdcd9cad770a70e2afe">_top_stack</a> ];
+<a name="l00100"></a>00100         <span class="keywordflow">if</span> (NULL!=e) {
+<a name="l00101"></a>00101 
+<a name="l00102"></a>00102                 _stack[<a class="code" href="pool_8c.html#2e55d0fea0e1bfdcd9cad770a70e2afe">_top_stack</a>] = NULL;
+<a name="l00103"></a>00103                 <a class="code" href="pool_8c.html#ad0b7166470e29cb5024efeca7d035af">__litm_pool_clean</a>( e );
+<a name="l00104"></a>00104 
+<a name="l00105"></a>00105                 <span class="comment">// statistics...</span>
+<a name="l00106"></a>00106                 <a class="code" href="pool_8c.html#e388cd19bca797abf0835dea71037f44">_returned</a> ++;
+<a name="l00107"></a>00107 
+<a name="l00108"></a>00108                 <a class="code" href="logger_8h.html#21a2c7330a04ac78200a986f66609369">DEBUG_LOG</a>(LOG_DEBUG, <span class="stringliteral">"__litm_pool_get: returning recycled envelope [%x]"</span>, e );
+<a name="l00109"></a>00109 
+<a name="l00110"></a>00110                 <span class="keywordflow">if</span> (0!=<a class="code" href="pool_8c.html#2e55d0fea0e1bfdcd9cad770a70e2afe">_top_stack</a>)
+<a name="l00111"></a>00111                         <a class="code" href="pool_8c.html#2e55d0fea0e1bfdcd9cad770a70e2afe">_top_stack</a>-- ;
+<a name="l00112"></a>00112 
+<a name="l00113"></a>00113         } <span class="keywordflow">else</span> {
+<a name="l00114"></a>00114 
+<a name="l00115"></a>00115                 <span class="comment">// prepare a new one</span>
+<a name="l00116"></a>00116                 e = malloc(<span class="keyword">sizeof</span>(<a class="code" href="struct__litm__envelope.html">litm_envelope</a>));
+<a name="l00117"></a>00117                 <span class="keywordflow">if</span> (NULL!=e) {
+<a name="l00118"></a>00118 
+<a name="l00119"></a>00119                         <span class="comment">// prepare the envelope</span>
+<a name="l00120"></a>00120                         <a class="code" href="pool_8c.html#ad0b7166470e29cb5024efeca7d035af">__litm_pool_clean</a>( e );
+<a name="l00121"></a>00121 
+<a name="l00122"></a>00122                         <span class="comment">// statistics...</span>
+<a name="l00123"></a>00123                         <a class="code" href="pool_8c.html#9acc85c1d61a1322b66e9a6dec848ea3">_created</a> ++ ;
+<a name="l00124"></a>00124 
+<a name="l00125"></a>00125                         <a class="code" href="logger_8h.html#21a2c7330a04ac78200a986f66609369">DEBUG_LOG</a>(LOG_DEBUG, <span class="stringliteral">"__litm_pool_get: returning new envelope [%x]"</span>, e );
+<a name="l00126"></a>00126                 }
+<a name="l00127"></a>00127 
+<a name="l00128"></a>00128         }
+<a name="l00129"></a>00129 
+<a name="l00130"></a>00130         pthread_mutex_unlock( &amp;<a class="code" href="pool_8c.html#d06122921905f71cafca1e4b4fe74a71">_pool_mutex</a> );
+<a name="l00131"></a>00131         <span class="keywordflow">return</span> e;
+<a name="l00132"></a>00132 }<span class="comment">//</span>
+<a name="l00133"></a>00133 
+<a name="l00134"></a>00134 <span class="comment"></span>
+<a name="l00135"></a>00135 <span class="comment">/**</span>
+<a name="l00136"></a>00136 <span class="comment"> * Destroys an ``envelope`` ie. just use free()</span>
+<a name="l00137"></a>00137 <span class="comment"> *</span>
+<a name="l00138"></a>00138 <span class="comment"> * A client of this module **must** dispose of</span>
+<a name="l00139"></a>00139 <span class="comment"> * the internal structure of the ``envelope``</span>
+<a name="l00140"></a>00140 <span class="comment"> * (ie. the ``msg`` member) before using this function.</span>
+<a name="l00141"></a>00141 <span class="comment"> *</span>
+<a name="l00142"></a>00142 <span class="comment"> */</span>
+<a name="l00143"></a>00143         <span class="keywordtype">void</span>
+<a name="l00144"></a><a class="code" href="pool_8h.html#2f844d6f6d2a471a5a93c3c49c28eef2">00144</a> <a class="code" href="pool_8c.html#2f844d6f6d2a471a5a93c3c49c28eef2">__litm_pool_destroy</a>( <a class="code" href="struct__litm__envelope.html">litm_envelope</a> *envlp ) {
+<a name="l00145"></a>00145 
+<a name="l00146"></a>00146         <span class="keywordflow">if</span> (NULL==envlp) {
+<a name="l00147"></a>00147                 <a class="code" href="logger_8h.html#21a2c7330a04ac78200a986f66609369">DEBUG_LOG</a>( LOG_ERR, <span class="stringliteral">"__litm_pool_destroy: NULL envelope"</span>);
+<a name="l00148"></a>00148                 <span class="keywordflow">return</span>;
+<a name="l00149"></a>00149         }
+<a name="l00150"></a>00150         <a class="code" href="logger_8h.html#21a2c7330a04ac78200a986f66609369">DEBUG_LOG</a>(LOG_DEBUG, <span class="stringliteral">"__litm_pool_destroy: envelope [%x]"</span>, envlp );
+<a name="l00151"></a>00151 
+<a name="l00152"></a>00152         free( envlp );
+<a name="l00153"></a>00153 
+<a name="l00154"></a>00154 }<span class="comment">//</span>
+<a name="l00155"></a>00155 
+<a name="l00156"></a>00156 <span class="comment"></span>
+<a name="l00157"></a>00157 <span class="comment">/**</span>
+<a name="l00158"></a>00158 <span class="comment"> * Cleans an ``envelope``</span>
+<a name="l00159"></a>00159 <span class="comment"> *</span>
+<a name="l00160"></a>00160 <span class="comment"> * NOTE: use with care i.e. the ``msg`` member is just</span>
+<a name="l00161"></a>00161 <span class="comment"> *       NULLed.</span>
+<a name="l00162"></a>00162 <span class="comment"> */</span>
+<a name="l00163"></a>00163         <span class="keywordtype">void</span>
+<a name="l00164"></a><a class="code" href="pool_8h.html#ad0b7166470e29cb5024efeca7d035af">00164</a> <a class="code" href="pool_8c.html#ad0b7166470e29cb5024efeca7d035af">__litm_pool_clean</a>( <a class="code" href="struct__litm__envelope.html">litm_envelope</a> *envlp ) {
+<a name="l00165"></a>00165         <a class="code" href="logger_8h.html#5e74f7a89e89b195bba421ac1ed9a496">DEBUG_LOG_PTR</a>( envlp, LOG_ERR, <span class="stringliteral">"__litm_pool_clean: NULL"</span>);
+<a name="l00166"></a>00166 
+<a name="l00167"></a>00167         <span class="comment">//DEBUG_LOG(LOG_DEBUG, "__litm_pool_clean: envelope [%x]", envlp );</span>
+<a name="l00168"></a>00168 
+<a name="l00169"></a>00169         (envlp-&gt;<a class="code" href="struct__litm__envelope.html#7c7a351b72e9b4d084e526a00787a44f">routes</a>).bus_id  = 0;
+<a name="l00170"></a>00170         (envlp-&gt;<a class="code" href="struct__litm__envelope.html#7c7a351b72e9b4d084e526a00787a44f">routes</a>).current = NULL;
+<a name="l00171"></a>00171         (envlp-&gt;<a class="code" href="struct__litm__envelope.html#7c7a351b72e9b4d084e526a00787a44f">routes</a>).sender  = NULL;
+<a name="l00172"></a>00172         (envlp-&gt;<a class="code" href="struct__litm__envelope.html#7c7a351b72e9b4d084e526a00787a44f">routes</a>).pending = 0;
+<a name="l00173"></a>00173 
+<a name="l00174"></a>00174         envlp-&gt;<a class="code" href="struct__litm__envelope.html#9e1e2e92283fc88e458ab22c80ed5a10">cleaner</a> = NULL;
+<a name="l00175"></a>00175         envlp-&gt;<a class="code" href="struct__litm__envelope.html#5ed18526b98cb26460fdb273ea2178ac">msg</a>     = NULL;
+<a name="l00176"></a>00176 
+<a name="l00177"></a>00177         envlp-&gt;<a class="code" href="struct__litm__envelope.html#7102977c891a672bd99ade9a1927dd7c">delivery_count</a> = 0;
+<a name="l00178"></a>00178         envlp-&gt;<a class="code" href="struct__litm__envelope.html#34a68490d7f97acac5caa3ffc2aa6fb9">released_count</a> = 0;
+<a name="l00179"></a>00179 }<span class="comment">//</span>
 </pre></div></div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Tue Apr 28 10:26:36 2009 for LITM by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Wed Apr 29 11:23:04 2009 for LITM by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.6 </small></address>
 </body>

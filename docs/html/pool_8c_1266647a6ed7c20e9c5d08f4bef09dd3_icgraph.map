@@ -1,8 +1,9 @@
-<area shape="rect" href="$switch_8c.html#149e07f06e61c0daee8f4cf38200dff2" title="__switch_finalize" alt="" coords="189,56,309,83">
-<area shape="rect" href="$switch_8h.html#7ff2d602f713f81e854c172e842afcad" title="switch_send" alt="" coords="203,107,296,134">
-<area shape="rect" href="$switch_8c.html#99ec0a50e5e594cb656f9ea1f7d39554" title="__switch_thread_function" alt="" coords="357,6,525,32">
-<area shape="rect" href="$switch_8h.html#2bab91639e612d51d0d7d8a3a64d0ace" title="switch_release" alt="" coords="388,56,495,83">
-<area shape="rect" href="$switch_8h.html#cf83bfcffad6990c781b1a668ec8209e" title="switch_init" alt="" coords="579,6,661,32">
-<area shape="rect" href="$litm_8h.html#bc852d2eb14353e36adf21c33eab03a3" title="litm_connect" alt="" coords="715,6,811,32">
-<area shape="rect" href="$litm_8h.html#21def412c9b064fc929e0822f28d2a2a" title="litm_release" alt="" coords="575,56,665,83">
-<area shape="rect" href="$litm_8h.html#bed13398c1bc31a6c81c3e50997e2f2c" title="litm_send" alt="" coords="403,107,480,134">
+<area shape="rect" href="$switch_8c.html#149e07f06e61c0daee8f4cf38200dff2" title="__switch_finalize" alt="" coords="189,69,309,96">
+<area shape="rect" href="$switch_8h.html#7ff2d602f713f81e854c172e842afcad" title="switch_send" alt="" coords="203,132,296,158">
+<area shape="rect" href="$switch_8c.html#195303a03d0b0c2a3f44951a38b2b0f6" title="__switch_handle_pending" alt="" coords="359,5,527,32">
+<area shape="rect" href="$switch_8c.html#99ec0a50e5e594cb656f9ea1f7d39554" title="__switch_thread_function" alt="" coords="576,30,744,57">
+<area shape="rect" href="$switch_8h.html#2bab91639e612d51d0d7d8a3a64d0ace" title="switch_release" alt="" coords="389,106,496,133">
+<area shape="rect" href="$switch_8h.html#cf83bfcffad6990c781b1a668ec8209e" title="switch_init" alt="" coords="792,30,875,57">
+<area shape="rect" href="$litm_8h.html#bc852d2eb14353e36adf21c33eab03a3" title="litm_connect" alt="" coords="923,30,1019,57">
+<area shape="rect" href="$litm_8h.html#21def412c9b064fc929e0822f28d2a2a" title="litm_release" alt="" coords="615,106,705,133">
+<area shape="rect" href="$litm_8h.html#bed13398c1bc31a6c81c3e50997e2f2c" title="litm_send" alt="" coords="404,157,481,184">

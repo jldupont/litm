@@ -1,8 +1,8 @@
-/*
- * connection.c
+/**
+ * @file connection.c
  *
- *  Created on: 2009-04-24
- *      Author: Jean-Lou Dupont
+ * @date   2009-04-24
+ * @author Jean-Lou Dupont
  */
 #include <pthread.h>
 #include <errno.h>
@@ -13,23 +13,23 @@
 #include "logger.h"
 
 // PRIVATE
-int __litm_connection_get_free_index(void);
-/**
- * Returns the index for a specified connection
- *  or -1 on Error
- */
-int	__litm_connection_get_index(litm_connection *conn);
-/**
- * Returns the connection for a specified index
- *  or NULL on error
- */
+int __litm_connection_get_index(litm_connection *(table)[], litm_connection *conn);
+int __litm_connection_get_free_index(litm_connection *(table)[]);
 litm_connection *__litm_connection_get_ptr(int connection_index);
 
 
 // PRIVATE VARIABLES
 // -----------------
+
+	// ACTIVE CONNECTIONS
+	// ------------------
 pthread_mutex_t  _connections_mutex = PTHREAD_MUTEX_INITIALIZER;
 litm_connection *_connections[LITM_CONNECTION_MAX];
+
+	// CONNECTIONS PENDING DELETION
+	// ----------------------------
+pthread_mutex_t  _connections_pending_deletion_mutex = PTHREAD_MUTEX_INITIALIZER;
+litm_connection *_connections_pending_deletion[LITM_CONNECTION_MAX];
 
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -48,7 +48,7 @@ litm_connection_open(litm_connection **conn) {
 		return LITM_CODE_BUSY;
 	}
 
-	target_index = __litm_connection_get_free_index();
+	target_index = __litm_connection_get_free_index(_connections);
 	if (-1 == target_index) {
 		pthread_mutex_unlock( &_connections_mutex );
 		return LITM_CODE_ERROR_NO_MORE_CONNECTIONS;
@@ -89,47 +89,23 @@ litm_connection_close(litm_connection *conn) {
 		return LITM_CODE_ERROR_BAD_CONNECTION;
 	}
 
-	int code = pthread_mutex_trylock( &_connections_mutex );
-	if (EBUSY==code) {
-		return LITM_CODE_BUSY;
-	}
+	pthread_mutex_lock( &_connections_pending_deletion_mutex );
 
-	//is it really a connection?
-	int index = __litm_connection_get_index(conn);
+		int target_index = __litm_connection_get_free_index(_connections_pending_deletion);
 
-	if (-1 == index) {
-		pthread_mutex_unlock( &_connections_mutex );
-		return LITM_CODE_ERROR_BAD_CONNECTION;
-	}
+		if (-1 == target_index) {
+			pthread_mutex_unlock( &_connections_pending_deletion_mutex );
+			return LITM_CODE_ERROR_NO_MORE_CONNECTIONS;
+		}
 
-	queue *q = conn->input_queue;
+		_connections_pending_deletion[target_index] = conn;
 
-	DEBUG_LOG(LOG_INFO, "litm_connection_close: CLOSED, index[%u] ref[%x] q[%x]", index, conn, q);
+		DEBUG_LOG(LOG_INFO, "litm_connection_close: PENDING conn[%x]", conn);
 
-	queue_destroy( q );
-	_connections[index] = NULL;
-	free( conn );
-
-	pthread_mutex_unlock( &_connections_mutex );
+	pthread_mutex_unlock( &_connections_pending_deletion_mutex );
 
 	return LITM_CODE_OK;
 }//
-
-	int
-__litm_connection_get_index(litm_connection *conn) {
-
-	int index, result = -1; //pessimistic
-
-	for (index=1; index<LITM_CONNECTION_MAX; index++ ) {
-		if ( conn ==_connections[index] ) {
-			result = index;
-			break;
-		}
-	}//for
-
-	return result;
-}//
-
 
 	litm_connection *
 __litm_connection_get_ptr(int connection_index) {
@@ -140,17 +116,34 @@ __litm_connection_get_ptr(int connection_index) {
 	return _connections[connection_index];
 }//
 
+	int
+__litm_connection_get_index(litm_connection *(table)[], litm_connection *conn) {
+
+	int index, result = -1; //pessimistic
+
+	for (index=1; index<LITM_CONNECTION_MAX; index++ ) {
+		if ( conn == table[index] ) {
+			result = index;
+			break;
+		}
+	}//for
+
+	return result;
+}//
+
+
+
 /**
  * Verifies if a `spot` is available in
  *  the connection map OR -1 if none.
  *
  */
 	int
-__litm_connection_get_free_index(void) {
+__litm_connection_get_free_index(litm_connection *(table)[]) {
 
 	int index, result=-1;
 	for (index=1; index<LITM_CONNECTION_MAX; index++) {
-		if (NULL==_connections[index]) {
+		if (NULL==table[index]) {
 			result=index;
 			break;
 		}

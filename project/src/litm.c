@@ -1,8 +1,13 @@
-/*
- * litm.c
+/**
+ * @file litm.c
  *
- *  Created on: 2009-04-24
- *      Author: Jean-Lou Dupont
+ * @date   2009-04-24
+ * @author Jean-Lou Dupont
+ *
+ * This module is the principal interface to LITM.
+ * For more information as to the API of this module,
+ * please consult litm.h .
+ *
  */
 #include <errno.h>
 
@@ -35,8 +40,6 @@ char *LITM_CODE_MESSAGES[] = {
 	litm_code
 litm_connect(litm_connection **conn) {
 
-	//DEBUG_LOG(LOG_INFO, "litm_connect: BEGIN");
-
 	switch_init();
 
 	litm_code code = litm_connection_open(conn);
@@ -44,8 +47,6 @@ litm_connect(litm_connection **conn) {
 		*conn = NULL;
 		return code;
 	}
-
-	//DEBUG_LOG(LOG_INFO, "litm_connect: END");
 
 	return LITM_CODE_OK;
 

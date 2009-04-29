@@ -169,7 +169,9 @@ void *threadFunction(void *params) {
 	code = litm_subscribe(conn, 1);
 	//printMessage(code, "* Subscribed, code[%s]...","thread_id[%u]\n", thread_id );
 
-	char *message = "Message!";
+	char message[255];
+	sprintf( message, "message from [%u]", thread_id );
+
 	char *msg;
 	litm_envelope *e;
 
@@ -187,7 +189,7 @@ void *threadFunction(void *params) {
 			msg = e->msg;
 			delivery = e->delivery_count;
 			released = e->released_count;
-			printf("* thread[%u] received message, msg[%x] envelope[%x] delivery[%u] released[%u] \n", thread_id, msg, e, delivery, released);
+			printf("* thread[%u] received message[%s], msg[%x] envelope[%x] delivery[%u] released[%u] \n", thread_id, msg, msg, e, delivery, released);
 			litm_release(conn, e);
 		}
 

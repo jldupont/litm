@@ -38,10 +38,13 @@
 <a name="l00023"></a>00023         <span class="comment">// PRIVATE</span>
 <a name="l00024"></a>00024         <span class="keywordtype">void</span> <a class="code" href="connection_8c.html#9e582b29253857b58f87ba89f8a6526f">_litm_connections_lock</a>(<span class="keywordtype">void</span>);
 <a name="l00025"></a>00025         <span class="keywordtype">void</span> <a class="code" href="connection_8c.html#c75b4b0413d3523574bda13549715447">_litm_connections_unlock</a>(<span class="keywordtype">void</span>);
-<a name="l00026"></a>00026 
-<a name="l00027"></a>00027 <span class="preprocessor">#endif </span><span class="comment">/* CONNECTION_H_ */</span>
+<a name="l00026"></a>00026         <span class="keywordtype">int</span> <a class="code" href="connection_8c.html#6b2986abb5453019ea29678d1d75383f">_litm_connections_trylock</a>(<span class="keywordtype">void</span>);
+<a name="l00027"></a>00027         <span class="keywordtype">int</span> <a class="code" href="connection_8c.html#0f0edb76ffefb926f35e8edb5393f11b">_litm_connection_validate</a>(<a class="code" href="struct__litm__connection.html">litm_connection</a> *conn);
+<a name="l00028"></a>00028         <span class="keywordtype">int</span> <a class="code" href="connection_8c.html#200b813c910cd4a83c36aa907bd52dbe">_litm_connection_validate_safe</a>(<a class="code" href="struct__litm__connection.html">litm_connection</a> *conn);
+<a name="l00029"></a>00029 
+<a name="l00030"></a>00030 <span class="preprocessor">#endif </span><span class="comment">/* CONNECTION_H_ */</span>
 </pre></div></div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Tue Apr 28 10:26:36 2009 for LITM by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Wed Apr 29 11:23:04 2009 for LITM by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.6 </small></address>
 </body>

@@ -1,3 +1,2 @@
-<area shape="rect" href="$connection_8c.html#8e4dadbbe89d174acfa60f3f44b66c00" title="litm_connection_close" alt="" coords="167,31,316,57">
-<area shape="rect" href="$connection_8c.html#7ccfa58f4fc175e9b4f4400e5a275baf" title="__litm_connection_get_index" alt="" coords="365,5,555,32">
-<area shape="rect" href="$queue_8c.html#21d75708e816b8fc3299ac8e6f7109eb" title="queue_destroy" alt="" coords="407,56,513,83">
+<area shape="rect" href="$connection_8c.html#8e4dadbbe89d174acfa60f3f44b66c00" title="litm_connection_close" alt="" coords="167,5,316,32">
+<area shape="rect" href="$connection_8c.html#720256527350db29d5e743a32d908151" title="__litm_connection_get_free_index" alt="" coords="365,5,584,32">
