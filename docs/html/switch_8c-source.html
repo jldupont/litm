@@ -70,73 +70,73 @@
 <a name="l00055"></a>00055 <span class="keywordtype">void</span> <a class="code" href="switch_8c.html#e4d3d02052899f64d09070f18f75c29a">__switch_init_tables</a>(<span class="keywordtype">void</span>);
 <a name="l00056"></a>00056 <span class="keywordtype">void</span> <a class="code" href="switch_8c.html#195303a03d0b0c2a3f44951a38b2b0f6">__switch_handle_pending</a>(<a class="code" href="struct__litm__envelope.html">litm_envelope</a> *e);
 <a name="l00057"></a>00057 
-<a name="l00058"></a>00058 <span class="comment">// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+<a name="l00058"></a>00058 
 <a name="l00059"></a>00059 <span class="comment">// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
-<a name="l00060"></a>00060 
-<a name="l00061"></a>00061         <span class="keywordtype">int</span>
-<a name="l00062"></a><a class="code" href="switch_8h.html#cf83bfcffad6990c781b1a668ec8209e">00062</a> <a class="code" href="switch_8c.html#cf83bfcffad6990c781b1a668ec8209e">switch_init</a>(<span class="keywordtype">void</span>) {
-<a name="l00063"></a>00063 
-<a name="l00064"></a>00064         <span class="keywordflow">if</span> (0== <a class="code" href="switch_8c.html#d8504e0696f737980aafecd01c559839">_switchThread_status</a>) {
+<a name="l00060"></a>00060 <span class="comment">// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+<a name="l00061"></a>00061 
+<a name="l00062"></a>00062 
+<a name="l00063"></a>00063         <span class="keywordtype">int</span>
+<a name="l00064"></a><a class="code" href="switch_8h.html#cf83bfcffad6990c781b1a668ec8209e">00064</a> <a class="code" href="switch_8c.html#cf83bfcffad6990c781b1a668ec8209e">switch_init</a>(<span class="keywordtype">void</span>) {
 <a name="l00065"></a>00065 
-<a name="l00066"></a>00066 
-<a name="l00067"></a>00067                 <span class="comment">// init queue *before* launching thread!</span>
-<a name="l00068"></a>00068                 _switch_queue = <a class="code" href="queue_8c.html#404f283e7764be86026fda0714b6b7b6">queue_create</a>();
-<a name="l00069"></a>00069                 <a class="code" href="switch_8c.html#e4d3d02052899f64d09070f18f75c29a">__switch_init_tables</a>();
-<a name="l00070"></a>00070 
-<a name="l00071"></a>00071                 <a class="code" href="logger_8h.html#21a2c7330a04ac78200a986f66609369">DEBUG_LOG</a>(LOG_INFO, <span class="stringliteral">"switch_init: creating switch thread &amp; queue, q[%x] "</span>, _switch_queue);
+<a name="l00066"></a>00066         <span class="keywordflow">if</span> (0== <a class="code" href="switch_8c.html#d8504e0696f737980aafecd01c559839">_switchThread_status</a>) {
+<a name="l00067"></a>00067 
+<a name="l00068"></a>00068 
+<a name="l00069"></a>00069                 <span class="comment">// init queue *before* launching thread!</span>
+<a name="l00070"></a>00070                 _switch_queue = <a class="code" href="queue_8c.html#404f283e7764be86026fda0714b6b7b6">queue_create</a>();
+<a name="l00071"></a>00071                 <a class="code" href="switch_8c.html#e4d3d02052899f64d09070f18f75c29a">__switch_init_tables</a>();
 <a name="l00072"></a>00072 
-<a name="l00073"></a>00073                 pthread_create(&amp;<a class="code" href="switch_8c.html#cb3ec39b5454e93fd98267ce8a0d7bab">_switchThread</a>, NULL, &amp;<a class="code" href="switch_8c.html#99ec0a50e5e594cb656f9ea1f7d39554">__switch_thread_function</a>, NULL);
-<a name="l00074"></a>00074                 <a class="code" href="switch_8c.html#d8504e0696f737980aafecd01c559839">_switchThread_status</a> = 1; <span class="comment">//created</span>
-<a name="l00075"></a>00075         }
-<a name="l00076"></a>00076 }<span class="comment">//</span>
-<a name="l00077"></a>00077 
-<a name="l00078"></a>00078         <span class="keywordtype">void</span>
-<a name="l00079"></a><a class="code" href="switch_8c.html#e4d3d02052899f64d09070f18f75c29a">00079</a> <a class="code" href="switch_8c.html#e4d3d02052899f64d09070f18f75c29a">__switch_init_tables</a>(<span class="keywordtype">void</span>) {
-<a name="l00080"></a>00080         <span class="keywordtype">int</span> b, c;
-<a name="l00081"></a>00081 
-<a name="l00082"></a>00082         <span class="keywordflow">for</span> (b=0; b&lt;<a class="code" href="litm_8h.html#fbd708ff493c92eb23ebf90685253660">LITM_BUSSES_MAX</a>; b++)
-<a name="l00083"></a>00083                 <span class="keywordflow">for</span> (c=0;c&lt;=<a class="code" href="litm_8h.html#1b077a43eb60b36c3a0d6d4d71cf1fac">LITM_CONNECTION_MAX</a>;c++)
-<a name="l00084"></a>00084                         _subscribers[b][c] = NULL;
-<a name="l00085"></a>00085 }
-<a name="l00086"></a>00086 <span class="comment"></span>
-<a name="l00087"></a>00087 <span class="comment">/**</span>
-<a name="l00088"></a>00088 <span class="comment"> * TODO implement switch shutdown</span>
-<a name="l00089"></a>00089 <span class="comment"> */</span>
-<a name="l00090"></a>00090         <span class="keywordtype">void</span>
-<a name="l00091"></a><a class="code" href="switch_8h.html#fae3098df985d2dfb04f4fa646b0e771">00091</a> <a class="code" href="switch_8c.html#fae3098df985d2dfb04f4fa646b0e771">switch_shutdown</a>(<span class="keywordtype">void</span>) {
-<a name="l00092"></a>00092 
-<a name="l00093"></a>00093         <a class="code" href="switch_8c.html#16f24e5af07c4e0cb58fc669fb04635c">__switch_signal_shutdown</a> = 1;
+<a name="l00073"></a>00073                 <a class="code" href="logger_8h.html#21a2c7330a04ac78200a986f66609369">DEBUG_LOG</a>(LOG_INFO, <span class="stringliteral">"switch_init: creating switch thread &amp; queue, q[%x] "</span>, _switch_queue);
+<a name="l00074"></a>00074 
+<a name="l00075"></a>00075                 pthread_create(&amp;<a class="code" href="switch_8c.html#cb3ec39b5454e93fd98267ce8a0d7bab">_switchThread</a>, NULL, &amp;<a class="code" href="switch_8c.html#99ec0a50e5e594cb656f9ea1f7d39554">__switch_thread_function</a>, NULL);
+<a name="l00076"></a>00076                 <a class="code" href="switch_8c.html#d8504e0696f737980aafecd01c559839">_switchThread_status</a> = 1; <span class="comment">//created</span>
+<a name="l00077"></a>00077         }
+<a name="l00078"></a>00078 }<span class="comment">//</span>
+<a name="l00079"></a>00079 
+<a name="l00080"></a>00080         <span class="keywordtype">void</span>
+<a name="l00081"></a><a class="code" href="switch_8c.html#e4d3d02052899f64d09070f18f75c29a">00081</a> <a class="code" href="switch_8c.html#e4d3d02052899f64d09070f18f75c29a">__switch_init_tables</a>(<span class="keywordtype">void</span>) {
+<a name="l00082"></a>00082         <span class="keywordtype">int</span> b, c;
+<a name="l00083"></a>00083 
+<a name="l00084"></a>00084         <span class="keywordflow">for</span> (b=0; b&lt;<a class="code" href="litm_8h.html#fbd708ff493c92eb23ebf90685253660">LITM_BUSSES_MAX</a>; b++)
+<a name="l00085"></a>00085                 <span class="keywordflow">for</span> (c=0;c&lt;=<a class="code" href="litm_8h.html#1b077a43eb60b36c3a0d6d4d71cf1fac">LITM_CONNECTION_MAX</a>;c++)
+<a name="l00086"></a>00086                         _subscribers[b][c] = NULL;
+<a name="l00087"></a>00087 }
+<a name="l00088"></a>00088 <span class="comment"></span>
+<a name="l00089"></a>00089 <span class="comment">/**</span>
+<a name="l00090"></a>00090 <span class="comment"> * TODO implement switch shutdown</span>
+<a name="l00091"></a>00091 <span class="comment"> */</span>
+<a name="l00092"></a>00092         <span class="keywordtype">void</span>
+<a name="l00093"></a><a class="code" href="switch_8h.html#fae3098df985d2dfb04f4fa646b0e771">00093</a> <a class="code" href="switch_8c.html#fae3098df985d2dfb04f4fa646b0e771">switch_shutdown</a>(<span class="keywordtype">void</span>) {
 <a name="l00094"></a>00094 
-<a name="l00095"></a>00095         pthread_join( <a class="code" href="switch_8c.html#cb3ec39b5454e93fd98267ce8a0d7bab">_switchThread</a>, (<span class="keywordtype">void</span> **)NULL );
-<a name="l00096"></a>00096 }<span class="comment">//</span>
-<a name="l00097"></a>00097 
-<a name="l00098"></a>00098 <span class="comment"></span>
-<a name="l00099"></a>00099 <span class="comment">/**</span>
-<a name="l00100"></a>00100 <span class="comment"> * The switch thread dequeues messages from the</span>
-<a name="l00101"></a>00101 <span class="comment"> *  ``input queue`` and dispatches them to the</span>
-<a name="l00102"></a>00102 <span class="comment"> *  next connection queue.</span>
-<a name="l00103"></a>00103 <span class="comment"> */</span>
-<a name="l00104"></a>00104         <span class="keywordtype">void</span> *
-<a name="l00105"></a><a class="code" href="switch_8c.html#99ec0a50e5e594cb656f9ea1f7d39554">00105</a> <a class="code" href="switch_8c.html#99ec0a50e5e594cb656f9ea1f7d39554">__switch_thread_function</a>(<span class="keywordtype">void</span> *params) {
-<a name="l00106"></a>00106 
-<a name="l00107"></a>00107         <span class="keywordtype">char</span> *err_msg;
-<a name="l00108"></a>00108         <span class="keywordtype">int</span> pending, action;
-<a name="l00109"></a>00109         <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a> code;
-<a name="l00110"></a>00110         <a class="code" href="struct__litm__envelope.html">litm_envelope</a> *e;
-<a name="l00111"></a>00111         <a class="code" href="struct__litm__connection.html">litm_connection</a> *next, *sender, *current;
-<a name="l00112"></a>00112         <a class="code" href="litm_8h.html#e7fcc1b5cd037f318d4fe40a2f9d30d3">litm_bus</a> bus_id;
-<a name="l00113"></a>00113         <span class="keyword">static</span> <span class="keywordtype">char</span> *thisMsg = <span class="stringliteral">"__switch_thread_function: conn[%x] code[%s]"</span>;
-<a name="l00114"></a>00114 
-<a name="l00115"></a>00115         <a class="code" href="logger_8h.html#21a2c7330a04ac78200a986f66609369">DEBUG_LOG</a>(LOG_INFO, <span class="stringliteral">"__switch_thread_function: starting"</span>);
+<a name="l00095"></a>00095         <a class="code" href="switch_8c.html#16f24e5af07c4e0cb58fc669fb04635c">__switch_signal_shutdown</a> = 1;
+<a name="l00096"></a>00096 
+<a name="l00097"></a>00097         pthread_join( <a class="code" href="switch_8c.html#cb3ec39b5454e93fd98267ce8a0d7bab">_switchThread</a>, (<span class="keywordtype">void</span> **)NULL );
+<a name="l00098"></a>00098 }<span class="comment">//</span>
+<a name="l00099"></a>00099 
+<a name="l00100"></a>00100 <span class="comment"></span>
+<a name="l00101"></a>00101 <span class="comment">/**</span>
+<a name="l00102"></a>00102 <span class="comment"> * The switch thread dequeues messages from the</span>
+<a name="l00103"></a>00103 <span class="comment"> *  ``input queue`` and dispatches them to the</span>
+<a name="l00104"></a>00104 <span class="comment"> *  next connection queue.</span>
+<a name="l00105"></a>00105 <span class="comment"> */</span>
+<a name="l00106"></a>00106         <span class="keywordtype">void</span> *
+<a name="l00107"></a><a class="code" href="switch_8c.html#99ec0a50e5e594cb656f9ea1f7d39554">00107</a> <a class="code" href="switch_8c.html#99ec0a50e5e594cb656f9ea1f7d39554">__switch_thread_function</a>(<span class="keywordtype">void</span> *params) {
+<a name="l00108"></a>00108 
+<a name="l00109"></a>00109         <span class="keywordtype">char</span> *err_msg;
+<a name="l00110"></a>00110         <span class="keywordtype">int</span> pending, action;
+<a name="l00111"></a>00111         <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a> code;
+<a name="l00112"></a>00112         <a class="code" href="struct__litm__envelope.html">litm_envelope</a> *e;
+<a name="l00113"></a>00113         <a class="code" href="struct__litm__connection.html">litm_connection</a> *next, *sender, *current;
+<a name="l00114"></a>00114         <a class="code" href="litm_8h.html#e7fcc1b5cd037f318d4fe40a2f9d30d3">litm_bus</a> bus_id;
+<a name="l00115"></a>00115         <span class="keyword">static</span> <span class="keywordtype">char</span> *thisMsg = <span class="stringliteral">"__switch_thread_function: conn[%x] code[%s]"</span>;
 <a name="l00116"></a>00116 
-<a name="l00117"></a>00117         <span class="comment">//TODO switch shutdown signal check</span>
-<a name="l00118"></a>00118         <span class="keywordflow">while</span>(1) {
-<a name="l00119"></a>00119                 <span class="comment">// we block here since if we have no messages</span>
-<a name="l00120"></a>00120                 <span class="comment">//  to process, we don't have anything else to do...</span>
-<a name="l00121"></a>00121                 e=(<a class="code" href="struct__litm__envelope.html">litm_envelope</a> *) <a class="code" href="queue_8c.html#819eed56d043a96499116f087d928057">queue_get_nb</a>( _switch_queue );
-<a name="l00122"></a>00122 
-<a name="l00123"></a>00123                 <span class="keywordflow">if</span> (NULL==e) {
-<a name="l00124"></a>00124                         <span class="comment">//sleep(0.001);</span>
+<a name="l00117"></a>00117         <a class="code" href="logger_8h.html#21a2c7330a04ac78200a986f66609369">DEBUG_LOG</a>(LOG_INFO, <span class="stringliteral">"__switch_thread_function: starting"</span>);
+<a name="l00118"></a>00118 
+<a name="l00119"></a>00119         <span class="keywordflow">while</span>(1) {
+<a name="l00120"></a>00120                 <span class="comment">// we block here since if we have no messages</span>
+<a name="l00121"></a>00121                 <span class="comment">//  to process, we don't have anything else to do...</span>
+<a name="l00122"></a>00122                 e=(<a class="code" href="struct__litm__envelope.html">litm_envelope</a> *) <a class="code" href="queue_8c.html#819eed56d043a96499116f087d928057">queue_get_nb</a>( _switch_queue );
+<a name="l00123"></a>00123 
+<a name="l00124"></a>00124                 <span class="keywordflow">if</span> (NULL==e) {
 <a name="l00125"></a>00125 
 <a name="l00126"></a>00126                         <span class="comment">//shutdown signaled?</span>
 <a name="l00127"></a>00127                         <span class="keywordflow">if</span> (1==<a class="code" href="switch_8c.html#16f24e5af07c4e0cb58fc669fb04635c">__switch_signal_shutdown</a>) {
@@ -692,7 +692,7 @@
 <a name="l00677"></a>00677         <span class="keywordflow">return</span> result;
 <a name="l00678"></a>00678 }<span class="comment">//</span>
 </pre></div></div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Wed Apr 29 11:23:04 2009 for LITM by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Wed Apr 29 11:37:42 2009 for LITM by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.6 </small></address>
 </body>

@@ -25,5 +25,6 @@
 	void *queue_get_nb(queue *q);
 	int   queue_peek(queue *q);
 
+	int queue_put_safe( queue *q, void *node );
 
 #endif /* QUEUE_H_ */

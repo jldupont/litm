@@ -3,6 +3,27 @@
  *
  * @date   2009-04-24
  * @author Jean-Lou Dupont
+ *
+ * \section Overview
+ * 			This module implements the ``connection`` aspect:
+ *
+ * 			- opening
+ * 			- closing
+ *
+ *			A limited number of connections are supported at any point
+ *			in time. When a connection is closed, it is queued for
+ *			later deletion: the connection can not be used for any
+ *			access from this point onwards.
+ *
+ * \section Deletion
+ *
+ * 			Connection deletion is performed in the following manner:
+ *
+ *			- the connection's status is changed to "PENDING_DELETION"
+ * 			- the connection identifier is placed in a stack (pending deletion)
+ * 			- the ``switch`` inspects the said stack at regular interval
+ *
+ *
  */
 #include <pthread.h>
 #include <errno.h>
@@ -35,7 +56,10 @@ litm_connection *_connections_pending_deletion[LITM_CONNECTION_MAX];
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
+/**
+ * Opens a ``connection``
+ *
+ */
 	litm_code
 litm_connection_open(litm_connection **conn) {
 
@@ -70,6 +94,7 @@ litm_connection_open(litm_connection **conn) {
 
 	_connections[target_index] = *conn;
 	(*conn)->input_queue = q;
+	(*conn)->status = LITM_CONNECTION_STATUS_ACTIVE;
 
 	DEBUG_LOG(LOG_INFO, "litm_connection_open: OPENED, index[%u] ref[%x], q[%x]", target_index, *conn, q);
 
@@ -88,6 +113,13 @@ litm_connection_close(litm_connection *conn) {
 	if (NULL==conn) {
 		return LITM_CODE_ERROR_BAD_CONNECTION;
 	}
+
+	// FLAG the connection has been about to be deleted
+	//  Hopefully, this doesn't cause too much blockage...
+	pthread_mutex_lock( &_connections_mutex );
+		conn->status = LITM_CONNECTION_STATUS_PENDING_DELETION;
+	pthread_mutex_unlock( &_connections_mutex );
+
 
 	pthread_mutex_lock( &_connections_pending_deletion_mutex );
 
@@ -208,5 +240,25 @@ _litm_connection_validate_safe(litm_connection *conn) {
 			}
 
 		return returnCode;
+
+}
+
+	void
+_litm_connection_lock(litm_connection *conn) {
+
+	pthread_mutex_lock( conn->input_queue->mutex );
+
+}//
+
+	void
+_litm_connection_unlock(litm_connection *conn) {
+
+	pthread_mutex_unlock( conn->input_queue->mutex );
+}
+
+	litm_connection_status
+_litm_connection_get_status(litm_connection *conn) {
+
+	return conn->status;
 
 }

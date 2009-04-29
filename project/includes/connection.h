@@ -27,4 +27,9 @@
 	int _litm_connection_validate(litm_connection *conn);
 	int _litm_connection_validate_safe(litm_connection *conn);
 
+
+	void _litm_connection_lock(litm_connection *conn);
+	void _litm_connection_unlock(litm_connection *conn);
+	litm_connection_status _litm_connection_get_status(litm_connection *conn);
+
 #endif /* CONNECTION_H_ */

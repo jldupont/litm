@@ -55,8 +55,10 @@ litm_code __switch_try_sending_or_requeue(litm_connection *conn, litm_envelope *
 void __switch_init_tables(void);
 void __switch_handle_pending(litm_envelope *e);
 
+
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
 	int
 switch_init(void) {
@@ -114,14 +116,12 @@ __switch_thread_function(void *params) {
 
 	DEBUG_LOG(LOG_INFO, "__switch_thread_function: starting");
 
-	//TODO switch shutdown signal check
 	while(1) {
 		// we block here since if we have no messages
 		//  to process, we don't have anything else to do...
 		e=(litm_envelope *) queue_get_nb( _switch_queue );
 
 		if (NULL==e) {
-			//sleep(0.001);
 
 			//shutdown signaled?
 			if (1==__switch_signal_shutdown) {
@@ -332,13 +332,31 @@ __switch_try_sending_or_requeue(litm_connection *conn, litm_envelope *envlp) {
  * This function should only be called by ''__switch_try_sending_or_requeue''.
  */
 	litm_code
-__switch_try_sending_to_recipient(	litm_connection *recipient,
+__switch_try_sending_to_recipient(	litm_connection *conn,
 									litm_envelope *env) {
 
+	if (NULL==conn) {
+		DEBUG_LOG(LOG_ERR, "__switch_try_sending_to_recipient: NULL connection" );
+		return LITM_CODE_ERROR_BAD_CONNECTION;
+	}
+
+	if (NULL==env) {
+		DEBUG_LOG(LOG_ERR, "__switch_try_sending_to_recipient: NULL envelope" );
+		return LITM_CODE_ERROR_INVALID_ENVELOPE;
+	}
+
+	litm_connection_status status;
 	litm_code returnCode = LITM_CODE_OK;
 	int code = 0;
 
-	code = queue_put_nb( recipient->input_queue, (void *) env);
+	_litm_connection_lock(conn);
+		status = _litm_connection_get_status( conn );
+		if (LITM_CONNECTION_STATUS_ACTIVE!=status) {
+			code = 2;
+		} else {
+			code = queue_put_safe( conn->input_queue, (void *) env);
+		}
+	_litm_connection_unlock(conn);
 
 	switch(code) {
 	case 0: //error
@@ -349,6 +367,9 @@ __switch_try_sending_to_recipient(	litm_connection *recipient,
 		break;
 	case -1: //busy
 		returnCode = LITM_CODE_BUSY_OUTPUT_QUEUE;
+		break;
+	case 2:
+		returnCode = LITM_CODE_ERROR_CONNECTION_NOT_ACTIVE;
 		break;
 	}
 
