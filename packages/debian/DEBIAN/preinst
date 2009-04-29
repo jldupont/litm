@@ -1,0 +1,8 @@
+#!/usr/bin/env python
+
+import os
+import sys
+
+print "LITM: preinst: args[%s]" % sys.argv
+
+sys.exit(0)

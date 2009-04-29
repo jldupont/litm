@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-<title>LITM: Welcome to the documentation for the library LITM</title>
+<title>LITM: Welcome to the documentation for the library LITM -- version 0.1</title>
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 <link href="tabs.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -16,7 +16,7 @@
   </div>
 </div>
 <div class="contents">
-<h1>Welcome to the documentation for the library LITM</h1>
+<h1>Welcome to the documentation for the library LITM -- version 0.1</h1>
 <p>
 The library serves as a <b>Lightweight Inter-Thread Messaging</b> under Linux/Unix.<h2><a class="anchor" name="Dependencies">
 Dependencies</a></h2>
@@ -47,6 +47,10 @@ Opening a connection</a></h3>
                                                 <span class="comment">//something is wrong...</span>
                                                 <span class="keywordflow">break</span>;
                                 }
+                                <span class="comment">// if everything is OK, create our worker thread</span>
+                                params-&gt;conn = conn; <span class="comment">// pass along the LITM connection identifier</span>
+                                pthread_t thread;
+                                pthread_create( &amp;thread, NULL, &amp;thread_fnction, (<span class="keywordtype">void</span> *) &amp;params );
 </pre></div><h3><a class="anchor" name="Example_Subscribing">
 Subscribing to a _bus_</a></h3>
 <div class="fragment"><pre class="fragment">                                <span class="comment">// subscribing to bus #1</span>
@@ -54,12 +58,21 @@ Subscribing to a _bus_</a></h3>
                                   ... check <span class="keywordflow">return</span> code ...
 </pre></div><h3><a class="anchor" name="Example_Sending">
 Sending a message on a _bus_</a></h3>
-<div class="fragment"><pre class="fragment">                                        <span class="keywordtype">void</span> *message; <span class="comment">// whatever structure</span>
+<div class="fragment"><pre class="fragment">                                <span class="comment">// litm connection should be passed through the thread params</span>
+                                <span class="keywordtype">void</span> *thread_function(<span class="keywordtype">void</span> *params) {
+
+                                        <span class="keywordtype">void</span> *message; <span class="comment">// whatever structure</span>
                                         <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a> code = <a class="code" href="litm_8c.html#bed13398c1bc31a6c81c3e50997e2f2c">litm_send</a>(conn, bus_id, message, NULL);
                                          ... check <span class="keywordflow">return</span> code ...
+
+                                        ...
+
+                                }<span class="comment">//thread_function</span>
 </pre></div><h3><a class="anchor" name="Example_Receiving">
 Receiving a message</a></h3>
-<div class="fragment"><pre class="fragment">                                        <a class="code" href="struct__litm__envelope.html">litm_envelope</a> *envelope;
+<div class="fragment"><pre class="fragment">                                        ... inside the thread_function ...
+
+                                        <a class="code" href="struct__litm__envelope.html">litm_envelope</a> *envelope;
                                         <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a> code = <a class="code" href="litm_8c.html#2b6bffa08706c97ea5d9f6d670f8b359">litm_receive_nb</a>(conn, &amp;envelope);
                                          ... check <span class="keywordflow">return</span> code ...
 
@@ -74,7 +87,7 @@ Receiving a message</a></h3>
 <dl compact><dt><b><a class="el" href="todo.html#_todo000001">Todo:</a></b></dt><dd>Better shutdown system </dd></dl>
 <dl compact><dt><b><a class="el" href="todo.html#_todo000001">Todo:</a></b></dt><dd>Better connection close</dd></dl>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Wed Apr 29 14:37:58 2009 for LITM by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Wed Apr 29 14:54:49 2009 for LITM by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.6 </small></address>
 </body>

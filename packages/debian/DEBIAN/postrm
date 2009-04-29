@@ -3,6 +3,6 @@
 import os
 import sys
 
-print "LITM: postinst: args[%s]" % sys.argv
+print "LITM: postrm: args[%s]" % sys.argv
 
 sys.exit(0)
