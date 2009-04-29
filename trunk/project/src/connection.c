@@ -68,7 +68,6 @@ litm_connection_open(litm_connection **conn) {
 	}
 
 
-
 	_connections[target_index] = *conn;
 	(*conn)->input_queue = q;
 

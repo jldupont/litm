@@ -164,7 +164,7 @@ void *threadFunction(void *params) {
 	thread_id = tp->thread_id;
 	conn      = tp->conn;
 
-	printMessage2("Thread [%u] started, conn[%x]\n", thread_id, conn);
+	//printMessage2("Thread [%u] started, conn[%x]\n", thread_id, conn);
 
 	code = litm_subscribe(conn, 1);
 	printMessage(code, "* Subscribed, code[%s]...","thread_id[%u]\n", thread_id );
@@ -175,7 +175,7 @@ void *threadFunction(void *params) {
 
 	while(1) {
 		code = litm_send( conn, 1, message, &void_cleaner );
-		printMessage(code, "* Sent, code[%s]...","thread_id[%u] conn[%x]\n", thread_id, conn );
+		printMessage(code, "* Sent, code[%s]...","msg[%x] thread_id[%u] conn[%x]\n", message, thread_id, conn );
 		if (LITM_CODE_OK==code)
 			break;
 	}
@@ -191,7 +191,7 @@ void *threadFunction(void *params) {
 			litm_release(conn, e);
 		}
 
-		//sleep(0.01);
+		sleep(0.1);
 		//printf("Thread[%u] loop restart", thread_id);
 	}//while
 
@@ -203,5 +203,5 @@ void *threadFunction(void *params) {
 }//
 
 void void_cleaner(void *msg) {
-
+	//printf("# void_cleaner: msg[%x]\n", msg);
 }
