@@ -9,6 +9,7 @@
   <div class="tabs">
     <ul>
       <li><a href="main.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
       <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
     </ul>
@@ -171,7 +172,7 @@ Returns a copy of the pointer to the message.<p>
 </dl>
 This function should be used instead of relying on the ``litm_envelope`` data structure.<p>
 <b>** DO NOT** modify the message!</b> 
-<p>Definition at line <a class="el" href="litm_8c-source.html#l00133">133</a> of file <a class="el" href="litm_8c-source.html">litm.c</a>.</p>
+<p>Definition at line <a class="el" href="litm_8c-source.html#l00135">135</a> of file <a class="el" href="litm_8c-source.html">litm.c</a>.</p>
 
 </div>
 </div><p>
@@ -201,16 +202,10 @@ This function should be used instead of relying on the ``litm_envelope`` data st
 <div class="memdoc">
 
 <p>
-Receives (non-blocking) from any ``bus``<p>
-<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="litm_8h.html#11d169394b16263d121989e5ac965606">litm_disconnect</a></dd></dl>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>*conn</em>&nbsp;</td><td>connection reference </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>**envlp</em>&nbsp;</td><td>the pointer to received envelope </td></tr>
-  </table>
-</dl>
+Receive (non-blocking) function for clients<p>
+<dl class="note" compact><dt><b>Note:</b></dt><dd>It is the responsibility of the client to _not_ use this function once a connection is closed. </dd></dl>
 
-<p>Definition at line <a class="el" href="litm_8c-source.html#l00088">88</a> of file <a class="el" href="litm_8c-source.html">litm.c</a>.</p>
+<p>Definition at line <a class="el" href="litm_8c-source.html#l00096">96</a> of file <a class="el" href="litm_8c-source.html">litm.c</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -251,7 +246,7 @@ Here is the call graph for this function:</div>
 <p>
 Release a message to LITM<p>
 This function should *ONLY* be used by client's as a result of finishing the processing of an envelope/message retrieved through ``litm_receive_nb''. 
-<p>Definition at line <a class="el" href="litm_8c-source.html#l00119">119</a> of file <a class="el" href="litm_8c-source.html">litm.c</a>.</p>
+<p>Definition at line <a class="el" href="litm_8c-source.html#l00121">121</a> of file <a class="el" href="litm_8c-source.html">litm.c</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -346,7 +341,7 @@ Here is the call graph for this function:</div>
 <p>
 Shutdown<p>
 This function attempts to shutdown all the connection threads in a graceful manner. This function is blocking. 
-<p>Definition at line <a class="el" href="litm_8c-source.html#l00126">126</a> of file <a class="el" href="litm_8c-source.html">litm.c</a>.</p>
+<p>Definition at line <a class="el" href="litm_8c-source.html#l00128">128</a> of file <a class="el" href="litm_8c-source.html">litm.c</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -431,7 +426,7 @@ Translates a code to a message pointer<p>
   </table>
 </dl>
 
-<p>Definition at line <a class="el" href="litm_8c-source.html#l00143">143</a> of file <a class="el" href="litm_8c-source.html">litm.c</a>.</p>
+<p>Definition at line <a class="el" href="litm_8c-source.html#l00145">145</a> of file <a class="el" href="litm_8c-source.html">litm.c</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -531,7 +526,7 @@ Here is the call graph for this function:</div>
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Wed Apr 29 13:18:19 2009 for LITM by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Wed Apr 29 14:37:59 2009 for LITM by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.6 </small></address>
 </body>

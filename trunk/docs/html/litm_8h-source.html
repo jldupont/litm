@@ -9,6 +9,7 @@
   <div class="tabs">
     <ul>
       <li><a href="main.html"><span>Main&nbsp;Page</span></a></li>
+      <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
       <li><a href="annotated.html"><span>Data&nbsp;Structures</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
     </ul>
@@ -37,285 +38,347 @@
 <a name="l00022"></a>00022 <span class="comment"> *          - python package "pyjld.os" (available through &lt;i&gt;easy_install&lt;/i&gt;)</span>
 <a name="l00023"></a>00023 <span class="comment"> *</span>
 <a name="l00024"></a>00024 <span class="comment"> *</span>
-<a name="l00025"></a>00025 <span class="comment"> */</span>
-<a name="l00026"></a>00026 
-<a name="l00027"></a>00027 <span class="preprocessor">#ifndef LITM_H_</span>
-<a name="l00028"></a>00028 <span class="preprocessor"></span><span class="preprocessor">#define LITM_H_</span>
-<a name="l00029"></a>00029 <span class="preprocessor"></span>
-<a name="l00030"></a>00030 <span class="preprocessor">#       include &lt;sys/types.h&gt;</span>
-<a name="l00031"></a>00031 <span class="preprocessor">#       include &lt;pthread.h&gt;</span>
-<a name="l00032"></a>00032 
-<a name="l00033"></a>00033 
-<a name="l00034"></a><a class="code" href="litm_8h.html#1b077a43eb60b36c3a0d6d4d71cf1fac">00034</a> <span class="preprocessor">#       define LITM_CONNECTION_MAX 15</span>
-<a name="l00035"></a><a class="code" href="litm_8h.html#fbd708ff493c92eb23ebf90685253660">00035</a> <span class="preprocessor"></span><span class="preprocessor">#       define LITM_BUSSES_MAX     7</span>
-<a name="l00036"></a>00036 <span class="preprocessor"></span><span class="comment"></span>
-<a name="l00037"></a>00037 <span class="comment">                /**</span>
-<a name="l00038"></a>00038 <span class="comment">                 * Queue node - entry in a queue</span>
-<a name="l00039"></a>00039 <span class="comment">                 *</span>
-<a name="l00040"></a>00040 <span class="comment">                 * @param msg:  pointer to the message</span>
-<a name="l00041"></a>00041 <span class="comment">                 * @param next: pointer to the ``next`` queue_node entry</span>
-<a name="l00042"></a>00042 <span class="comment">                 */</span>
-<a name="l00043"></a><a class="code" href="struct__queue__node.html">00043</a>                 <span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct__queue__node.html">_queue_node</a> {
-<a name="l00044"></a><a class="code" href="struct__queue__node.html#8d229f11c7e8532e4eef032bd03f5954">00044</a>                         <span class="keywordtype">void</span> *<a class="code" href="struct__queue__node.html#8d229f11c7e8532e4eef032bd03f5954">node</a>;
-<a name="l00045"></a><a class="code" href="struct__queue__node.html#95be05d8f02322217bcd7c643e22bb14">00045</a>                         <span class="keyword">struct </span><a class="code" href="struct__queue__node.html">_queue_node</a> *<a class="code" href="struct__queue__node.html#95be05d8f02322217bcd7c643e22bb14">next</a>;
-<a name="l00046"></a>00046                 } <a class="code" href="struct__queue__node.html">queue_node</a>;
-<a name="l00047"></a>00047 <span class="comment"></span>
-<a name="l00048"></a>00048 <span class="comment">                /**</span>
-<a name="l00049"></a>00049 <span class="comment">                 * Queue - thread-safe</span>
-<a name="l00050"></a>00050 <span class="comment">                 *</span>
-<a name="l00051"></a>00051 <span class="comment">                 * @param mutex: mutex</span>
-<a name="l00052"></a>00052 <span class="comment">                 * @param head:  pointer to ``head``</span>
-<a name="l00053"></a>00053 <span class="comment">                 * @param tail:  pointer to ``tail``</span>
-<a name="l00054"></a>00054 <span class="comment">                 */</span>
-<a name="l00055"></a><a class="code" href="structqueue.html">00055</a>                 <span class="keyword">typedef</span> <span class="keyword">struct </span>{
-<a name="l00056"></a><a class="code" href="structqueue.html#493c1d1593f4f6e965797c8139e668b2">00056</a>                         pthread_mutex_t *mutex;
-<a name="l00057"></a><a class="code" href="structqueue.html#971bce1db86a08e9bdf934c6805861b5">00057</a>                         <span class="keyword">struct </span><a class="code" href="struct__queue__node.html">_queue_node</a> *head, *tail;
-<a name="l00058"></a>00058                 } <a class="code" href="structqueue.html">queue</a>;
-<a name="l00059"></a>00059 
-<a name="l00060"></a>00060 <span class="comment"></span>
-<a name="l00061"></a>00061 <span class="comment">                /**</span>
-<a name="l00062"></a>00062 <span class="comment">                 * ``Bus`` identifier type</span>
-<a name="l00063"></a>00063 <span class="comment">                 */</span>
-<a name="l00064"></a><a class="code" href="litm_8h.html#e7fcc1b5cd037f318d4fe40a2f9d30d3">00064</a>                 <span class="keyword">typedef</span> <span class="keywordtype">int</span> <a class="code" href="litm_8h.html#e7fcc1b5cd037f318d4fe40a2f9d30d3">litm_bus</a>;
-<a name="l00065"></a>00065 <span class="comment"></span>
-<a name="l00066"></a>00066 <span class="comment">                /**</span>
-<a name="l00067"></a>00067 <span class="comment">                 * ``Connection Status`` type</span>
-<a name="l00068"></a>00068 <span class="comment">                 */</span>
-<a name="l00069"></a><a class="code" href="litm_8h.html#162832423e3440c32bee96b14817a29c">00069</a>                 <span class="keyword">typedef</span> <span class="keyword">enum</span> <a class="code" href="litm_8h.html#162832423e3440c32bee96b14817a29c">_litm_connection_status_codes</a> {
-<a name="l00070"></a><a class="code" href="litm_8h.html#162832423e3440c32bee96b14817a29c65be2ab65f83d0339d8ecf36bb2ecb27">00070</a>                         <a class="code" href="litm_8h.html#162832423e3440c32bee96b14817a29c65be2ab65f83d0339d8ecf36bb2ecb27">LITM_CONNECTION_STATUS_INVALID</a> = 0,
-<a name="l00071"></a><a class="code" href="litm_8h.html#162832423e3440c32bee96b14817a29c75a4f622fd8d044b9278df6446f259f0">00071</a>                         <a class="code" href="litm_8h.html#162832423e3440c32bee96b14817a29c75a4f622fd8d044b9278df6446f259f0">LITM_CONNECTION_STATUS_ACTIVE</a>,
-<a name="l00072"></a><a class="code" href="litm_8h.html#162832423e3440c32bee96b14817a29cb596e17f779156a216a0dfc8ee24723f">00072</a>                         <a class="code" href="litm_8h.html#162832423e3440c32bee96b14817a29cb596e17f779156a216a0dfc8ee24723f">LITM_CONNECTION_STATUS_PENDING_DELETION</a>
-<a name="l00073"></a>00073                 } <a class="code" href="litm_8h.html#02e9069eb37674bf44c1f0888dc64896">litm_connection_status</a>;
-<a name="l00074"></a>00074 <span class="comment"></span>
-<a name="l00075"></a>00075 <span class="comment">                /**</span>
-<a name="l00076"></a>00076 <span class="comment">                 * ``Connection`` type</span>
-<a name="l00077"></a>00077 <span class="comment">                 *</span>
-<a name="l00078"></a>00078 <span class="comment">                 * @param input_queue the connection's input queue</span>
-<a name="l00079"></a>00079 <span class="comment">                 */</span>
-<a name="l00080"></a><a class="code" href="struct__litm__connection.html">00080</a>                 <span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct__litm__connection.html">_litm_connection</a> {
-<a name="l00081"></a><a class="code" href="struct__litm__connection.html#bf95b395af1ec217cb86c8bf5aafb632">00081</a>                         <a class="code" href="litm_8h.html#02e9069eb37674bf44c1f0888dc64896">litm_connection_status</a> <a class="code" href="struct__litm__connection.html#bf95b395af1ec217cb86c8bf5aafb632">status</a>;
-<a name="l00082"></a><a class="code" href="struct__litm__connection.html#92412056140d8e635b20b0681fa32c9a">00082</a>                         <a class="code" href="structqueue.html">queue</a> *<a class="code" href="struct__litm__connection.html#92412056140d8e635b20b0681fa32c9a">input_queue</a>;
-<a name="l00083"></a>00083                 } <a class="code" href="struct__litm__connection.html">litm_connection</a>;
-<a name="l00084"></a>00084 
-<a name="l00085"></a>00085                 <span class="comment">//typedef _litm_connection litm_connection;</span>
-<a name="l00086"></a>00086 <span class="comment"></span>
-<a name="l00087"></a>00087 <span class="comment">                /**</span>
-<a name="l00088"></a>00088 <span class="comment">                 * Envelope Routing</span>
-<a name="l00089"></a>00089 <span class="comment">                 *</span>
-<a name="l00090"></a>00090 <span class="comment">                 * @param pending Pending Status Flag</span>
-<a name="l00091"></a>00091 <span class="comment">                 * @param bus_id  Destination ``bus``</span>
-<a name="l00092"></a>00092 <span class="comment">                 * @param sender  The sender's connection pointer</span>
-<a name="l00093"></a>00093 <span class="comment">                 * @param current The current recipient's connection pointer</span>
-<a name="l00094"></a>00094 <span class="comment">                 */</span>
-<a name="l00095"></a><a class="code" href="struct____litm__routing.html">00095</a>                 <span class="keyword">typedef</span> <span class="keyword">struct </span>{
-<a name="l00096"></a><a class="code" href="struct____litm__routing.html#078e15223c87cc831becc4169d2f7a2f">00096</a>                         <span class="keywordtype">int</span>                              pending;
-<a name="l00097"></a><a class="code" href="struct____litm__routing.html#1f7b0cd5a23c153bf0a244fd7cba6689">00097</a>                         <a class="code" href="litm_8h.html#e7fcc1b5cd037f318d4fe40a2f9d30d3">litm_bus</a>         bus_id;
-<a name="l00098"></a><a class="code" href="struct____litm__routing.html#855edf29452572a9d83b7d551c2b3a3b">00098</a>                         <a class="code" href="struct__litm__connection.html">litm_connection</a> *sender;
-<a name="l00099"></a><a class="code" href="struct____litm__routing.html#30882ea416f664293fb2f0468cb09e8b">00099</a>                         <a class="code" href="struct__litm__connection.html">litm_connection</a> *current;
-<a name="l00100"></a>00100                 } <a class="code" href="struct____litm__routing.html">__litm_routing</a>;
-<a name="l00101"></a>00101 
-<a name="l00102"></a>00102 
-<a name="l00103"></a>00103 
-<a name="l00104"></a>00104 
-<a name="l00105"></a>00105                 <span class="comment">// Return Codes</span>
-<a name="l00106"></a>00106                 <span class="comment">// ------------</span>
-<a name="l00107"></a>00107                 <span class="comment">//</span>
-<a name="l00108"></a><a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293">00108</a>                 <span class="keyword">typedef</span> <span class="keyword">enum</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293">_litm_codes</a> {
-<a name="l00109"></a><a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622930b651a4f84388b526d32980e3b43c4a2">00109</a>                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622930b651a4f84388b526d32980e3b43c4a2">LITM_CODE_OK</a> = 0,
-<a name="l00110"></a><a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293c4db0bf4a6b68b3ae976c9cbe323da3e">00110</a>                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293c4db0bf4a6b68b3ae976c9cbe323da3e">LITM_CODE_NO_MESSAGE</a>,
-<a name="l00111"></a><a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622939fd144765aaaf968cb7a7b7fa847a278">00111</a>                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622939fd144765aaaf968cb7a7b7fa847a278">LITM_CODE_BUSY</a>,
-<a name="l00112"></a><a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d6229369f5e764faddb58449c77b25df30dfc6">00112</a>                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d6229369f5e764faddb58449c77b25df30dfc6">LITM_CODE_ERROR_MALLOC</a>,
-<a name="l00113"></a><a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293fb95351b58800e5e56d3069a47cd60e4">00113</a>                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293fb95351b58800e5e56d3069a47cd60e4">LITM_CODE_ERROR_CONNECTION_OPEN</a>,
-<a name="l00114"></a><a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293030ffb6b9de7d729330056b0c40eeaa4">00114</a>                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293030ffb6b9de7d729330056b0c40eeaa4">LITM_CODE_ERROR_BAD_CONNECTION</a>,
-<a name="l00115"></a><a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622939aeb836e2cf171cef63d14d898c847da">00115</a>                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622939aeb836e2cf171cef63d14d898c847da">LITM_CODE_ERROR_NO_MORE_CONNECTIONS</a>,
-<a name="l00116"></a><a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622933f8543ac2f3b59248fb667f2adfa2263">00116</a>                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622933f8543ac2f3b59248fb667f2adfa2263">LITM_CODE_ERROR_INVALID_BUS</a>,
-<a name="l00117"></a><a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622935220c97da0615dec2b888d62f937a7c8">00117</a>                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622935220c97da0615dec2b888d62f937a7c8">LITM_CODE_ERROR_SWITCH_SENDER_EQUAL_CURRENT</a>,
-<a name="l00118"></a><a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293a973644706468eb1af25e07dff363b19">00118</a>                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293a973644706468eb1af25e07dff363b19">LITM_CODE_ERROR_SWITCH_NO_CURRENT</a>,
-<a name="l00119"></a><a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622934d8aae31a6e2d37e27001a7eb78883f6">00119</a>                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622934d8aae31a6e2d37e27001a7eb78883f6">LITM_CODE_ERROR_SWITCH_NEXT_NOT_FOUND</a>,
-<a name="l00120"></a><a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622939982f109e1fbfd1b3e0968a5ff51d438">00120</a>                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622939982f109e1fbfd1b3e0968a5ff51d438">LITM_CODE_ERROR_OUTPUT_QUEUING</a>,                                 <span class="comment">//can't send to the recipient</span>
-<a name="l00121"></a><a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622937355ba30364dfa3151df630f8e330e1c">00121</a>                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622937355ba30364dfa3151df630f8e330e1c">LITM_CODE_BUSY_OUTPUT_QUEUE</a>,
-<a name="l00122"></a><a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622930aea3671c60548df5c630dfb89adf3bb">00122</a>                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622930aea3671c60548df5c630dfb89adf3bb">LITM_CODE_ERROR_INVALID_ENVELOPE</a>,
-<a name="l00123"></a><a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d6229314b279eb339b133229cd86cdec3061b1">00123</a>                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d6229314b279eb339b133229cd86cdec3061b1">LITM_CODE_ERROR_SUBSCRIPTION_NOT_FOUND</a>,
-<a name="l00124"></a><a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293f2511f4fa54ba3b446d52b5e3245b4b4">00124</a>                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293f2511f4fa54ba3b446d52b5e3245b4b4">LITM_CODE_ERROR_BUS_FULL</a>,
-<a name="l00125"></a><a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293d2c20dd90f4bfae2b58404d661150277">00125</a>                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293d2c20dd90f4bfae2b58404d661150277">LITM_CODE_BUSY_CONNECTIONS</a>,
-<a name="l00126"></a><a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293616f3113b342c0798a12e3692246aaea">00126</a>                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293616f3113b342c0798a12e3692246aaea">LITM_CODE_ERROR_CONNECTION_NOT_ACTIVE</a>
-<a name="l00127"></a>00127 
-<a name="l00128"></a>00128                 } <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a>;
-<a name="l00129"></a>00129 
-<a name="l00130"></a>00130 <span class="comment"></span>
-<a name="l00131"></a>00131 <span class="comment">                /**</span>
-<a name="l00132"></a>00132 <span class="comment">                 * ``Envelope`` structure for messages</span>
-<a name="l00133"></a>00133 <span class="comment">                 *</span>
-<a name="l00134"></a>00134 <span class="comment">                 * @param cleaner The ``cleaner`` function to use</span>
-<a name="l00135"></a>00135 <span class="comment">                 * @param routes  The ``routing`` structure</span>
-<a name="l00136"></a>00136 <span class="comment">                 * @param msg     The pointer to the message</span>
-<a name="l00137"></a>00137 <span class="comment">                 *</span>
-<a name="l00138"></a>00138 <span class="comment">                 * Contains the pointer to the message</span>
-<a name="l00139"></a>00139 <span class="comment">                 *  as well as a ``routing`` structure</span>
-<a name="l00140"></a>00140 <span class="comment">                 *  used to deliver the said message</span>
-<a name="l00141"></a>00141 <span class="comment">                 *  to all bus which have at least</span>
-<a name="l00142"></a>00142 <span class="comment">                 *  1 subscriber.</span>
-<a name="l00143"></a>00143 <span class="comment">                 *</span>
-<a name="l00144"></a>00144 <span class="comment">                 * The client (ie. receiver of the envelope)</span>
-<a name="l00145"></a>00145 <span class="comment">                 *  must not tamper with the message (ie. msg)</span>
-<a name="l00146"></a>00146 <span class="comment">                 *  as it is shared with other client(s).</span>
-<a name="l00147"></a>00147 <span class="comment">                 *</span>
-<a name="l00148"></a>00148 <span class="comment">                 */</span>
-<a name="l00149"></a><a class="code" href="struct__litm__envelope.html">00149</a>                 <span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct__litm__envelope.html">_litm_envelope</a> {
-<a name="l00150"></a>00150 
-<a name="l00151"></a><a class="code" href="struct__litm__envelope.html#34a68490d7f97acac5caa3ffc2aa6fb9">00151</a>                         <span class="keywordtype">int</span> <a class="code" href="struct__litm__envelope.html#34a68490d7f97acac5caa3ffc2aa6fb9">released_count</a>;
-<a name="l00152"></a><a class="code" href="struct__litm__envelope.html#7102977c891a672bd99ade9a1927dd7c">00152</a>                         <span class="keywordtype">int</span> <a class="code" href="struct__litm__envelope.html#7102977c891a672bd99ade9a1927dd7c">delivery_count</a>;
-<a name="l00153"></a>00153                         void (*<a class="code" href="struct__litm__envelope.html#9e1e2e92283fc88e458ab22c80ed5a10">cleaner</a>)(<span class="keywordtype">void</span> *<a class="code" href="struct__litm__envelope.html#5ed18526b98cb26460fdb273ea2178ac">msg</a>);
-<a name="l00154"></a><a class="code" href="struct__litm__envelope.html#7c7a351b72e9b4d084e526a00787a44f">00154</a>                         <a class="code" href="struct____litm__routing.html">__litm_routing</a> <a class="code" href="struct__litm__envelope.html#7c7a351b72e9b4d084e526a00787a44f">routes</a>;
-<a name="l00155"></a><a class="code" href="struct__litm__envelope.html#5ed18526b98cb26460fdb273ea2178ac">00155</a>                         <span class="keywordtype">void</span> *<a class="code" href="struct__litm__envelope.html#5ed18526b98cb26460fdb273ea2178ac">msg</a>;
-<a name="l00156"></a>00156 
-<a name="l00157"></a>00157                 } <a class="code" href="struct__litm__envelope.html">litm_envelope</a>;
-<a name="l00158"></a>00158 
-<a name="l00159"></a>00159 <span class="comment"></span>
-<a name="l00160"></a>00160 <span class="comment">                /**</span>
-<a name="l00161"></a>00161 <span class="comment">                 * Opens a ``connection`` to the ``switch``</span>
-<a name="l00162"></a>00162 <span class="comment">                 *  and returns a pointer to the connection reference</span>
-<a name="l00163"></a>00163 <span class="comment">                 *</span>
-<a name="l00164"></a>00164 <span class="comment">                 * @param **conn pointer to connection reference</span>
-<a name="l00165"></a>00165 <span class="comment">                 */</span>
-<a name="l00166"></a>00166                 <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a> <a class="code" href="litm_8c.html#bc852d2eb14353e36adf21c33eab03a3">litm_connect</a>(<a class="code" href="struct__litm__connection.html">litm_connection</a> **conn);
-<a name="l00167"></a>00167 
-<a name="l00168"></a>00168 <span class="comment"></span>
-<a name="l00169"></a>00169 <span class="comment">                /**</span>
-<a name="l00170"></a>00170 <span class="comment">                 * Disconnects from the ``switch``</span>
-<a name="l00171"></a>00171 <span class="comment">                 *</span>
-<a name="l00172"></a>00172 <span class="comment">                 * Once a client calls this function, no more access</span>
-<a name="l00173"></a>00173 <span class="comment">                 * with the connection is permitted to any of the</span>
-<a name="l00174"></a>00174 <span class="comment">                 * following functions:</span>
-<a name="l00175"></a>00175 <span class="comment">                 *</span>
-<a name="l00176"></a>00176 <span class="comment">                 *  - litm_subscribe</span>
-<a name="l00177"></a>00177 <span class="comment">                 *  - litm_unsubscribe</span>
-<a name="l00178"></a>00178 <span class="comment">                 *  - litm_receive_nb</span>
-<a name="l00179"></a>00179 <span class="comment">                 *  - litm_send</span>
-<a name="l00180"></a>00180 <span class="comment">                 *  - litm_release</span>
-<a name="l00181"></a>00181 <span class="comment">                 *</span>
-<a name="l00182"></a>00182 <span class="comment">                 * Be sure to release any message in the client's</span>
-<a name="l00183"></a>00183 <span class="comment">                 * care before disconnecting.</span>
-<a name="l00184"></a>00184 <span class="comment">                 *</span>
-<a name="l00185"></a>00185 <span class="comment">                 * @param *conn connection reference</span>
-<a name="l00186"></a>00186 <span class="comment">                 */</span>
-<a name="l00187"></a>00187                 <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a> <a class="code" href="litm_8c.html#11d169394b16263d121989e5ac965606">litm_disconnect</a>(<a class="code" href="struct__litm__connection.html">litm_connection</a> *conn);
-<a name="l00188"></a>00188 
-<a name="l00189"></a>00189 <span class="comment"></span>
-<a name="l00190"></a>00190 <span class="comment">                /**</span>
-<a name="l00191"></a>00191 <span class="comment">                 * Subscribe to a ``bus``</span>
-<a name="l00192"></a>00192 <span class="comment">                 *</span>
-<a name="l00193"></a>00193 <span class="comment">                 * @see litm_disconnect</span>
-<a name="l00194"></a>00194 <span class="comment">                 *</span>
-<a name="l00195"></a>00195 <span class="comment">                 * @param *conn connection reference</span>
-<a name="l00196"></a>00196 <span class="comment">                 * @param bus_id the ``bus`` identifier to subscribe to</span>
-<a name="l00197"></a>00197 <span class="comment">                 *</span>
-<a name="l00198"></a>00198 <span class="comment">                 */</span>
-<a name="l00199"></a>00199                 <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a> <a class="code" href="litm_8c.html#1c8191e4aca778b346954933c7bdf3ff">litm_subscribe</a>(<a class="code" href="struct__litm__connection.html">litm_connection</a> *conn, <a class="code" href="litm_8h.html#e7fcc1b5cd037f318d4fe40a2f9d30d3">litm_bus</a> bus_id);
-<a name="l00200"></a>00200 
-<a name="l00201"></a>00201 <span class="comment"></span>
-<a name="l00202"></a>00202 <span class="comment">                /**</span>
-<a name="l00203"></a>00203 <span class="comment">                 * Unsubscribe from a ``bus``</span>
-<a name="l00204"></a>00204 <span class="comment">                 *</span>
-<a name="l00205"></a>00205 <span class="comment">                 * @see litm_disconnect</span>
-<a name="l00206"></a>00206 <span class="comment">                 *</span>
-<a name="l00207"></a>00207 <span class="comment">                 * @param *conn connection reference</span>
-<a name="l00208"></a>00208 <span class="comment">                 * @param bus_id the ``bus`` identifier to unsubscribe from</span>
-<a name="l00209"></a>00209 <span class="comment">                 */</span>
-<a name="l00210"></a>00210                 <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a> <a class="code" href="litm_8c.html#50225024a2292b63a5eb95cca00f2545">litm_unsubscribe</a>(<a class="code" href="struct__litm__connection.html">litm_connection</a> *conn, <a class="code" href="litm_8h.html#e7fcc1b5cd037f318d4fe40a2f9d30d3">litm_bus</a> bus_id);
-<a name="l00211"></a>00211 
-<a name="l00212"></a>00212 <span class="comment"></span>
-<a name="l00213"></a>00213 <span class="comment">                /**</span>
-<a name="l00214"></a>00214 <span class="comment">                 * Send message on a ``bus``</span>
-<a name="l00215"></a>00215 <span class="comment">                 *</span>
-<a name="l00216"></a>00216 <span class="comment">                 * @see litm_disconnect</span>
-<a name="l00217"></a>00217 <span class="comment">                 *</span>
-<a name="l00218"></a>00218 <span class="comment">                 * @param *conn connection reference</span>
-<a name="l00219"></a>00219 <span class="comment">                 * @param bus_id the ``bus`` to send the message onto</span>
-<a name="l00220"></a>00220 <span class="comment">                 * @param *msg the pointer to the message</span>
-<a name="l00221"></a>00221 <span class="comment">                 * @param *cleaner the pointer to the cleaner function</span>
-<a name="l00222"></a>00222 <span class="comment">                 *</span>
-<a name="l00223"></a>00223 <span class="comment">                 * If omitted, the default ``cleaner`` function will be</span>
-<a name="l00224"></a>00224 <span class="comment">                 * &lt;b&gt;free()&lt;/b&gt;.</span>
+<a name="l00025"></a>00025 <span class="comment"> * \section     Example_Usage Example Usage:</span>
+<a name="l00026"></a>00026 <span class="comment"> *</span>
+<a name="l00027"></a>00027 <span class="comment"> *                      \subsection Example_Opening Opening a connection</span>
+<a name="l00028"></a>00028 <span class="comment"> *</span>
+<a name="l00029"></a>00029 <span class="comment"> *                      \code</span>
+<a name="l00030"></a>00030 <span class="comment"> *</span>
+<a name="l00031"></a>00031 <span class="comment"> *                              litm_connection *conn;</span>
+<a name="l00032"></a>00032 <span class="comment"> *                              litm_code code = litm_connection_open( &amp;conn );</span>
+<a name="l00033"></a>00033 <span class="comment"> *                              switch(code) {</span>
+<a name="l00034"></a>00034 <span class="comment"> *                               case LITM_CODE_OK:</span>
+<a name="l00035"></a>00035 <span class="comment"> *                                              // can start using the connection</span>
+<a name="l00036"></a>00036 <span class="comment"> *                                              break;</span>
+<a name="l00037"></a>00037 <span class="comment"> *                               case LITM_CODE_BUSY:</span>
+<a name="l00038"></a>00038 <span class="comment"> *                                              // better try again later</span>
+<a name="l00039"></a>00039 <span class="comment"> *                                              break;</span>
+<a name="l00040"></a>00040 <span class="comment"> *                               default:</span>
+<a name="l00041"></a>00041 <span class="comment"> *                                              //something is wrong...</span>
+<a name="l00042"></a>00042 <span class="comment"> *                                              break;</span>
+<a name="l00043"></a>00043 <span class="comment"> *                              }</span>
+<a name="l00044"></a>00044 <span class="comment"> *</span>
+<a name="l00045"></a>00045 <span class="comment"> *                      \endcode</span>
+<a name="l00046"></a>00046 <span class="comment"> *</span>
+<a name="l00047"></a>00047 <span class="comment"> *</span>
+<a name="l00048"></a>00048 <span class="comment"> *                      \subsection Example_Subscribing Subscribing to a _bus_</span>
+<a name="l00049"></a>00049 <span class="comment"> *</span>
+<a name="l00050"></a>00050 <span class="comment"> *                              \code</span>
+<a name="l00051"></a>00051 <span class="comment"> *                              // subscribing to bus #1</span>
+<a name="l00052"></a>00052 <span class="comment"> *                              litm_code code = litm_subscribe(conn, 1);</span>
+<a name="l00053"></a>00053 <span class="comment"> *                                ... check return code ...</span>
+<a name="l00054"></a>00054 <span class="comment"> *</span>
+<a name="l00055"></a>00055 <span class="comment"> *                              \endcode</span>
+<a name="l00056"></a>00056 <span class="comment"> *</span>
+<a name="l00057"></a>00057 <span class="comment"> *</span>
+<a name="l00058"></a>00058 <span class="comment"> *                      \subsection Example_Sending Sending a message on a _bus_</span>
+<a name="l00059"></a>00059 <span class="comment"> *</span>
+<a name="l00060"></a>00060 <span class="comment"> *                              \code</span>
+<a name="l00061"></a>00061 <span class="comment"> *                                      void *message; // whatever structure</span>
+<a name="l00062"></a>00062 <span class="comment"> *                                      litm_code code = litm_send(conn, bus_id, message, NULL);</span>
+<a name="l00063"></a>00063 <span class="comment"> *                                       ... check return code ...</span>
+<a name="l00064"></a>00064 <span class="comment"> *                              \endcode</span>
+<a name="l00065"></a>00065 <span class="comment"> *</span>
+<a name="l00066"></a>00066 <span class="comment"> *</span>
+<a name="l00067"></a>00067 <span class="comment"> *                      \subsection Example_Receiving Receiving a message</span>
+<a name="l00068"></a>00068 <span class="comment"> *</span>
+<a name="l00069"></a>00069 <span class="comment"> *                              \code</span>
+<a name="l00070"></a>00070 <span class="comment"> *                                      litm_envelope *envelope;</span>
+<a name="l00071"></a>00071 <span class="comment"> *                                      litm_code code = litm_receive_nb(conn, &amp;envelope);</span>
+<a name="l00072"></a>00072 <span class="comment"> *                                       ... check return code ...</span>
+<a name="l00073"></a>00073 <span class="comment"> *</span>
+<a name="l00074"></a>00074 <span class="comment"> *                                      void *msg;</span>
+<a name="l00075"></a>00075 <span class="comment"> *                                      msg = litm_get_message( envelope );</span>
+<a name="l00076"></a>00076 <span class="comment"> *</span>
+<a name="l00077"></a>00077 <span class="comment"> *                                       ... process message WITHOUT MODIFYING IT ...</span>
+<a name="l00078"></a>00078 <span class="comment"> *</span>
+<a name="l00079"></a>00079 <span class="comment"> *                                      // return the envelope to LITM</span>
+<a name="l00080"></a>00080 <span class="comment"> *                                      code = litm_release(conn, envelope);</span>
+<a name="l00081"></a>00081 <span class="comment"> *</span>
+<a name="l00082"></a>00082 <span class="comment"> *                              \endcode</span>
+<a name="l00083"></a>00083 <span class="comment"> *</span>
+<a name="l00084"></a>00084 <span class="comment"> * \todo Better shutdown system</span>
+<a name="l00085"></a>00085 <span class="comment"> * \todo Better connection close</span>
+<a name="l00086"></a>00086 <span class="comment"> *</span>
+<a name="l00087"></a>00087 <span class="comment"> */</span>
+<a name="l00088"></a>00088 
+<a name="l00089"></a>00089 <span class="preprocessor">#ifndef LITM_H_</span>
+<a name="l00090"></a>00090 <span class="preprocessor"></span><span class="preprocessor">#define LITM_H_</span>
+<a name="l00091"></a>00091 <span class="preprocessor"></span>
+<a name="l00092"></a>00092 <span class="preprocessor">#       include &lt;sys/types.h&gt;</span>
+<a name="l00093"></a>00093 <span class="preprocessor">#       include &lt;pthread.h&gt;</span>
+<a name="l00094"></a>00094 
+<a name="l00095"></a>00095 
+<a name="l00096"></a><a class="code" href="litm_8h.html#1b077a43eb60b36c3a0d6d4d71cf1fac">00096</a> <span class="preprocessor">#       define LITM_CONNECTION_MAX 15</span>
+<a name="l00097"></a><a class="code" href="litm_8h.html#fbd708ff493c92eb23ebf90685253660">00097</a> <span class="preprocessor"></span><span class="preprocessor">#       define LITM_BUSSES_MAX     7</span>
+<a name="l00098"></a>00098 <span class="preprocessor"></span><span class="comment"></span>
+<a name="l00099"></a>00099 <span class="comment">                /**</span>
+<a name="l00100"></a>00100 <span class="comment">                 * Queue node - entry in a queue</span>
+<a name="l00101"></a>00101 <span class="comment">                 *</span>
+<a name="l00102"></a>00102 <span class="comment">                 * @param msg:  pointer to the message</span>
+<a name="l00103"></a>00103 <span class="comment">                 * @param next: pointer to the ``next`` queue_node entry</span>
+<a name="l00104"></a>00104 <span class="comment">                 */</span>
+<a name="l00105"></a><a class="code" href="struct__queue__node.html">00105</a>                 <span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct__queue__node.html">_queue_node</a> {
+<a name="l00106"></a><a class="code" href="struct__queue__node.html#8d229f11c7e8532e4eef032bd03f5954">00106</a>                         <span class="keywordtype">void</span> *<a class="code" href="struct__queue__node.html#8d229f11c7e8532e4eef032bd03f5954">node</a>;
+<a name="l00107"></a><a class="code" href="struct__queue__node.html#95be05d8f02322217bcd7c643e22bb14">00107</a>                         <span class="keyword">struct </span><a class="code" href="struct__queue__node.html">_queue_node</a> *<a class="code" href="struct__queue__node.html#95be05d8f02322217bcd7c643e22bb14">next</a>;
+<a name="l00108"></a>00108                 } <a class="code" href="struct__queue__node.html">queue_node</a>;
+<a name="l00109"></a>00109 <span class="comment"></span>
+<a name="l00110"></a>00110 <span class="comment">                /**</span>
+<a name="l00111"></a>00111 <span class="comment">                 * Queue - thread-safe</span>
+<a name="l00112"></a>00112 <span class="comment">                 *</span>
+<a name="l00113"></a>00113 <span class="comment">                 * @param mutex: mutex</span>
+<a name="l00114"></a>00114 <span class="comment">                 * @param head:  pointer to ``head``</span>
+<a name="l00115"></a>00115 <span class="comment">                 * @param tail:  pointer to ``tail``</span>
+<a name="l00116"></a>00116 <span class="comment">                 */</span>
+<a name="l00117"></a><a class="code" href="structqueue.html">00117</a>                 <span class="keyword">typedef</span> <span class="keyword">struct </span>{
+<a name="l00118"></a><a class="code" href="structqueue.html#493c1d1593f4f6e965797c8139e668b2">00118</a>                         pthread_mutex_t *mutex;
+<a name="l00119"></a><a class="code" href="structqueue.html#971bce1db86a08e9bdf934c6805861b5">00119</a>                         <span class="keyword">struct </span><a class="code" href="struct__queue__node.html">_queue_node</a> *head, *tail;
+<a name="l00120"></a>00120                 } <a class="code" href="structqueue.html">queue</a>;
+<a name="l00121"></a>00121 
+<a name="l00122"></a>00122 <span class="comment"></span>
+<a name="l00123"></a>00123 <span class="comment">                /**</span>
+<a name="l00124"></a>00124 <span class="comment">                 * ``Bus`` identifier type</span>
+<a name="l00125"></a>00125 <span class="comment">                 */</span>
+<a name="l00126"></a><a class="code" href="litm_8h.html#e7fcc1b5cd037f318d4fe40a2f9d30d3">00126</a>                 <span class="keyword">typedef</span> <span class="keywordtype">int</span> <a class="code" href="litm_8h.html#e7fcc1b5cd037f318d4fe40a2f9d30d3">litm_bus</a>;
+<a name="l00127"></a>00127 <span class="comment"></span>
+<a name="l00128"></a>00128 <span class="comment">                /**</span>
+<a name="l00129"></a>00129 <span class="comment">                 * ``Connection Status`` type</span>
+<a name="l00130"></a>00130 <span class="comment">                 */</span>
+<a name="l00131"></a><a class="code" href="litm_8h.html#162832423e3440c32bee96b14817a29c">00131</a>                 <span class="keyword">typedef</span> <span class="keyword">enum</span> <a class="code" href="litm_8h.html#162832423e3440c32bee96b14817a29c">_litm_connection_status_codes</a> {
+<a name="l00132"></a><a class="code" href="litm_8h.html#162832423e3440c32bee96b14817a29c65be2ab65f83d0339d8ecf36bb2ecb27">00132</a>                         <a class="code" href="litm_8h.html#162832423e3440c32bee96b14817a29c65be2ab65f83d0339d8ecf36bb2ecb27">LITM_CONNECTION_STATUS_INVALID</a> = 0,
+<a name="l00133"></a><a class="code" href="litm_8h.html#162832423e3440c32bee96b14817a29c75a4f622fd8d044b9278df6446f259f0">00133</a>                         <a class="code" href="litm_8h.html#162832423e3440c32bee96b14817a29c75a4f622fd8d044b9278df6446f259f0">LITM_CONNECTION_STATUS_ACTIVE</a>,
+<a name="l00134"></a><a class="code" href="litm_8h.html#162832423e3440c32bee96b14817a29cb596e17f779156a216a0dfc8ee24723f">00134</a>                         <a class="code" href="litm_8h.html#162832423e3440c32bee96b14817a29cb596e17f779156a216a0dfc8ee24723f">LITM_CONNECTION_STATUS_PENDING_DELETION</a>
+<a name="l00135"></a>00135                 } <a class="code" href="litm_8h.html#02e9069eb37674bf44c1f0888dc64896">litm_connection_status</a>;
+<a name="l00136"></a>00136 <span class="comment"></span>
+<a name="l00137"></a>00137 <span class="comment">                /**</span>
+<a name="l00138"></a>00138 <span class="comment">                 * ``Connection`` type</span>
+<a name="l00139"></a>00139 <span class="comment">                 *</span>
+<a name="l00140"></a>00140 <span class="comment">                 * @param input_queue the connection's input queue</span>
+<a name="l00141"></a>00141 <span class="comment">                 */</span>
+<a name="l00142"></a><a class="code" href="struct__litm__connection.html">00142</a>                 <span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct__litm__connection.html">_litm_connection</a> {
+<a name="l00143"></a><a class="code" href="struct__litm__connection.html#bf95b395af1ec217cb86c8bf5aafb632">00143</a>                         <a class="code" href="litm_8h.html#02e9069eb37674bf44c1f0888dc64896">litm_connection_status</a> <a class="code" href="struct__litm__connection.html#bf95b395af1ec217cb86c8bf5aafb632">status</a>;
+<a name="l00144"></a><a class="code" href="struct__litm__connection.html#92412056140d8e635b20b0681fa32c9a">00144</a>                         <a class="code" href="structqueue.html">queue</a> *<a class="code" href="struct__litm__connection.html#92412056140d8e635b20b0681fa32c9a">input_queue</a>;
+<a name="l00145"></a>00145                 } <a class="code" href="struct__litm__connection.html">litm_connection</a>;
+<a name="l00146"></a>00146 
+<a name="l00147"></a>00147                 <span class="comment">//typedef _litm_connection litm_connection;</span>
+<a name="l00148"></a>00148 <span class="comment"></span>
+<a name="l00149"></a>00149 <span class="comment">                /**</span>
+<a name="l00150"></a>00150 <span class="comment">                 * Envelope Routing</span>
+<a name="l00151"></a>00151 <span class="comment">                 *</span>
+<a name="l00152"></a>00152 <span class="comment">                 * @param pending Pending Status Flag</span>
+<a name="l00153"></a>00153 <span class="comment">                 * @param bus_id  Destination ``bus``</span>
+<a name="l00154"></a>00154 <span class="comment">                 * @param sender  The sender's connection pointer</span>
+<a name="l00155"></a>00155 <span class="comment">                 * @param current The current recipient's connection pointer</span>
+<a name="l00156"></a>00156 <span class="comment">                 */</span>
+<a name="l00157"></a><a class="code" href="struct____litm__routing.html">00157</a>                 <span class="keyword">typedef</span> <span class="keyword">struct </span>{
+<a name="l00158"></a><a class="code" href="struct____litm__routing.html#078e15223c87cc831becc4169d2f7a2f">00158</a>                         <span class="keywordtype">int</span>                              pending;
+<a name="l00159"></a><a class="code" href="struct____litm__routing.html#1f7b0cd5a23c153bf0a244fd7cba6689">00159</a>                         <a class="code" href="litm_8h.html#e7fcc1b5cd037f318d4fe40a2f9d30d3">litm_bus</a>         bus_id;
+<a name="l00160"></a><a class="code" href="struct____litm__routing.html#855edf29452572a9d83b7d551c2b3a3b">00160</a>                         <a class="code" href="struct__litm__connection.html">litm_connection</a> *sender;
+<a name="l00161"></a><a class="code" href="struct____litm__routing.html#30882ea416f664293fb2f0468cb09e8b">00161</a>                         <a class="code" href="struct__litm__connection.html">litm_connection</a> *current;
+<a name="l00162"></a>00162                 } <a class="code" href="struct____litm__routing.html">__litm_routing</a>;
+<a name="l00163"></a>00163 
+<a name="l00164"></a>00164 
+<a name="l00165"></a>00165 
+<a name="l00166"></a>00166 
+<a name="l00167"></a>00167                 <span class="comment">// Return Codes</span>
+<a name="l00168"></a>00168                 <span class="comment">// ------------</span>
+<a name="l00169"></a>00169                 <span class="comment">//</span>
+<a name="l00170"></a><a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293">00170</a>                 <span class="keyword">typedef</span> <span class="keyword">enum</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293">_litm_codes</a> {
+<a name="l00171"></a><a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622930b651a4f84388b526d32980e3b43c4a2">00171</a>                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622930b651a4f84388b526d32980e3b43c4a2">LITM_CODE_OK</a> = 0,
+<a name="l00172"></a><a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293c4db0bf4a6b68b3ae976c9cbe323da3e">00172</a>                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293c4db0bf4a6b68b3ae976c9cbe323da3e">LITM_CODE_NO_MESSAGE</a>,
+<a name="l00173"></a><a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622939fd144765aaaf968cb7a7b7fa847a278">00173</a>                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622939fd144765aaaf968cb7a7b7fa847a278">LITM_CODE_BUSY</a>,
+<a name="l00174"></a><a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d6229369f5e764faddb58449c77b25df30dfc6">00174</a>                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d6229369f5e764faddb58449c77b25df30dfc6">LITM_CODE_ERROR_MALLOC</a>,
+<a name="l00175"></a><a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293fb95351b58800e5e56d3069a47cd60e4">00175</a>                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293fb95351b58800e5e56d3069a47cd60e4">LITM_CODE_ERROR_CONNECTION_OPEN</a>,
+<a name="l00176"></a><a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293030ffb6b9de7d729330056b0c40eeaa4">00176</a>                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293030ffb6b9de7d729330056b0c40eeaa4">LITM_CODE_ERROR_BAD_CONNECTION</a>,
+<a name="l00177"></a><a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622939aeb836e2cf171cef63d14d898c847da">00177</a>                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622939aeb836e2cf171cef63d14d898c847da">LITM_CODE_ERROR_NO_MORE_CONNECTIONS</a>,
+<a name="l00178"></a><a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622933f8543ac2f3b59248fb667f2adfa2263">00178</a>                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622933f8543ac2f3b59248fb667f2adfa2263">LITM_CODE_ERROR_INVALID_BUS</a>,
+<a name="l00179"></a><a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622935220c97da0615dec2b888d62f937a7c8">00179</a>                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622935220c97da0615dec2b888d62f937a7c8">LITM_CODE_ERROR_SWITCH_SENDER_EQUAL_CURRENT</a>,
+<a name="l00180"></a><a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293a973644706468eb1af25e07dff363b19">00180</a>                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293a973644706468eb1af25e07dff363b19">LITM_CODE_ERROR_SWITCH_NO_CURRENT</a>,
+<a name="l00181"></a><a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622934d8aae31a6e2d37e27001a7eb78883f6">00181</a>                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622934d8aae31a6e2d37e27001a7eb78883f6">LITM_CODE_ERROR_SWITCH_NEXT_NOT_FOUND</a>,
+<a name="l00182"></a><a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622939982f109e1fbfd1b3e0968a5ff51d438">00182</a>                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622939982f109e1fbfd1b3e0968a5ff51d438">LITM_CODE_ERROR_OUTPUT_QUEUING</a>,                                 <span class="comment">//can't send to the recipient</span>
+<a name="l00183"></a><a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622937355ba30364dfa3151df630f8e330e1c">00183</a>                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622937355ba30364dfa3151df630f8e330e1c">LITM_CODE_BUSY_OUTPUT_QUEUE</a>,
+<a name="l00184"></a><a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622930aea3671c60548df5c630dfb89adf3bb">00184</a>                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622930aea3671c60548df5c630dfb89adf3bb">LITM_CODE_ERROR_INVALID_ENVELOPE</a>,
+<a name="l00185"></a><a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d6229314b279eb339b133229cd86cdec3061b1">00185</a>                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d6229314b279eb339b133229cd86cdec3061b1">LITM_CODE_ERROR_SUBSCRIPTION_NOT_FOUND</a>,
+<a name="l00186"></a><a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293f2511f4fa54ba3b446d52b5e3245b4b4">00186</a>                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293f2511f4fa54ba3b446d52b5e3245b4b4">LITM_CODE_ERROR_BUS_FULL</a>,
+<a name="l00187"></a><a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293d2c20dd90f4bfae2b58404d661150277">00187</a>                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293d2c20dd90f4bfae2b58404d661150277">LITM_CODE_BUSY_CONNECTIONS</a>,
+<a name="l00188"></a><a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293616f3113b342c0798a12e3692246aaea">00188</a>                         <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293616f3113b342c0798a12e3692246aaea">LITM_CODE_ERROR_CONNECTION_NOT_ACTIVE</a>
+<a name="l00189"></a>00189 
+<a name="l00190"></a>00190                 } <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a>;
+<a name="l00191"></a>00191 
+<a name="l00192"></a>00192 <span class="comment"></span>
+<a name="l00193"></a>00193 <span class="comment">                /**</span>
+<a name="l00194"></a>00194 <span class="comment">                 * ``Envelope`` structure for messages</span>
+<a name="l00195"></a>00195 <span class="comment">                 *</span>
+<a name="l00196"></a>00196 <span class="comment">                 * @param cleaner The ``cleaner`` function to use</span>
+<a name="l00197"></a>00197 <span class="comment">                 * @param routes  The ``routing`` structure</span>
+<a name="l00198"></a>00198 <span class="comment">                 * @param msg     The pointer to the message</span>
+<a name="l00199"></a>00199 <span class="comment">                 *</span>
+<a name="l00200"></a>00200 <span class="comment">                 * Contains the pointer to the message</span>
+<a name="l00201"></a>00201 <span class="comment">                 *  as well as a ``routing`` structure</span>
+<a name="l00202"></a>00202 <span class="comment">                 *  used to deliver the said message</span>
+<a name="l00203"></a>00203 <span class="comment">                 *  to all bus which have at least</span>
+<a name="l00204"></a>00204 <span class="comment">                 *  1 subscriber.</span>
+<a name="l00205"></a>00205 <span class="comment">                 *</span>
+<a name="l00206"></a>00206 <span class="comment">                 * The client (ie. receiver of the envelope)</span>
+<a name="l00207"></a>00207 <span class="comment">                 *  must not tamper with the message (ie. msg)</span>
+<a name="l00208"></a>00208 <span class="comment">                 *  as it is shared with other client(s).</span>
+<a name="l00209"></a>00209 <span class="comment">                 *</span>
+<a name="l00210"></a>00210 <span class="comment">                 */</span>
+<a name="l00211"></a><a class="code" href="struct__litm__envelope.html">00211</a>                 <span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="struct__litm__envelope.html">_litm_envelope</a> {
+<a name="l00212"></a>00212 
+<a name="l00213"></a><a class="code" href="struct__litm__envelope.html#34a68490d7f97acac5caa3ffc2aa6fb9">00213</a>                         <span class="keywordtype">int</span> <a class="code" href="struct__litm__envelope.html#34a68490d7f97acac5caa3ffc2aa6fb9">released_count</a>;
+<a name="l00214"></a><a class="code" href="struct__litm__envelope.html#7102977c891a672bd99ade9a1927dd7c">00214</a>                         <span class="keywordtype">int</span> <a class="code" href="struct__litm__envelope.html#7102977c891a672bd99ade9a1927dd7c">delivery_count</a>;
+<a name="l00215"></a>00215                         void (*<a class="code" href="struct__litm__envelope.html#9e1e2e92283fc88e458ab22c80ed5a10">cleaner</a>)(<span class="keywordtype">void</span> *<a class="code" href="struct__litm__envelope.html#5ed18526b98cb26460fdb273ea2178ac">msg</a>);
+<a name="l00216"></a><a class="code" href="struct__litm__envelope.html#7c7a351b72e9b4d084e526a00787a44f">00216</a>                         <a class="code" href="struct____litm__routing.html">__litm_routing</a> <a class="code" href="struct__litm__envelope.html#7c7a351b72e9b4d084e526a00787a44f">routes</a>;
+<a name="l00217"></a><a class="code" href="struct__litm__envelope.html#5ed18526b98cb26460fdb273ea2178ac">00217</a>                         <span class="keywordtype">void</span> *<a class="code" href="struct__litm__envelope.html#5ed18526b98cb26460fdb273ea2178ac">msg</a>;
+<a name="l00218"></a>00218 
+<a name="l00219"></a>00219                 } <a class="code" href="struct__litm__envelope.html">litm_envelope</a>;
+<a name="l00220"></a>00220 
+<a name="l00221"></a>00221 <span class="comment"></span>
+<a name="l00222"></a>00222 <span class="comment">                /**</span>
+<a name="l00223"></a>00223 <span class="comment">                 * Opens a ``connection`` to the ``switch``</span>
+<a name="l00224"></a>00224 <span class="comment">                 *  and returns a pointer to the connection reference</span>
 <a name="l00225"></a>00225 <span class="comment">                 *</span>
-<a name="l00226"></a>00226 <span class="comment">                 * If an error occurs, it is the responsibility of the sender</span>
-<a name="l00227"></a>00227 <span class="comment">                 *  to dispose of the ``messages`` appropriately.  If the</span>
-<a name="l00228"></a>00228 <span class="comment">                 *  operation went LITM_CODE_OK, then once all recipients</span>
-<a name="l00229"></a>00229 <span class="comment">                 *  are finished with the message, the ``cleaner`` will be</span>
-<a name="l00230"></a>00230 <span class="comment">                 *  called with the message pointer OR if ``cleaner`` is</span>
-<a name="l00231"></a>00231 <span class="comment">                 *  NULL, the message will simply be freed with free().</span>
-<a name="l00232"></a>00232 <span class="comment">                 *</span>
-<a name="l00233"></a>00233 <span class="comment">                 */</span>
-<a name="l00234"></a>00234                 <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a> <a class="code" href="litm_8c.html#bed13398c1bc31a6c81c3e50997e2f2c">litm_send</a>(    <a class="code" href="struct__litm__connection.html">litm_connection</a> *conn,
-<a name="l00235"></a>00235                                                                 <a class="code" href="litm_8h.html#e7fcc1b5cd037f318d4fe40a2f9d30d3">litm_bus</a> bus_id,
-<a name="l00236"></a>00236                                                                 <span class="keywordtype">void</span> *msg,
-<a name="l00237"></a>00237                                                                 <span class="keywordtype">void</span> (*cleaner)(<span class="keywordtype">void</span> *msg)
-<a name="l00238"></a>00238                                                                 );
-<a name="l00239"></a>00239 
-<a name="l00240"></a>00240 <span class="comment"></span>
-<a name="l00241"></a>00241 <span class="comment">                /**</span>
-<a name="l00242"></a>00242 <span class="comment">                 * Receives (non-blocking) from any ``bus``</span>
+<a name="l00226"></a>00226 <span class="comment">                 * @param **conn pointer to connection reference</span>
+<a name="l00227"></a>00227 <span class="comment">                 */</span>
+<a name="l00228"></a>00228                 <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a> <a class="code" href="litm_8c.html#bc852d2eb14353e36adf21c33eab03a3">litm_connect</a>(<a class="code" href="struct__litm__connection.html">litm_connection</a> **conn);
+<a name="l00229"></a>00229 
+<a name="l00230"></a>00230 <span class="comment"></span>
+<a name="l00231"></a>00231 <span class="comment">                /**</span>
+<a name="l00232"></a>00232 <span class="comment">                 * Disconnects from the ``switch``</span>
+<a name="l00233"></a>00233 <span class="comment">                 *</span>
+<a name="l00234"></a>00234 <span class="comment">                 * Once a client calls this function, no more access</span>
+<a name="l00235"></a>00235 <span class="comment">                 * with the connection is permitted to any of the</span>
+<a name="l00236"></a>00236 <span class="comment">                 * following functions:</span>
+<a name="l00237"></a>00237 <span class="comment">                 *</span>
+<a name="l00238"></a>00238 <span class="comment">                 *  - litm_subscribe</span>
+<a name="l00239"></a>00239 <span class="comment">                 *  - litm_unsubscribe</span>
+<a name="l00240"></a>00240 <span class="comment">                 *  - litm_receive_nb</span>
+<a name="l00241"></a>00241 <span class="comment">                 *  - litm_send</span>
+<a name="l00242"></a>00242 <span class="comment">                 *  - litm_release</span>
 <a name="l00243"></a>00243 <span class="comment">                 *</span>
-<a name="l00244"></a>00244 <span class="comment">                 * @see litm_disconnect</span>
-<a name="l00245"></a>00245 <span class="comment">                 *</span>
-<a name="l00246"></a>00246 <span class="comment">                 * @param *conn connection reference</span>
-<a name="l00247"></a>00247 <span class="comment">                 * @param **envlp the pointer to received envelope</span>
-<a name="l00248"></a>00248 <span class="comment">                 *</span>
-<a name="l00249"></a>00249 <span class="comment">                 */</span>
-<a name="l00250"></a>00250                 <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a> <a class="code" href="litm_8c.html#2b6bffa08706c97ea5d9f6d670f8b359">litm_receive_nb</a>(<a class="code" href="struct__litm__connection.html">litm_connection</a> *conn, <a class="code" href="struct__litm__envelope.html">litm_envelope</a> **envlp);
-<a name="l00251"></a>00251 
-<a name="l00252"></a>00252 <span class="comment"></span>
-<a name="l00253"></a>00253 <span class="comment">                /**</span>
-<a name="l00254"></a>00254 <span class="comment">                 * Releases an ``envelope``</span>
-<a name="l00255"></a>00255 <span class="comment">                 *</span>
-<a name="l00256"></a>00256 <span class="comment">                 * @see litm_disconnect</span>
-<a name="l00257"></a>00257 <span class="comment">                 *</span>
-<a name="l00258"></a>00258 <span class="comment">                 * @param *conn connection reference</span>
-<a name="l00259"></a>00259 <span class="comment">                 * @param *envlp the pointer to received envelope to release</span>
-<a name="l00260"></a>00260 <span class="comment">                 *</span>
-<a name="l00261"></a>00261 <span class="comment">                 *  Once the client has consumed the message</span>
-<a name="l00262"></a>00262 <span class="comment">                 *  ``contained`` in the envelope, the client</span>
-<a name="l00263"></a>00263 <span class="comment">                 *  **MUST** release it back to litm.</span>
-<a name="l00264"></a>00264 <span class="comment">                 */</span>
-<a name="l00265"></a>00265                 <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a> <a class="code" href="litm_8c.html#21def412c9b064fc929e0822f28d2a2a">litm_release</a>(<a class="code" href="struct__litm__connection.html">litm_connection</a> *conn, <a class="code" href="struct__litm__envelope.html">litm_envelope</a> *envlp);
-<a name="l00266"></a>00266 
-<a name="l00267"></a>00267 <span class="comment"></span>
-<a name="l00268"></a>00268 <span class="comment">                /**</span>
-<a name="l00269"></a>00269 <span class="comment">                 * Shutdown</span>
-<a name="l00270"></a>00270 <span class="comment">                 *</span>
-<a name="l00271"></a>00271 <span class="comment">                 * This function attempts to shutdown all the connection</span>
-<a name="l00272"></a>00272 <span class="comment">                 * threads in a graceful manner.  This function is blocking.</span>
-<a name="l00273"></a>00273 <span class="comment">                 */</span>
-<a name="l00274"></a>00274                 <span class="keywordtype">void</span> <a class="code" href="litm_8c.html#4a5e0afddfcac684951623218de962b9">litm_shutdown</a>(<span class="keywordtype">void</span>);
-<a name="l00275"></a>00275 
-<a name="l00276"></a>00276 <span class="comment"></span>
-<a name="l00277"></a>00277 <span class="comment">                /**</span>
-<a name="l00278"></a>00278 <span class="comment">                 * Returns a copy of the pointer to the message.</span>
+<a name="l00244"></a>00244 <span class="comment">                 * Be sure to release any message in the client's</span>
+<a name="l00245"></a>00245 <span class="comment">                 * care before disconnecting.</span>
+<a name="l00246"></a>00246 <span class="comment">                 *</span>
+<a name="l00247"></a>00247 <span class="comment">                 * @param *conn connection reference</span>
+<a name="l00248"></a>00248 <span class="comment">                 */</span>
+<a name="l00249"></a>00249                 <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a> <a class="code" href="litm_8c.html#11d169394b16263d121989e5ac965606">litm_disconnect</a>(<a class="code" href="struct__litm__connection.html">litm_connection</a> *conn);
+<a name="l00250"></a>00250 
+<a name="l00251"></a>00251 <span class="comment"></span>
+<a name="l00252"></a>00252 <span class="comment">                /**</span>
+<a name="l00253"></a>00253 <span class="comment">                 * Subscribe to a ``bus``</span>
+<a name="l00254"></a>00254 <span class="comment">                 *</span>
+<a name="l00255"></a>00255 <span class="comment">                 * @see litm_disconnect</span>
+<a name="l00256"></a>00256 <span class="comment">                 *</span>
+<a name="l00257"></a>00257 <span class="comment">                 * @param *conn connection reference</span>
+<a name="l00258"></a>00258 <span class="comment">                 * @param bus_id the ``bus`` identifier to subscribe to</span>
+<a name="l00259"></a>00259 <span class="comment">                 *</span>
+<a name="l00260"></a>00260 <span class="comment">                 */</span>
+<a name="l00261"></a>00261                 <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a> <a class="code" href="litm_8c.html#1c8191e4aca778b346954933c7bdf3ff">litm_subscribe</a>(<a class="code" href="struct__litm__connection.html">litm_connection</a> *conn, <a class="code" href="litm_8h.html#e7fcc1b5cd037f318d4fe40a2f9d30d3">litm_bus</a> bus_id);
+<a name="l00262"></a>00262 
+<a name="l00263"></a>00263 <span class="comment"></span>
+<a name="l00264"></a>00264 <span class="comment">                /**</span>
+<a name="l00265"></a>00265 <span class="comment">                 * Unsubscribe from a ``bus``</span>
+<a name="l00266"></a>00266 <span class="comment">                 *</span>
+<a name="l00267"></a>00267 <span class="comment">                 * @see litm_disconnect</span>
+<a name="l00268"></a>00268 <span class="comment">                 *</span>
+<a name="l00269"></a>00269 <span class="comment">                 * @param *conn connection reference</span>
+<a name="l00270"></a>00270 <span class="comment">                 * @param bus_id the ``bus`` identifier to unsubscribe from</span>
+<a name="l00271"></a>00271 <span class="comment">                 */</span>
+<a name="l00272"></a>00272                 <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a> <a class="code" href="litm_8c.html#50225024a2292b63a5eb95cca00f2545">litm_unsubscribe</a>(<a class="code" href="struct__litm__connection.html">litm_connection</a> *conn, <a class="code" href="litm_8h.html#e7fcc1b5cd037f318d4fe40a2f9d30d3">litm_bus</a> bus_id);
+<a name="l00273"></a>00273 
+<a name="l00274"></a>00274 <span class="comment"></span>
+<a name="l00275"></a>00275 <span class="comment">                /**</span>
+<a name="l00276"></a>00276 <span class="comment">                 * Send message on a ``bus``</span>
+<a name="l00277"></a>00277 <span class="comment">                 *</span>
+<a name="l00278"></a>00278 <span class="comment">                 * @see litm_disconnect</span>
 <a name="l00279"></a>00279 <span class="comment">                 *</span>
-<a name="l00280"></a>00280 <span class="comment">                 * @param *envlp the envelope from which to extract the pointer to the message</span>
-<a name="l00281"></a>00281 <span class="comment">                 *</span>
-<a name="l00282"></a>00282 <span class="comment">                 * This function should be used instead</span>
-<a name="l00283"></a>00283 <span class="comment">                 *  of relying on the ``litm_envelope``</span>
-<a name="l00284"></a>00284 <span class="comment">                 *  data structure.</span>
-<a name="l00285"></a>00285 <span class="comment">                 *</span>
-<a name="l00286"></a>00286 <span class="comment">                 *  &lt;b&gt;** DO NOT** modify the message!&lt;/b&gt;</span>
+<a name="l00280"></a>00280 <span class="comment">                 * @param *conn connection reference</span>
+<a name="l00281"></a>00281 <span class="comment">                 * @param bus_id the ``bus`` to send the message onto</span>
+<a name="l00282"></a>00282 <span class="comment">                 * @param *msg the pointer to the message</span>
+<a name="l00283"></a>00283 <span class="comment">                 * @param *cleaner the pointer to the cleaner function</span>
+<a name="l00284"></a>00284 <span class="comment">                 *</span>
+<a name="l00285"></a>00285 <span class="comment">                 * If omitted, the default ``cleaner`` function will be</span>
+<a name="l00286"></a>00286 <span class="comment">                 * &lt;b&gt;free()&lt;/b&gt;.</span>
 <a name="l00287"></a>00287 <span class="comment">                 *</span>
-<a name="l00288"></a>00288 <span class="comment">                 */</span>
-<a name="l00289"></a>00289                 <span class="keywordtype">void</span> *<a class="code" href="litm_8c.html#aeb4655eae7753e131a710ff5a64b9f7">litm_get_message</a>(<a class="code" href="struct__litm__envelope.html">litm_envelope</a> *envlp);
-<a name="l00290"></a>00290 
-<a name="l00291"></a>00291 <span class="comment"></span>
-<a name="l00292"></a>00292 <span class="comment">                /**</span>
-<a name="l00293"></a>00293 <span class="comment">                 * Translates a code to a message pointer</span>
+<a name="l00288"></a>00288 <span class="comment">                 * If an error occurs, it is the responsibility of the sender</span>
+<a name="l00289"></a>00289 <span class="comment">                 *  to dispose of the ``messages`` appropriately.  If the</span>
+<a name="l00290"></a>00290 <span class="comment">                 *  operation went LITM_CODE_OK, then once all recipients</span>
+<a name="l00291"></a>00291 <span class="comment">                 *  are finished with the message, the ``cleaner`` will be</span>
+<a name="l00292"></a>00292 <span class="comment">                 *  called with the message pointer OR if ``cleaner`` is</span>
+<a name="l00293"></a>00293 <span class="comment">                 *  NULL, the message will simply be freed with free().</span>
 <a name="l00294"></a>00294 <span class="comment">                 *</span>
-<a name="l00295"></a>00295 <span class="comment">                 * @param code a &lt;i&gt;litm_code&lt;/i&gt; to translate to a string version</span>
-<a name="l00296"></a>00296 <span class="comment">                 *</span>
-<a name="l00297"></a>00297 <span class="comment">                 */</span>
-<a name="l00298"></a>00298                 <span class="keywordtype">char</span> *<a class="code" href="litm_8c.html#76f700b9bb8531fd8baf8931e67c4604">litm_translate_code</a>(<a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a> code);
-<a name="l00299"></a>00299 
-<a name="l00300"></a>00300 
-<a name="l00301"></a>00301 <span class="preprocessor">#endif </span><span class="comment">/* LITM_H_ */</span>
+<a name="l00295"></a>00295 <span class="comment">                 */</span>
+<a name="l00296"></a>00296                 <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a> <a class="code" href="litm_8c.html#bed13398c1bc31a6c81c3e50997e2f2c">litm_send</a>(    <a class="code" href="struct__litm__connection.html">litm_connection</a> *conn,
+<a name="l00297"></a>00297                                                                 <a class="code" href="litm_8h.html#e7fcc1b5cd037f318d4fe40a2f9d30d3">litm_bus</a> bus_id,
+<a name="l00298"></a>00298                                                                 <span class="keywordtype">void</span> *msg,
+<a name="l00299"></a>00299                                                                 <span class="keywordtype">void</span> (*cleaner)(<span class="keywordtype">void</span> *msg)
+<a name="l00300"></a>00300                                                                 );
+<a name="l00301"></a>00301 
+<a name="l00302"></a>00302 <span class="comment"></span>
+<a name="l00303"></a>00303 <span class="comment">                /**</span>
+<a name="l00304"></a>00304 <span class="comment">                 * Receives (non-blocking) from any ``bus``</span>
+<a name="l00305"></a>00305 <span class="comment">                 *</span>
+<a name="l00306"></a>00306 <span class="comment">                 * @see litm_disconnect</span>
+<a name="l00307"></a>00307 <span class="comment">                 *</span>
+<a name="l00308"></a>00308 <span class="comment">                 * @param *conn connection reference</span>
+<a name="l00309"></a>00309 <span class="comment">                 * @param **envlp the pointer to received envelope</span>
+<a name="l00310"></a>00310 <span class="comment">                 *</span>
+<a name="l00311"></a>00311 <span class="comment">                 */</span>
+<a name="l00312"></a>00312                 <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a> <a class="code" href="litm_8c.html#2b6bffa08706c97ea5d9f6d670f8b359">litm_receive_nb</a>(<a class="code" href="struct__litm__connection.html">litm_connection</a> *conn, <a class="code" href="struct__litm__envelope.html">litm_envelope</a> **envlp);
+<a name="l00313"></a>00313 
+<a name="l00314"></a>00314 <span class="comment"></span>
+<a name="l00315"></a>00315 <span class="comment">                /**</span>
+<a name="l00316"></a>00316 <span class="comment">                 * Releases an ``envelope``</span>
+<a name="l00317"></a>00317 <span class="comment">                 *</span>
+<a name="l00318"></a>00318 <span class="comment">                 * @see litm_disconnect</span>
+<a name="l00319"></a>00319 <span class="comment">                 *</span>
+<a name="l00320"></a>00320 <span class="comment">                 * @param *conn connection reference</span>
+<a name="l00321"></a>00321 <span class="comment">                 * @param *envlp the pointer to received envelope to release</span>
+<a name="l00322"></a>00322 <span class="comment">                 *</span>
+<a name="l00323"></a>00323 <span class="comment">                 *  Once the client has consumed the message</span>
+<a name="l00324"></a>00324 <span class="comment">                 *  ``contained`` in the envelope, the client</span>
+<a name="l00325"></a>00325 <span class="comment">                 *  **MUST** release it back to litm.</span>
+<a name="l00326"></a>00326 <span class="comment">                 */</span>
+<a name="l00327"></a>00327                 <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a> <a class="code" href="litm_8c.html#21def412c9b064fc929e0822f28d2a2a">litm_release</a>(<a class="code" href="struct__litm__connection.html">litm_connection</a> *conn, <a class="code" href="struct__litm__envelope.html">litm_envelope</a> *envlp);
+<a name="l00328"></a>00328 
+<a name="l00329"></a>00329 <span class="comment"></span>
+<a name="l00330"></a>00330 <span class="comment">                /**</span>
+<a name="l00331"></a>00331 <span class="comment">                 * Shutdown</span>
+<a name="l00332"></a>00332 <span class="comment">                 *</span>
+<a name="l00333"></a>00333 <span class="comment">                 * This function attempts to shutdown all the connection</span>
+<a name="l00334"></a>00334 <span class="comment">                 * threads in a graceful manner.  This function is blocking.</span>
+<a name="l00335"></a>00335 <span class="comment">                 */</span>
+<a name="l00336"></a>00336                 <span class="keywordtype">void</span> <a class="code" href="litm_8c.html#4a5e0afddfcac684951623218de962b9">litm_shutdown</a>(<span class="keywordtype">void</span>);
+<a name="l00337"></a>00337 
+<a name="l00338"></a>00338 <span class="comment"></span>
+<a name="l00339"></a>00339 <span class="comment">                /**</span>
+<a name="l00340"></a>00340 <span class="comment">                 * Returns a copy of the pointer to the message.</span>
+<a name="l00341"></a>00341 <span class="comment">                 *</span>
+<a name="l00342"></a>00342 <span class="comment">                 * @param *envlp the envelope from which to extract the pointer to the message</span>
+<a name="l00343"></a>00343 <span class="comment">                 *</span>
+<a name="l00344"></a>00344 <span class="comment">                 * This function should be used instead</span>
+<a name="l00345"></a>00345 <span class="comment">                 *  of relying on the ``litm_envelope``</span>
+<a name="l00346"></a>00346 <span class="comment">                 *  data structure.</span>
+<a name="l00347"></a>00347 <span class="comment">                 *</span>
+<a name="l00348"></a>00348 <span class="comment">                 *  &lt;b&gt;** DO NOT** modify the message!&lt;/b&gt;</span>
+<a name="l00349"></a>00349 <span class="comment">                 *</span>
+<a name="l00350"></a>00350 <span class="comment">                 */</span>
+<a name="l00351"></a>00351                 <span class="keywordtype">void</span> *<a class="code" href="litm_8c.html#aeb4655eae7753e131a710ff5a64b9f7">litm_get_message</a>(<a class="code" href="struct__litm__envelope.html">litm_envelope</a> *envlp);
+<a name="l00352"></a>00352 
+<a name="l00353"></a>00353 <span class="comment"></span>
+<a name="l00354"></a>00354 <span class="comment">                /**</span>
+<a name="l00355"></a>00355 <span class="comment">                 * Translates a code to a message pointer</span>
+<a name="l00356"></a>00356 <span class="comment">                 *</span>
+<a name="l00357"></a>00357 <span class="comment">                 * @param code a &lt;i&gt;litm_code&lt;/i&gt; to translate to a string version</span>
+<a name="l00358"></a>00358 <span class="comment">                 *</span>
+<a name="l00359"></a>00359 <span class="comment">                 */</span>
+<a name="l00360"></a>00360                 <span class="keywordtype">char</span> *<a class="code" href="litm_8c.html#76f700b9bb8531fd8baf8931e67c4604">litm_translate_code</a>(<a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a> code);
+<a name="l00361"></a>00361 
+<a name="l00362"></a>00362 
+<a name="l00363"></a>00363 <span class="preprocessor">#endif </span><span class="comment">/* LITM_H_ */</span>
 </pre></div></div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Wed Apr 29 13:18:18 2009 for LITM by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Wed Apr 29 14:37:58 2009 for LITM by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.6 </small></address>
 </body>

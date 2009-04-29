@@ -86,9 +86,6 @@ __switch_init_tables(void) {
 			_subscribers[b][c] = NULL;
 }
 
-/**
- * TODO implement switch shutdown
- */
 	void
 switch_shutdown(void) {
 
