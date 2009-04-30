@@ -1,0 +1,7 @@
+#!/bin/bash
+#
+# @author Jean-Lou Dupont
+#
+#
+cd ..
+dpkg-scanpackages tags/debian/binary | gzip -9c > tags/debian/binary/Packages.gz
