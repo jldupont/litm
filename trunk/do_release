@@ -4,4 +4,4 @@
 #
 #
 cd ..
-dpkg-scanpackages tags/debian/binary | gzip -9c > tags/debian/binary/Packages.gz
+dpkg-scanpackages tags/debian/binary-i386 | gzip -9c > tags/debian/binary-i386/Packages.gz
