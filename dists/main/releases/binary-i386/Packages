@@ -2,14 +2,11 @@ Package: litm
 Version: 0.1
 Architecture: i386
 Maintainer: Jean-Lou Dupont <litm@jldupont.com>
-Installed-Size: 
-Depends: python (>=2.5)
-Suggests: 
-Conflicts: 
-Replaces: 
+Depends: python (>= 2.5)
 Filename: dists/main/releases/binary-i386/litm_0.1-1_i386.deb
-Size: 23712
-MD5sum: 97c15247de833e5460231924e2240861
+Size: 23684
+MD5sum: 25b810301bc3b806bb64c6ed218886ce
+Section: Other
 Priority: optional
 Description: Lightweight Inter-Thread Messaging library
  LITM is a cross-platform Lightweight Inter-Thread Messaging library
