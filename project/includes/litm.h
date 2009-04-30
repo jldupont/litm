@@ -1,12 +1,12 @@
 /**
  * @file   litm.h
  *
- * @version $version$
+ * @version $version
  *
  * @date   2009-04-24
  * @author Jean-Lou Dupont
  *
- * @mainpage Welcome to the documentation for the library LITM -- $version$
+ * @mainpage Welcome to the documentation for the library LITM -- $version
  *
  *           The library serves as a <b>Lightweight Inter-Thread Messaging</b> under Linux/Unix.
  *
