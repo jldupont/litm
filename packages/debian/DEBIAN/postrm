@@ -1,8 +1,16 @@
 #!/usr/bin/env python
 
+"""
+	@author: Jean-Lou Dupont
+"""
+
 import os
 import sys
 
-print "LITM: postrm: args[%s]" % sys.argv
+try:
+	command = sys.argv[1]
+	print "LITM: postrm: command[%s]" % command
+except:
+	pass
 
 sys.exit(0)
