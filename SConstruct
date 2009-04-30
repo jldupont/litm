@@ -144,9 +144,9 @@ if 'release' in COMMAND_LINE_TARGETS:
 	shutil.copy('/tmp/litm.deb', path)
 
 	print "scons: copying [%s] to repo in tags/debian/binary" % path
-	shutil.copy(path, "../tags/debian/binary")
+	shutil.copy(path, "../tags/debian/binary-i386")
 	
-	debian_path = "./tags/debian/binary/%s" % name
+	debian_path = "./tags/debian/binary-i386/%s" % name
 	print "scons: running dpkg-scanpackages  [%s]" % debian_path
 	os.system("./do_release")
 	
