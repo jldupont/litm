@@ -17,9 +17,18 @@ Help("""\
  Type:	
    'scons' to build the libraries (release and debug),
    'scons deb' to build the .deb package
+   'scons release' to release the package to tags/debian repository
    'scons install' to install on local machine
 """)
 
+
+# need to go up one level in order
+#  for commands such as 'dpkg-scanpackages' to work as expected
+#curdir = os.getcwd()
+#root_dir  = os.path.dirname( curdir )
+#print "scons: using root directory [%s]" % root_dir
+#os.chdir( root_dir )
+#print "getcwd[%s]" % os.getcwd()
 
 
 env_release = Environment(CPPPATH='#project/includes')
@@ -39,7 +48,6 @@ if 'install' in COMMAND_LINE_TARGETS:
 	shutil.copy('./debug/liblitm.a', '/usr/lib/liblitm_debug.a')
 
 env_release.Command("install", "./release/liblitm.a", "cp $SOURCE /usr/lib")
-
 
 def read_version():
 	file = open('./project/VERSION')
@@ -135,8 +143,13 @@ if 'release' in COMMAND_LINE_TARGETS:
 	print "scons: renaming debian package: %s" % name
 	shutil.copy('/tmp/litm.deb', path)
 
-	print "scons: copying to repo in /tags"
-	shutil.copy(path, "../tags")
+	print "scons: copying [%s] to repo in tags/debian/binary" % path
+	shutil.copy(path, "../tags/debian/binary")
+	
+	debian_path = "./tags/debian/binary/%s" % name
+	print "scons: running dpkg-scanpackages  [%s]" % debian_path
+	os.system("./do_release")
+	
 
-#dummy target
-env_release.Command("release", "./project/VERSION", "cp $SOURCE ../tags/VERSION")
+
+
