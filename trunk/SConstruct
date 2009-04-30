@@ -63,30 +63,51 @@ def generate_control(version):
 	file_target.write(c)
 	file_target.close()
 
+def replace_params(path_src, path_dest, params):
+	"""
+	Replace the parameters in the target path
+	"""
+	file = open(path_src,"r")
+	contents = file.read()
+	file.close()
+	
+	tpl=Template(contents)
+	updated_content = tpl.safe_substitute( **params )
+	
+	file = open(path_dest, "w")
+	file.write(updated_content)
+	file.close()
+	
+	
+
 
 # BUILDING .deb PACKAGE
 # =====================
 if 'deb' in COMMAND_LINE_TARGETS:
 	print "Preparing .deb package"
 	try:
-		print """scons: cloning 'liblitm.a'""" 
-		shutil.copy('./release/liblitm.a', './packages/debian/usr/lib')
-		shutil.copy('./debug/liblitm.a', './packages/debian/usr/lib/liblitm_debug.a')
+		version = read_version()
+		print """scons: building release [%s]""" % version
 		
-		print """scons: cloning 'litm.h'"""
-		shutil.copy('./project/includes/litm.h', './packages/debian/usr/include')
+		print """scons: cloning release 'liblitm.a'""" 
+		shutil.copy('./release/liblitm.a', "./packages/debian/usr/lib/liblitm-%s.a" % version)
+		
+		print """scons: cloning debug 'liblitm_debug.a'"""
+		shutil.copy('./debug/liblitm.a', './packages/debian/usr/lib/liblitm_debug-%s.a' % version)
+		
+		print """scons: cloning 'litm.h' & adjust version"""
+		replace_params('./project/includes/litm.h', './packages/debian/usr/include/litm.h', {'version':version} )
 		
 		print """scons: removing /tmp/litm"""
 		shutil.rmtree('/tmp/litm', ignore_errors=True)
 
-		version = read_version()
 		print """scons: updating debian 'control' with version[%s]""" % version
 		generate_control(version)
 		
 		print """scons: cloning ./packages/debian to /tmp/litm"""
 		safe_copytree('./packages/debian', '/tmp/litm', skip_dirs=['.svn',], dir_mode=0775, make_dirs=True)
 		
-		print """scons: adjusting permissions for `dkpg-deb`"""
+		print """scons: adjusting permissions for `dkpg-deb` command-line"""
 		recursive_chmod("/tmp/litm", mode=0775)
 
 
