@@ -6,6 +6,6 @@ scons build file
 
 Import('env')
 
-litm = env.Library('litm', Glob("*.c"), LIBS=['pthread',] )
+litm = env.SharedLibrary('litm', Glob("*.c"), LIBS=['pthread',] )
 Default(litm)
 	
