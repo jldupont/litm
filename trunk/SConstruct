@@ -44,8 +44,8 @@ SConscript('project/src/SConscript', build_dir='debug', exports={'env':env_debug
 if 'install' in COMMAND_LINE_TARGETS:
 	print "scons: INSTALLING LOCALLY"
 	shutil.copy('./project/includes/litm.h', '/usr/include')
-	shutil.copy('./release/liblitm.a', '/usr/lib/liblitm.a')
-	shutil.copy('./debug/liblitm.a', '/usr/lib/liblitm_debug.a')
+	shutil.copy('./release/liblitm.so', '/usr/lib/liblitm.so')
+	shutil.copy('./debug/liblitm.so', '/usr/lib/liblitm_debug.so')
 
 env_release.Command("install", "./release/liblitm.a", "cp $SOURCE /usr/lib")
 
@@ -97,11 +97,11 @@ if 'deb' in COMMAND_LINE_TARGETS:
 		version = read_version()
 		print """scons: building release [%s]""" % version
 		
-		print """scons: cloning release 'liblitm.a'""" 
-		shutil.copy('./release/liblitm.a', "./packages/debian/usr/lib/liblitm-%s.a" % version)
+		print """scons: cloning release 'liblitm.so'""" 
+		shutil.copy('./release/liblitm.so', "./packages/debian/usr/lib/liblitm-%s.so" % version)
 		
-		print """scons: cloning debug 'liblitm_debug.a'"""
-		shutil.copy('./debug/liblitm.a', './packages/debian/usr/lib/liblitm_debug-%s.a' % version)
+		print """scons: cloning debug 'liblitm_debug.so'"""
+		shutil.copy('./debug/liblitm.so', './packages/debian/usr/lib/liblitm_debug-%s.so' % version)
 		
 		print """scons: cloning 'litm.h' & adjust version"""
 		replace_params('./project/includes/litm.h', './packages/debian/usr/include/litm.h', {'version':version} )
