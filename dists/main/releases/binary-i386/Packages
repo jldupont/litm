@@ -1,0 +1,19 @@
+Package: litm
+Version: 0.1
+Architecture: i386
+Maintainer: Jean-Lou Dupont <litm#jldupont.com>
+Installed-Size: 
+Depends: python (>=2.5)
+Suggests: 
+Conflicts: 
+Replaces: 
+Filename: dists/main/releases/binary-i386/litm_0.1-1_i386.deb
+Size: 23718
+MD5sum: 927c605c3c18c2ead09eb9e30e68d9be
+Priority: optional
+Description: The GNU `litm` package consists in a
+ Lightweight Inter-Thread Messaging library.
+ .
+ This package contains ``litm`` library.
+ .
+
