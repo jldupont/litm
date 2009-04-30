@@ -11,42 +11,9 @@ version = sys.argv[2]
 
 print "LITM: postinst: command[%s] version [%s]" % (command, version)
 
-dst = '/usr/lib/liblitm.a'
-src = '/usr/lib/liblitm-%s.a' % version
 
-ddst = '/usr/lib/liblitm_debug.a'
-dsrc = '/usr/lib/liblitm_debug-%s.a' % version
+if command is 'configure':
+	os.system("ldconfig")
 
-code = 0 #optimistic
-try:
-	print """LITM: removing previous symlinks"""
-	os.remove(dst)
-	os.remove(ddst)
-except:
-	pass
-
-try:
-	print """LITM: creating symlink src[%s] ==> dst[%s]""" % (src, dst)
-	os.symlink(src,  dst)
-except Exception,e:
-	print "Exception [%s]" % e
-	code = 1
 	
-try:
-	print """LITM: creating symlink src[%s] ==> dst[%s]""" % (dsrc, ddst)
-	os.symlink(dsrc, ddst)	
-except Exception,e:
-	print "Exception [%s]" % e
-	code = 1
-	
-try:
-	print """LITM: chmod's"""
-	os.chmod(src, 0755)
-	os.chmod(dst, 0755)
-	os.chmod(dsrc, 0755)
-	os.chmod(ddst, 0755)
-except Exception,e:
-	print "Exception [%s]" % e
-	code = 1
-	
-sys.exit( code )
+sys.exit( 0 )
