@@ -51,7 +51,7 @@ if command is 'configure':
 	except Exception,e:
 		print "Exception [%s]" % e
 		code = 1
-
+	
 	os.system("ldconfig")
 	sys.exit( code )
 	
