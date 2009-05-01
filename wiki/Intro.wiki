@@ -1,4 +1,5 @@
 #summary Lightweight Inter-Thread Messaging.
+#labels Featured
 
 = Introduction =
 
