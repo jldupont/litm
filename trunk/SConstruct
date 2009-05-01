@@ -103,6 +103,7 @@ if 'deb' in COMMAND_LINE_TARGETS:
 		print """scons: cloning debug 'liblitm_debug.so'"""
 		shutil.copy('./debug/liblitm.so', './packages/debian/usr/lib/liblitm_debug-%s.so' % version)
 		
+		# TODO error here........
 		print """scons: cloning 'litm.h' & adjust version"""
 		replace_params('./project/includes/litm.h', './project/includes/litm.h', {'version':version} )
 		shutil.copy('./project/includes/litm.h', './packages/debian/usr/include/litm.h')
