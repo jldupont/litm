@@ -104,7 +104,8 @@ if 'deb' in COMMAND_LINE_TARGETS:
 		shutil.copy('./debug/liblitm.so', './packages/debian/usr/lib/liblitm_debug-%s.so' % version)
 		
 		print """scons: cloning 'litm.h' & adjust version"""
-		replace_params('./project/includes/litm.h', './packages/debian/usr/include/litm.h', {'version':version} )
+		replace_params('./project/includes/litm.h', './project/includes/litm.h', {'version':version} )
+		shutil.copy('./project/includes/litm.h', './packages/debian/usr/include/litm.h')
 		
 		print """scons: removing /tmp/litm"""
 		shutil.rmtree('/tmp/litm', ignore_errors=True)
