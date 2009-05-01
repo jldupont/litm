@@ -12,7 +12,7 @@ version = sys.argv[2]
 print "LITM: postinst: command[%s] version [%s]" % (command, version)
 
 
-if command is 'configure':
+if command == 'configure':
 
 	dst = '/usr/lib/liblitm.so'
 	src = '/usr/lib/liblitm-%s.so' % version
@@ -20,7 +20,7 @@ if command is 'configure':
 	ddst = '/usr/lib/liblitm_debug.so'
 	dsrc = '/usr/lib/liblitm_debug-%s.so' % version
 	
-	code = 0 #optimistic
+	code = 0
 	try:
 		print """LITM: removing previous symlinks"""
 		os.remove(dst)
