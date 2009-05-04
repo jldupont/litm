@@ -98,6 +98,7 @@
  *
  * \todo Better shutdown system
  * \todo Better connection close
+ * \todo FIX $version
  *
  */
 
