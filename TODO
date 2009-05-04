@@ -1,1 +1,2 @@
 - FIX Sconstruct file: issue with replacement of $version in litm.h
+- FIX prerm script
