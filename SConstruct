@@ -104,9 +104,10 @@ if 'deb' in COMMAND_LINE_TARGETS:
 		shutil.copy('./debug/liblitm.so', './packages/debian/usr/lib/liblitm_debug-%s.so' % version)
 		
 		# TODO error here........
-		print """scons: cloning 'litm.h' & adjust version"""
-		replace_params('./project/includes/litm.h', './project/includes/litm.h', {'version':version} )
+		print """scons: cloning 'litm.h' & adjusting version"""
 		shutil.copy('./project/includes/litm.h', './packages/debian/usr/include/litm.h')
+		h_path = './packages/debian/usr/include/litm.h'
+		replace_params(h_path, h_path, {'version':version} )
 		
 		print """scons: removing /tmp/litm"""
 		shutil.rmtree('/tmp/litm', ignore_errors=True)
@@ -153,5 +154,12 @@ if 'release' in COMMAND_LINE_TARGETS:
 	os.system("./do_release")
 	
 
-
-
+if 'docs' in COMMAND_LINE_TARGETS:
+	print "scons: generating docs"
+	os.system("doxygen doxygen.config")
+	
+	print "scons: adjusting $version in html docs"
+	version = read_version()
+	
+	path = "./docs/html/index.html"
+	replace_params( path, path, {'version':version})
