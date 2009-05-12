@@ -47,7 +47,7 @@ if 'install' in COMMAND_LINE_TARGETS:
 	shutil.copy('./release/liblitm.so', '/usr/lib/liblitm.so')
 	shutil.copy('./debug/liblitm.so', '/usr/lib/liblitm_debug.so')
 
-env_release.Command("install", "./release/liblitm.a", "cp $SOURCE /usr/lib")
+env_release.Command("install", "./release/liblitm.so", "cp $SOURCE /usr/lib")
 
 def read_version():
 	file = open('./project/VERSION')

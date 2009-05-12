@@ -127,10 +127,12 @@
 		 * Queue - thread-safe
 		 *
 		 * @param mutex: mutex
+		 * @param cond:  the condition variable
 		 * @param head:  pointer to ``head``
 		 * @param tail:  pointer to ``tail``
 		 */
 		typedef struct {
+			pthread_cond_t  *cond;
 			pthread_mutex_t *mutex;
 			struct _queue_node *head, *tail;
 		} queue;
@@ -326,6 +328,17 @@
 		 *
 		 */
 		litm_code litm_receive_nb(litm_connection *conn, litm_envelope **envlp);
+
+		/**
+		 * Receives (waiting) from any ``bus``
+		 *
+		 * @see litm_disconnect
+		 *
+		 * @param *conn connection reference
+		 * @param **envlp the pointer to received envelope
+		 *
+		 */
+		litm_code litm_receive_wait(litm_connection *conn, litm_envelope **envlp);
 
 
 		/**

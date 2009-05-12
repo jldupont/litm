@@ -3,6 +3,10 @@
  *
  * @date   2009-04-23
  * @author Jean-Lou Dupont
+ *
+ * \note   The definition of the types for this module
+ * 		   are located in litm.h
+ *
  */
 
 #ifndef QUEUE_H_
@@ -21,8 +25,11 @@
 
 	int   queue_put_nb(queue *q, void *msg);
 	int   queue_put(queue *q, void *msg);
+
 	void *queue_get(queue *q);
 	void *queue_get_nb(queue *q);
+	void *queue_get_wait(queue *q);
+
 	int   queue_peek(queue *q);
 
 	int queue_put_safe( queue *q, void *node );
