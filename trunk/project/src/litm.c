@@ -108,6 +108,36 @@ litm_receive_nb(litm_connection *conn, litm_envelope **envlp) {
 	return returnCode;
 }//
 
+/**
+ * Receive with wait
+ */
+	litm_code
+litm_receive_wait(litm_connection *conn, litm_envelope **envlp) {
+
+	if (NULL==conn) {
+		return LITM_CODE_ERROR_BAD_CONNECTION;
+	}
+	int returnCode = LITM_CODE_OK; //optimistic
+
+	// let's see first if we need to bother with the
+	// conditional waiting on the queue.
+	// This also takes care of the probability of
+	//  missing a signal for whatever reason
+	*envlp = queue_get_nb( conn->input_queue );
+	if (NULL!=*envlp) {
+		returnCode=LITM_CODE_OK;
+	}
+
+	// ok, we really need to wait then...
+	*envlp = queue_get_wait( conn->input_queue );
+
+	// this shouldn't happen since we waited for a message!
+	if (NULL==*envlp) {
+		returnCode=LITM_CODE_NO_MESSAGE;
+	}
+
+	return returnCode;
+}//
 
 /**
  * Release a message to LITM

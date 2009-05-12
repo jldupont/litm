@@ -27,6 +27,13 @@
  */
 queue *queue_create(void) {
 
+	pthread_cond_t *cond = malloc( sizeof (pthread_cond_t) );
+	if (NULL == cond) {
+		return NULL;
+	} else {
+		pthread_cond_init( cond, NULL );
+	}
+
 	// if this malloc fails,
 	//  there are much bigger problems that loom
 	pthread_mutex_t *mutex = malloc( sizeof(pthread_mutex_t) );
@@ -39,6 +46,7 @@ queue *queue_create(void) {
 
 		pthread_mutex_init( mutex, NULL );
 		q->mutex = mutex;
+		q->cond  = cond;
 
 	} else {
 
@@ -74,12 +82,18 @@ void queue_destroy(queue *q) {
 		DEBUG_LOG(LOG_DEBUG, "queue_destroy: NULL queue ptr");
 		return;
 	}
+	pthread_mutex_t *mutex = q->mutex;
+	pthread_cond_t  *cond  = q->cond;
 
-	pthread_mutex_lock( q->mutex );
+	pthread_mutex_lock( mutex );
 		free(q);
 		q=NULL;
-	pthread_mutex_unlock( q->mutex );
-}
+	pthread_mutex_unlock( mutex );
+
+	free(mutex);
+	free(cond);
+
+}//
 
 /**
  * Queues a node (blocking)
@@ -95,9 +109,11 @@ int queue_put(queue *q, void *node) {
 		return 0;
 	}
 
+	int code;
+
 	pthread_mutex_lock( q->mutex );
 
-		int code = queue_put_safe( q, node );
+		code = queue_put_safe( q, node );
 
 	pthread_mutex_unlock( q->mutex );
 
@@ -109,7 +125,8 @@ int queue_put(queue *q, void *node) {
 /**
  * Queue_put_safe
  *
- * Lock is not handled
+ * Lock is not handled here - the caller must take
+ * care of this.
  *
  * @return 0 => error
  * @return 1 => success
@@ -139,6 +156,10 @@ queue_put_safe( queue *q, void *node ) {
 		// adjust head
 		if (NULL==q->head)
 			q->head=tmp;
+
+		// we were able to put an element:
+		//  signal the waiting thread(s)
+		pthread_cond_signal( q->cond );
 
 	} else {
 
@@ -259,6 +280,47 @@ void *queue_get_nb(queue *q) {
 
 	return node;
 }//[/queue_get]
+
+
+/**
+ * Waits for a node in the queue
+ */
+void *queue_get_wait(queue *q) {
+
+	if (NULL==q) {
+		DEBUG_LOG(LOG_DEBUG, "queue_get_nb: NULL queue ptr");
+		return NULL;
+	}
+
+	queue_node *tmp = NULL;
+	void *node=NULL;
+
+	pthread_mutex_lock( q->mutex );
+	pthread_cond_wait( q->cond, q->mutex );
+
+		tmp = q->head;
+		if (tmp!=NULL) {
+
+			// adjust tail: case if tail==head
+			//  ie. only one element present
+			if (q->head == q->tail) {
+				q->tail = NULL;
+			}
+
+			// adjust head : next pointer is already set
+			//  to NULL in queue_put
+			q->head = (q->head)->next;
+
+			node = tmp->node;
+
+			//DEBUG_LOG(LOG_DEBUG,"queue_get: MESSAGE PRESENT, freeing queue_node[%x]", tmp);
+			free(tmp);
+		}
+
+	pthread_mutex_unlock( q->mutex );
+
+	return node;
+}//
 
 /**
  * Verifies if a message is present
