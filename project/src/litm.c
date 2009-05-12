@@ -84,6 +84,15 @@ litm_send(	litm_connection *conn,
 }//
 
 
+	litm_code
+litm_send_shutdown( 	litm_connection *conn,
+						litm_bus bus_id,
+						void *msg,
+						void (*cleaner)(void *msg) ) {
+
+	return switch_send_shutdown(conn, bus_id, msg, cleaner);
+}//
+
 /**
  * Receive (non-blocking) function for clients
  *

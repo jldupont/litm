@@ -77,6 +77,26 @@
  *				\endcode
  *
  *
+ *			\subsection Example_Sending_Shutdown Sending a message on a _bus_ and initiating shutdown
+ *
+ *						The following will send a message around the _bus_ and once
+ *						all active subscribers have released the message, _litm_ will
+ *						terminate its _switch_ thread.
+ *
+ *
+ *				\code
+ *				// litm connection should be passed through the thread params
+ *				void *thread_function(void *params) {
+ *
+ *					void *message; // whatever structure
+ *					litm_code code = litm_send_shutdown(conn, bus_id, message, NULL);
+ *					 ... check return code ...
+ *
+ *					...
+ *
+ *				}//thread_function
+ *				\endcode
+ *
  *			\subsection Example_Receiving Receiving a message
  *
  *				\code
@@ -100,11 +120,17 @@
  *
  *		\subsection release_0_1 Release 0.1
  *
- *								* Initial release
+ *								\li Initial release
  *
  *		\subsection release_0_2 Release 0.2
  *
- *								* Added litm_receive_wait function
+ *								\li Added litm_receive_wait function
+ *
+ *		\subsection release_0_3 Release 0.3
+ *
+ *								\li Added 50ms sleeping in switch thread
+ *								\li Added _queue_put_head_ support for high priority messaging
+ *								\li Added _litm_send_shutdown_ function: coordinated shutdown
  *
  * \todo Better shutdown system
  * \todo Better connection close
@@ -237,6 +263,7 @@
 		 */
 		typedef struct _litm_envelope {
 
+			int shutdown_flag;
 			int released_count;
 			int delivery_count;
 			void (*cleaner)(void *msg);
@@ -325,6 +352,31 @@
 								void *msg,
 								void (*cleaner)(void *msg)
 								);
+
+		/**
+		 * Send message on a _bus_ and shutdown
+		 *
+		 * Sends the message around to the subscribers and
+		 *  once the message has been released by the last
+		 *  subscriber, performs a shutdown of the switch thread.
+		 *
+		 * Each client subscriber is responsible for recognizing
+		 *  the message (since litm does not interpret client
+		 *  messages) and terminate its access to litm & terminates
+		 *  its threads.
+		 *
+		 * @see litm_send
+		 *
+		 * @param *conn connection reference
+		 * @param bus_id the ``bus`` to send the message onto
+		 * @param *msg the pointer to the message
+		 * @param *cleaner the pointer to the cleaner function
+		 */
+		litm_code litm_send_shutdown( 	litm_connection *conn,
+										litm_bus bus_id,
+										void *msg,
+										void (*cleaner)(void *msg)
+									);
 
 
 		/**
