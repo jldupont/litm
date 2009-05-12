@@ -103,7 +103,6 @@ if 'deb' in COMMAND_LINE_TARGETS:
 		print """scons: cloning debug 'liblitm_debug.so'"""
 		shutil.copy('./debug/liblitm.so', './packages/debian/usr/lib/liblitm_debug-%s.so' % version)
 		
-		# TODO error here........
 		print """scons: cloning 'litm.h' & adjusting version"""
 		shutil.copy('./project/includes/litm.h', './packages/debian/usr/include/litm.h')
 		h_path = './packages/debian/usr/include/litm.h'
@@ -117,6 +116,9 @@ if 'deb' in COMMAND_LINE_TARGETS:
 		
 		print """scons: cloning ./packages/debian to /tmp/litm"""
 		safe_copytree('./packages/debian', '/tmp/litm', skip_dirs=['.svn',], dir_mode=0775, make_dirs=True)
+
+		print """scons: cloning 'Packages.gz'"""
+		shutil.copy("../dists/stable/main/binary-i386/Packages.gz", "/tmp/litm/Packages.gz")
 		
 		print """scons: adjusting permissions for `dkpg-deb` command-line"""
 		recursive_chmod("/tmp/litm", mode=0775)

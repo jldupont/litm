@@ -4,4 +4,4 @@
 #
 #
 cd ..
-dpkg-scanpackages dists/stable/main/binary-i386 | gzip -9c > dists/stable/main/binary-i386/Packages.gz
+dpkg-scanpackages -m dists/stable/main/binary-i386 /dev/null | gzip -9c > dists/stable/main/binary-i386/Packages.gz
