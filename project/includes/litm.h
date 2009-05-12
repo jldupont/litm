@@ -96,9 +96,18 @@
  *
  *				\endcode
  *
+ * \section Release_Notes Release Notes
+ *
+ *		\subsection release_0_1 Release 0.1
+ *
+ *								* Initial release
+ *
+ *		\subsection release_0_2 Release 0.2
+ *
+ *								* Added litm_receive_wait function
+ *
  * \todo Better shutdown system
  * \todo Better connection close
- * \todo FIX 0.1
  *
  */
 
