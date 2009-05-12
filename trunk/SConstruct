@@ -158,8 +158,9 @@ if 'docs' in COMMAND_LINE_TARGETS:
 	print "scons: generating docs"
 	os.system("doxygen doxygen.config")
 	
-	print "scons: adjusting $version in html docs"
+	path = "./docs/html/main.html"
 	version = read_version()
+		
+	print "scons: adjusting $version [%s] in html docs [%s]" % (version, path)
 	
-	path = "./docs/html/index.html"
 	replace_params( path, path, {'version':version})
