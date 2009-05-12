@@ -24,6 +24,9 @@
 #include "logger.h"
 
 
+#define LITM_SHUTDOWN_FLAG_TRUE  1
+#define LITM_SHUTDOWN_FLAG_FALSE 0
+
 // Input Queue
 queue *_switch_queue;
 
@@ -54,6 +57,7 @@ litm_code __switch_finalize(litm_envelope *envlp);
 litm_code __switch_try_sending_or_requeue(litm_connection *conn, litm_envelope *envlp);
 void __switch_init_tables(void);
 void __switch_handle_pending(litm_envelope *e);
+litm_code __switch_safe_send( litm_connection *conn, litm_bus bus_id, void *msg, void (*cleaner)(void *msg), int shutdown_flag );
 
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -104,7 +108,7 @@ switch_shutdown(void) {
 __switch_thread_function(void *params) {
 
 	char *err_msg;
-	int pending, action;
+	int pending, action, sd_flag=LITM_SHUTDOWN_FLAG_FALSE, shutdown_flag=LITM_SHUTDOWN_FLAG_FALSE;
 	litm_code code;
 	litm_envelope *e;
 	litm_connection *next, *sender, *current;
@@ -121,10 +125,11 @@ __switch_thread_function(void *params) {
 		if (NULL==e) {
 
 			//shutdown signaled?
-			if (1==__switch_signal_shutdown) {
+			if ((1==__switch_signal_shutdown) || (LITM_SHUTDOWN_FLAG_TRUE==shutdown_flag)) {
 				break;
 			}
 
+			usleep(50*1000);
 			continue;
 		}
 
@@ -162,6 +167,7 @@ __switch_thread_function(void *params) {
 		sender  = (e->routes).sender;
 		current = (e->routes).current;
 		bus_id  = (e->routes).bus_id;
+		sd_flag =  e->shutdown_flag;
 
 		//DEBUG_LOG(LOG_INFO, "__switch_thread_function: ENVELOPE NORMAL, bus[%u] sender[%x] current[%x] envelope[%x]", bus_id, sender, current, e);
 
@@ -179,6 +185,12 @@ __switch_thread_function(void *params) {
 			err_msg = litm_translate_code(code);
 			DEBUG_LOG(LOG_DEBUG, "__switch_thread_function: ENVELOPE NORMAL... error[%s], finalize message", err_msg);
 			__switch_finalize(e);
+
+			// last subscriber... and shutdown?
+			if (LITM_SHUTDOWN_FLAG_TRUE==sd_flag) {
+				shutdown_flag = LITM_SHUTDOWN_FLAG_TRUE;
+			}
+
 			continue; // <=======================================
 		}
 
@@ -336,6 +348,12 @@ __switch_try_sending_or_requeue(litm_connection *conn, litm_envelope *envlp) {
 		queue_put( _switch_queue, envlp );
 	}
 
+	// a connection dropped out... no big deal,
+	// just requeue as it was the first go
+	if (LITM_CODE_ERROR_CONNECTION_NOT_ACTIVE==result) {
+		queue_put( _switch_queue, envlp );
+	}
+
 	//_litm_connections_unlock();
 
 	return result;
@@ -397,6 +415,7 @@ __switch_try_sending_to_recipient(	litm_connection *conn,
 		break;
 	case 2:
 		returnCode = LITM_CODE_ERROR_CONNECTION_NOT_ACTIVE;
+		(env->routes).current = NULL;
 		break;
 	}
 
@@ -480,6 +499,25 @@ switch_remove_subscriber(litm_connection *conn, litm_bus bus_id) {
 	return result;
 }//
 
+
+/**
+ * @see switch_send
+ *
+ */
+	litm_code
+switch_send_shutdown(litm_connection *conn, litm_bus bus_id, void *msg, void (*cleaner)(void *msg)) {
+
+	if (NULL==conn) {
+		return LITM_CODE_ERROR_BAD_CONNECTION;
+	}
+
+	if (( LITM_BUSSES_MAX < bus_id ) || (0>=bus_id)) {
+		return LITM_CODE_ERROR_INVALID_BUS;
+	}
+
+	return __switch_safe_send( conn, bus_id, msg, cleaner, LITM_SHUTDOWN_FLAG_TRUE);
+}//
+
 /**
  * This function just queues up the message in the
  *  switch's input_queue without actually sending it
@@ -502,9 +540,17 @@ switch_send(litm_connection *conn, litm_bus bus_id, void *msg,
 		return LITM_CODE_ERROR_INVALID_BUS;
 	}
 
-	//DEBUG_LOG(LOG_INFO, "switch_send: BEGIN, conn[%x] bus[%u]", conn, bus_id);
+	return __switch_safe_send( conn, bus_id, msg, cleaner, LITM_SHUTDOWN_FLAG_FALSE);
+}//
 
-	// Grab an envelope & init
+
+	litm_code
+__switch_safe_send( litm_connection *conn,
+					litm_bus bus_id,
+					void *msg,
+					void (*cleaner)(void *msg),
+					int shutdown_flag ) {
+
 	litm_envelope *e=__litm_pool_get();
 	e->cleaner = cleaner;
 	(e->routes).pending = 0; //FALSE
@@ -513,6 +559,8 @@ switch_send(litm_connection *conn, litm_bus bus_id, void *msg,
 	(e->routes).current = NULL;  // First time sent
 	e->msg = msg;
 	e->delivery_count = 0;
+	e->released_count = 0;
+	e->shutdown_flag = shutdown_flag;
 
 	/*
 	 *  Initial message submission: if something goes
@@ -526,7 +574,6 @@ switch_send(litm_connection *conn, litm_bus bus_id, void *msg,
 
 	return LITM_CODE_OK;
 }//
-
 
 /**
  * Finalizes a message

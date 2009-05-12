@@ -26,6 +26,10 @@
 	int   queue_put_nb(queue *q, void *msg);
 	int   queue_put(queue *q, void *msg);
 
+	int   queue_put_head_nb(queue *q, void *node);
+	int   queue_put_head(queue *q, void *msg);
+	int   queue_put_head_safe( queue *q, void *node );
+
 	void *queue_get(queue *q);
 	void *queue_get_nb(queue *q);
 	void *queue_get_wait(queue *q);

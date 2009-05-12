@@ -96,6 +96,109 @@ void queue_destroy(queue *q) {
 }//
 
 /**
+ * Queues a node at the HEAD (non-blocking)
+ *
+ * @return 1  => success
+ * @return 0  => error
+ * @return -1 => busy
+ *
+ */
+	int
+queue_put_head_nb(queue *q, void *node) {
+
+	if ((NULL==q) || (NULL==node)) {
+		DEBUG_LOG(LOG_DEBUG, "queue_put_head_nb: NULL queue/node ptr");
+		return 0;
+	}
+
+	if (EBUSY == pthread_mutex_trylock( q->mutex ))
+		return -1;
+
+		int returnCode = queue_put_head_safe( q, node );
+
+	pthread_mutex_unlock( q->mutex );
+
+	return returnCode;
+}//[/queue_put]
+
+/**
+ * Puts a node at the HEAD of the queue
+ *
+ * This function is meant to support _high priority_ messages.
+ *
+ * @param q      queue reference
+ * @param node   message reference
+ *
+ * @return 1 => success
+ * @return 0 => error
+ *
+ */
+int   queue_put_head(queue *q, void *node) {
+
+	if ((NULL==q) || (NULL==node)) {
+		DEBUG_LOG(LOG_DEBUG, "queue_put_head: NULL queue/node ptr");
+		return 0;
+	}
+
+	int code;
+
+	pthread_mutex_lock( q->mutex );
+
+		code = queue_put_head_safe( q, node );
+
+	pthread_mutex_unlock( q->mutex );
+
+	//DEBUG_LOG(LOG_DEBUG,"queue_put: END");
+
+	return code;
+
+}//
+
+/**
+ * Puts a node a the HEAD of the queue
+ * without regards to thread-safety
+ *
+ */
+	int
+queue_put_head_safe( queue *q, void *msg ) {
+
+	int code = 1;
+	queue_node *tmp=NULL;
+
+	// if this malloc fails,
+	//  there are much bigger problems that loom
+	tmp = (queue_node *) malloc(sizeof(queue_node));
+	if (NULL!=tmp) {
+
+		tmp->node = msg;
+		tmp->next = NULL;
+
+		// there is a head... put at the front
+		if (NULL!=q->head) {
+			tmp->next = q->head;
+		}
+
+		// adjust head
+		q->head = tmp;
+
+		// adjust tail
+		if (NULL==q->tail)
+			q->tail=tmp;
+
+		// we were able to put an element:
+		//  signal the waiting thread(s)
+		pthread_cond_signal( q->cond );
+
+	} else {
+
+		code = 0;
+	}
+
+	return code;
+}//
+
+
+/**
  * Queues a node (blocking)
  *
  * @return 1 => success
@@ -105,7 +208,7 @@ void queue_destroy(queue *q) {
 int queue_put(queue *q, void *node) {
 
 	if ((NULL==q) || (NULL==node)) {
-		DEBUG_LOG(LOG_DEBUG, "queue_destroy: NULL queue/node ptr");
+		DEBUG_LOG(LOG_DEBUG, "queue_put: NULL queue/node ptr");
 		return 0;
 	}
 
@@ -288,7 +391,7 @@ void *queue_get_nb(queue *q) {
 void *queue_get_wait(queue *q) {
 
 	if (NULL==q) {
-		DEBUG_LOG(LOG_DEBUG, "queue_get_nb: NULL queue ptr");
+		DEBUG_LOG(LOG_DEBUG, "queue_get_wait: NULL queue ptr");
 		return NULL;
 	}
 
