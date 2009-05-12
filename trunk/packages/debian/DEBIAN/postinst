@@ -8,7 +8,10 @@ import sys
 
 command = sys.argv[1]
 version = sys.argv[2]
+cwd     = os.getcwd()
+id      = "$Id$"
 
+print "LITM: cwd[%s] id[%s]" % (cwd, id)
 print "LITM: postinst: command[%s] version [%s]" % (command, version)
 
 
