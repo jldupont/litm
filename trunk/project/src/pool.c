@@ -50,11 +50,11 @@ __litm_pool_recycle( litm_envelope *envlp ) {
 
 	//can we recycle this one?
 	if ( _top_stack + 1 == LITM_POOL_SIZE ) {
-		//DEBUG_LOG(LOG_DEBUG, "__litm_pool_recycle: destroying envelope [%x]", envlp );
+		DEBUG_LOG(LOG_DEBUG, "__litm_pool_recycle: destroying envelope [%x]", envlp );
 		__litm_pool_destroy( envlp );
 
 	} else {
-		//DEBUG_LOG(LOG_DEBUG, "__litm_pool_recycle: recycling envelope [%x]", envlp );
+		DEBUG_LOG(LOG_DEBUG, "__litm_pool_recycle: recycling envelope [%x] top_stack[%i]", envlp, _top_stack );
 		_top_stack ++;
 		_stack[_top_stack] = envlp;
 
@@ -105,7 +105,7 @@ __litm_pool_get(void) {
 		// statistics...
 		_returned ++;
 
-		//DEBUG_LOG(LOG_DEBUG, "__litm_pool_get: returning recycled envelope [%x]", e );
+		DEBUG_LOG(LOG_DEBUG, "__litm_pool_get: returning recycled envelope [%x] top_stack[%i]", e, _top_stack );
 
 		if (0!=_top_stack)
 			_top_stack-- ;

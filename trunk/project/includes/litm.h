@@ -193,6 +193,7 @@
 		 * @param input_queue the connection's input queue
 		 */
 		typedef struct _litm_connection {
+			int id;
 			litm_connection_status status;
 			queue *input_queue;
 		} litm_connection;
@@ -238,7 +239,8 @@
 			LITM_CODE_ERROR_SUBSCRIPTION_NOT_FOUND,
 			LITM_CODE_ERROR_BUS_FULL,
 			LITM_CODE_BUSY_CONNECTIONS,
-			LITM_CODE_ERROR_CONNECTION_NOT_ACTIVE
+			LITM_CODE_ERROR_CONNECTION_NOT_ACTIVE,
+			LITM_CODE_ERROR_END_OF_SUBSCRIBERS_LIST
 
 		} litm_code;
 
@@ -280,6 +282,23 @@
 		 * @param **conn pointer to connection reference
 		 */
 		litm_code litm_connect(litm_connection **conn);
+
+		/**
+		 * Opens a ``connection`` to the ``switch``
+		 *  and returns a pointer to the connection reference
+		 *
+		 * @param **conn pointer to connection reference
+		 * @param id connection identifier
+		 *
+		 */
+		litm_code litm_connect_ex(litm_connection **conn, int id);
+
+		/**
+		 * Returns the connection associated with a valid connection
+		 *
+		 * @return -1 on error
+		 */
+		int litm_connection_get_id(litm_connection *conn);
 
 
 		/**
