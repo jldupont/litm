@@ -92,8 +92,8 @@ void queue_destroy(queue *q) {
 		q=NULL;
 	pthread_mutex_unlock( mutex );
 
-	free(mutex);
-	free(cond);
+	pthread_mutex_destroy(mutex);
+	pthread_cond_destroy(cond);
 
 }//
 
@@ -296,7 +296,10 @@ queue_put_safe( queue *q, void *node ) {
 
 		// we were able to put an element:
 		//  signal the waiting thread(s)
-		pthread_cond_signal( q->cond );
+		int rc=pthread_cond_signal( q->cond );
+		if (rc) {
+			DEBUG_LOG(LOG_ERR,"queue_put_safe: ERROR during COND_SIGNAL");
+		}
 
 	} else {
 
@@ -365,12 +368,27 @@ void *queue_get_wait(queue *q) {
 		DEBUG_LOG(LOG_DEBUG, "queue_get_wait: NULL queue ptr");
 		return NULL;
 	}
+	int rc;
+	void *node=NULL;
 
 	pthread_mutex_lock( q->mutex );
-	pthread_cond_wait( q->cond, q->mutex );
 
-		void *node=NULL;
+	//first, try to get a node from the queue:
+	// no use waiting if one is already available!
+	node = __queue_get_safe(q);
+	if (NULL!=node) {
+		pthread_mutex_unlock( q->mutex );
+		return node;
+	}
+
+	// it seems we need to wait...
+	rc = pthread_cond_wait( q->cond, q->mutex );
+
+	if (rc) {
+		DEBUG_LOG(LOG_ERR,"queue_get_wait: CONDITION WAIT ERROR");
+	} else {
 		node = __queue_get_safe(q);
+	}
 
 	pthread_mutex_unlock( q->mutex );
 
