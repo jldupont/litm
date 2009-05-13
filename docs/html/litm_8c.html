@@ -44,6 +44,8 @@ Include dependency graph for litm.c:</div>
 <tr><td colspan="2"><br><h2>Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="litm_8c.html#bc852d2eb14353e36adf21c33eab03a3">litm_connect</a> (<a class="el" href="struct__litm__connection.html">litm_connection</a> **conn)</td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="litm_8c.html#7866d99d291588a5279844f2883fd3fa">litm_connect_ex</a> (<a class="el" href="struct__litm__connection.html">litm_connection</a> **conn, int id)</td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="litm_8c.html#11d169394b16263d121989e5ac965606">litm_disconnect</a> (<a class="el" href="struct__litm__connection.html">litm_connection</a> *conn)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="litm_8c.html#1c8191e4aca778b346954933c7bdf3ff">litm_subscribe</a> (<a class="el" href="struct__litm__connection.html">litm_connection</a> *conn, <a class="el" href="litm_8h.html#e7fcc1b5cd037f318d4fe40a2f9d30d3">litm_bus</a> bus_id)</td></tr>
@@ -51,6 +53,8 @@ Include dependency graph for litm.c:</div>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="litm_8c.html#50225024a2292b63a5eb95cca00f2545">litm_unsubscribe</a> (<a class="el" href="struct__litm__connection.html">litm_connection</a> *conn, <a class="el" href="litm_8h.html#e7fcc1b5cd037f318d4fe40a2f9d30d3">litm_bus</a> bus_id)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="litm_8c.html#bed13398c1bc31a6c81c3e50997e2f2c">litm_send</a> (<a class="el" href="struct__litm__connection.html">litm_connection</a> *conn, <a class="el" href="litm_8h.html#e7fcc1b5cd037f318d4fe40a2f9d30d3">litm_bus</a> bus_id, void *msg, void(*cleaner)(void *msg))</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="litm_8c.html#9e932bb687ba4087d90eca7aa6583f0a">litm_send_shutdown</a> (<a class="el" href="struct__litm__connection.html">litm_connection</a> *conn, <a class="el" href="litm_8h.html#e7fcc1b5cd037f318d4fe40a2f9d30d3">litm_bus</a> bus_id, void *msg, void(*cleaner)(void *msg))</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="litm_8c.html#2b6bffa08706c97ea5d9f6d670f8b359">litm_receive_nb</a> (<a class="el" href="struct__litm__connection.html">litm_connection</a> *conn, <a class="el" href="struct__litm__envelope.html">litm_envelope</a> **envlp)</td></tr>
 
@@ -98,7 +102,7 @@ Opens a ``connection`` to the ``switch`` and returns a pointer to the connection
   </table>
 </dl>
 
-<p>Definition at line <a class="el" href="litm_8c-source.html#l00042">42</a> of file <a class="el" href="litm_8c-source.html">litm.c</a>.</p>
+<p>Definition at line <a class="el" href="litm_8c-source.html#l00044">44</a> of file <a class="el" href="litm_8c-source.html">litm.c</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -106,7 +110,63 @@ Here is the call graph for this function:</div>
 <div class="dynsection">
 <p><center><img src="litm_8c_bc852d2eb14353e36adf21c33eab03a3_cgraph.png" border="0" usemap="#litm_8c_bc852d2eb14353e36adf21c33eab03a3_cgraph_map" alt=""></center>
 <map name="litm_8c_bc852d2eb14353e36adf21c33eab03a3_cgraph_map">
-<area shape="rect" href="connection_8c.html#1c62b68cf084828184eed29d17c6498c" title="litm_connection_open" alt="" coords="151,157,297,184"><area shape="rect" href="switch_8c.html#cf83bfcffad6990c781b1a668ec8209e" title="switch_init" alt="" coords="183,208,265,235"><area shape="rect" href="connection_8c.html#720256527350db29d5e743a32d908151" title="__litm_connection_get_free_index" alt="" coords="347,107,565,133"><area shape="rect" href="queue_8c.html#404f283e7764be86026fda0714b6b7b6" title="queue_create" alt="" coords="407,157,505,184"><area shape="rect" href="switch_8c.html#e4d3d02052899f64d09070f18f75c29a" title="__switch_init_tables" alt="" coords="387,208,525,235"><area shape="rect" href="switch_8c.html#99ec0a50e5e594cb656f9ea1f7d39554" title="__switch_thread_function" alt="" coords="372,259,540,285"><area shape="rect" href="switch_8c.html#149e07f06e61c0daee8f4cf38200dff2" title="__switch_finalize" alt="" coords="908,107,1028,133"><area shape="rect" href="switch_8c.html#428d719295458c6a33de960ab47a3594" title="__switch_get_next_subscriber" alt="" coords="615,360,809,387"><area shape="rect" href="switch_8c.html#195303a03d0b0c2a3f44951a38b2b0f6" title="__switch_handle_pending" alt="" coords="628,208,796,235"><area shape="rect" href="switch_8c.html#a915fa62ee3a445f9acac19e744005e3" title="__switch_try_sending_or_requeue" alt="" coords="860,208,1076,235"><area shape="rect" href="queue_8c.html#e8939dc8316290db7846b56d38c7ff90" title="queue_put" alt="" coords="1196,309,1276,336"><area shape="rect" href="litm_8c.html#76f700b9bb8531fd8baf8931e67c4604" title="litm_translate_code" alt="" coords="901,259,1035,285"><area shape="rect" href="queue_8c.html#819eed56d043a96499116f087d928057" title="queue_get_nb" alt="" coords="661,411,763,437"><area shape="rect" href="pool_8c.html#1266647a6ed7c20e9c5d08f4bef09dd3" title="__litm_pool_recycle" alt="" coords="1168,56,1304,83"><area shape="rect" href="pool_8c.html#2f844d6f6d2a471a5a93c3c49c28eef2" title="__litm_pool_destroy" alt="" coords="1429,5,1565,32"><area shape="rect" href="switch_8c.html#a94aad98c23f36ddee68fa7c14b4dfba" title="__switch_find_match" alt="" coords="896,360,1040,387"><area shape="rect" href="switch_8c.html#6ff5c1db987d3bf46b124d28967954a4" title="__switch_find_next_non_match" alt="" coords="867,411,1069,437"><area shape="rect" href="switch_8c.html#1025953257d7d23c8473d945dbf0c9db" title="__switch_try_sending_to_recipient" alt="" coords="1127,208,1345,235"><area shape="rect" href="connection_8c.html#86230c9edffe9b05ec0ff384b1706716" title="_litm_connection_get_status" alt="" coords="1404,56,1591,83"><area shape="rect" href="connection_8c.html#845538cd477e83b01381c22198ca318f" title="_litm_connection_lock" alt="" coords="1423,107,1572,133"><area shape="rect" href="connection_8c.html#1bbcee336581803f8ff367f55fca7363" title="_litm_connection_unlock" alt="" coords="1416,157,1579,184"><area shape="rect" href="connection_8c.html#200b813c910cd4a83c36aa907bd52dbe" title="_litm_connection_validate_safe" alt="" coords="1396,208,1599,235"><area shape="rect" href="connection_8c.html#9e582b29253857b58f87ba89f8a6526f" title="_litm_connections_lock" alt="" coords="1419,259,1576,285"><area shape="rect" href="connection_8c.html#c75b4b0413d3523574bda13549715447" title="_litm_connections_unlock" alt="" coords="1412,309,1583,336"><area shape="rect" href="queue_8c.html#24e3c9aaef201f1f66bcd8591b1e4c15" title="queue_put_safe" alt="" coords="1441,360,1553,387"></map>
+<area shape="rect" href="litm_8c.html#7866d99d291588a5279844f2883fd3fa" title="litm_connect_ex" alt="" coords="151,208,265,235"><area shape="rect" href="connection_8c.html#cdc49bd9a413a0db444340b5ffa35543" title="litm_connection_open_ex" alt="" coords="315,183,483,209"><area shape="rect" href="switch_8c.html#cf83bfcffad6990c781b1a668ec8209e" title="switch_init" alt="" coords="357,233,440,260"><area shape="rect" href="connection_8c.html#720256527350db29d5e743a32d908151" title="__litm_connection_get_free_index" alt="" coords="531,132,749,159"><area shape="rect" href="queue_8c.html#404f283e7764be86026fda0714b6b7b6" title="queue_create" alt="" coords="591,183,689,209"><area shape="rect" href="switch_8c.html#e4d3d02052899f64d09070f18f75c29a" title="__switch_init_tables" alt="" coords="571,233,709,260"><area shape="rect" href="switch_8c.html#99ec0a50e5e594cb656f9ea1f7d39554" title="__switch_thread_function" alt="" coords="556,284,724,311"><area shape="rect" href="switch_8c.html#149e07f06e61c0daee8f4cf38200dff2" title="__switch_finalize" alt="" coords="1092,107,1212,133"><area shape="rect" href="switch_8c.html#4d51cfe83ccbbb9248bbee852a1a3a65" title="__switch_get_next_subscriber" alt="" coords="799,360,993,387"><area shape="rect" href="switch_8c.html#195303a03d0b0c2a3f44951a38b2b0f6" title="__switch_handle_pending" alt="" coords="812,157,980,184"><area shape="rect" href="switch_8c.html#a915fa62ee3a445f9acac19e744005e3" title="__switch_try_sending_or_requeue" alt="" coords="1044,208,1260,235"><area shape="rect" href="queue_8c.html#e8939dc8316290db7846b56d38c7ff90" title="queue_put" alt="" coords="1380,309,1460,336"><area shape="rect" href="litm_8c.html#76f700b9bb8531fd8baf8931e67c4604" title="litm_translate_code" alt="" coords="1085,259,1219,285"><area shape="rect" href="connection_8c.html#b88c123e1d85482158c20a43e1f302ab" title="litm_connection_get_id" alt="" coords="819,411,973,437"><area shape="rect" href="queue_8c.html#819eed56d043a96499116f087d928057" title="queue_get_nb" alt="" coords="845,461,947,488"><area shape="rect" href="pool_8c.html#1266647a6ed7c20e9c5d08f4bef09dd3" title="__litm_pool_recycle" alt="" coords="1352,56,1488,83"><area shape="rect" href="pool_8c.html#2f844d6f6d2a471a5a93c3c49c28eef2" title="__litm_pool_destroy" alt="" coords="1613,5,1749,32"><area shape="rect" href="switch_8c.html#789e706afab00720920bef8347ac87af" title="__switch_find_match" alt="" coords="1080,411,1224,437"><area shape="rect" href="switch_8c.html#69410aeaf5f97afc41f6608cc00bd754" title="__switch_handle_first_subscriber" alt="" coords="1045,360,1259,387"><area shape="rect" href="switch_8c.html#6ff5c1db987d3bf46b124d28967954a4" title="__switch_find_next_non_match" alt="" coords="1319,360,1521,387"><area shape="rect" href="switch_8c.html#1025953257d7d23c8473d945dbf0c9db" title="__switch_try_sending_to_recipient" alt="" coords="1311,208,1529,235"><area shape="rect" href="connection_8c.html#86230c9edffe9b05ec0ff384b1706716" title="_litm_connection_get_status" alt="" coords="1588,56,1775,83"><area shape="rect" href="connection_8c.html#845538cd477e83b01381c22198ca318f" title="_litm_connection_lock" alt="" coords="1607,107,1756,133"><area shape="rect" href="connection_8c.html#1bbcee336581803f8ff367f55fca7363" title="_litm_connection_unlock" alt="" coords="1600,157,1763,184"><area shape="rect" href="connection_8c.html#200b813c910cd4a83c36aa907bd52dbe" title="_litm_connection_validate_safe" alt="" coords="1580,208,1783,235"><area shape="rect" href="connection_8c.html#9e582b29253857b58f87ba89f8a6526f" title="_litm_connections_lock" alt="" coords="1603,259,1760,285"><area shape="rect" href="connection_8c.html#c75b4b0413d3523574bda13549715447" title="_litm_connections_unlock" alt="" coords="1596,309,1767,336"><area shape="rect" href="queue_8c.html#24e3c9aaef201f1f66bcd8591b1e4c15" title="queue_put_safe" alt="" coords="1625,360,1737,387"><area shape="rect" href="queue_8c.html#223e84e07701aa14c2103fa27d08a101" title="__queue_get_safe" alt="" coords="1088,461,1216,488"></map>
+</div>
+
+</div>
+</div><p>
+<a class="anchor" name="7866d99d291588a5279844f2883fd3fa"></a><!-- doxytag: member="litm.c::litm_connect_ex" ref="7866d99d291588a5279844f2883fd3fa" args="(litm_connection **conn, int id)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a> litm_connect_ex           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct__litm__connection.html">litm_connection</a> **&nbsp;</td>
+          <td class="paramname"> <em>conn</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&nbsp;</td>
+          <td class="paramname"> <em>id</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Opens a ``connection`` to the ``switch`` and returns a pointer to the connection reference<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>**conn</em>&nbsp;</td><td>pointer to connection reference </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>id</em>&nbsp;</td><td>connection identifier </td></tr>
+  </table>
+</dl>
+
+<p>Definition at line <a class="el" href="litm_8c-source.html#l00050">50</a> of file <a class="el" href="litm_8c-source.html">litm.c</a>.</p>
+
+<p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dynsection">
+<p><center><img src="litm_8c_7866d99d291588a5279844f2883fd3fa_cgraph.png" border="0" usemap="#litm_8c_7866d99d291588a5279844f2883fd3fa_cgraph_map" alt=""></center>
+<map name="litm_8c_7866d99d291588a5279844f2883fd3fa_cgraph_map">
+<area shape="rect" href="connection_8c.html#cdc49bd9a413a0db444340b5ffa35543" title="litm_connection_open_ex" alt="" coords="171,183,339,209"><area shape="rect" href="switch_8c.html#cf83bfcffad6990c781b1a668ec8209e" title="switch_init" alt="" coords="213,233,296,260"><area shape="rect" href="connection_8c.html#720256527350db29d5e743a32d908151" title="__litm_connection_get_free_index" alt="" coords="387,132,605,159"><area shape="rect" href="queue_8c.html#404f283e7764be86026fda0714b6b7b6" title="queue_create" alt="" coords="447,183,545,209"><area shape="rect" href="switch_8c.html#e4d3d02052899f64d09070f18f75c29a" title="__switch_init_tables" alt="" coords="427,233,565,260"><area shape="rect" href="switch_8c.html#99ec0a50e5e594cb656f9ea1f7d39554" title="__switch_thread_function" alt="" coords="412,284,580,311"><area shape="rect" href="switch_8c.html#149e07f06e61c0daee8f4cf38200dff2" title="__switch_finalize" alt="" coords="948,107,1068,133"><area shape="rect" href="switch_8c.html#4d51cfe83ccbbb9248bbee852a1a3a65" title="__switch_get_next_subscriber" alt="" coords="655,360,849,387"><area shape="rect" href="switch_8c.html#195303a03d0b0c2a3f44951a38b2b0f6" title="__switch_handle_pending" alt="" coords="668,157,836,184"><area shape="rect" href="switch_8c.html#a915fa62ee3a445f9acac19e744005e3" title="__switch_try_sending_or_requeue" alt="" coords="900,208,1116,235"><area shape="rect" href="queue_8c.html#e8939dc8316290db7846b56d38c7ff90" title="queue_put" alt="" coords="1236,309,1316,336"><area shape="rect" href="litm_8c.html#76f700b9bb8531fd8baf8931e67c4604" title="litm_translate_code" alt="" coords="941,259,1075,285"><area shape="rect" href="connection_8c.html#b88c123e1d85482158c20a43e1f302ab" title="litm_connection_get_id" alt="" coords="675,411,829,437"><area shape="rect" href="queue_8c.html#819eed56d043a96499116f087d928057" title="queue_get_nb" alt="" coords="701,461,803,488"><area shape="rect" href="pool_8c.html#1266647a6ed7c20e9c5d08f4bef09dd3" title="__litm_pool_recycle" alt="" coords="1208,56,1344,83"><area shape="rect" href="pool_8c.html#2f844d6f6d2a471a5a93c3c49c28eef2" title="__litm_pool_destroy" alt="" coords="1469,5,1605,32"><area shape="rect" href="switch_8c.html#789e706afab00720920bef8347ac87af" title="__switch_find_match" alt="" coords="936,411,1080,437"><area shape="rect" href="switch_8c.html#69410aeaf5f97afc41f6608cc00bd754" title="__switch_handle_first_subscriber" alt="" coords="901,360,1115,387"><area shape="rect" href="switch_8c.html#6ff5c1db987d3bf46b124d28967954a4" title="__switch_find_next_non_match" alt="" coords="1175,360,1377,387"><area shape="rect" href="switch_8c.html#1025953257d7d23c8473d945dbf0c9db" title="__switch_try_sending_to_recipient" alt="" coords="1167,208,1385,235"><area shape="rect" href="connection_8c.html#86230c9edffe9b05ec0ff384b1706716" title="_litm_connection_get_status" alt="" coords="1444,56,1631,83"><area shape="rect" href="connection_8c.html#845538cd477e83b01381c22198ca318f" title="_litm_connection_lock" alt="" coords="1463,107,1612,133"><area shape="rect" href="connection_8c.html#1bbcee336581803f8ff367f55fca7363" title="_litm_connection_unlock" alt="" coords="1456,157,1619,184"><area shape="rect" href="connection_8c.html#200b813c910cd4a83c36aa907bd52dbe" title="_litm_connection_validate_safe" alt="" coords="1436,208,1639,235"><area shape="rect" href="connection_8c.html#9e582b29253857b58f87ba89f8a6526f" title="_litm_connections_lock" alt="" coords="1459,259,1616,285"><area shape="rect" href="connection_8c.html#c75b4b0413d3523574bda13549715447" title="_litm_connections_unlock" alt="" coords="1452,309,1623,336"><area shape="rect" href="queue_8c.html#24e3c9aaef201f1f66bcd8591b1e4c15" title="queue_put_safe" alt="" coords="1481,360,1593,387"><area shape="rect" href="queue_8c.html#223e84e07701aa14c2103fa27d08a101" title="__queue_get_safe" alt="" coords="944,461,1072,488"></map>
+</div>
+
+<p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dynsection">
+<p><center><img src="litm_8c_7866d99d291588a5279844f2883fd3fa_icgraph.png" border="0" usemap="#litm_8c_7866d99d291588a5279844f2883fd3fa_icgraph_map" alt=""></center>
+<map name="litm_8c_7866d99d291588a5279844f2883fd3fa_icgraph_map">
+<area shape="rect" href="litm_8h.html#bc852d2eb14353e36adf21c33eab03a3" title="litm_connect" alt="" coords="171,5,267,32"></map>
 </div>
 
 </div>
@@ -140,7 +200,7 @@ Be sure to release any message in the client's care before disconnecting.<p>
   </table>
 </dl>
 
-<p>Definition at line <a class="el" href="litm_8c-source.html#l00058">58</a> of file <a class="el" href="litm_8c-source.html">litm.c</a>.</p>
+<p>Definition at line <a class="el" href="litm_8c-source.html#l00064">64</a> of file <a class="el" href="litm_8c-source.html">litm.c</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -178,7 +238,7 @@ Returns a copy of the pointer to the message.<p>
 </dl>
 This function should be used instead of relying on the ``litm_envelope`` data structure.<p>
 <b>** DO NOT** modify the message!</b> 
-<p>Definition at line <a class="el" href="litm_8c-source.html#l00165">165</a> of file <a class="el" href="litm_8c-source.html">litm.c</a>.</p>
+<p>Definition at line <a class="el" href="litm_8c-source.html#l00180">180</a> of file <a class="el" href="litm_8c-source.html">litm.c</a>.</p>
 
 </div>
 </div><p>
@@ -211,7 +271,7 @@ This function should be used instead of relying on the ``litm_envelope`` data st
 Receive (non-blocking) function for clients<p>
 <dl class="note" compact><dt><b>Note:</b></dt><dd>It is the responsibility of the client to _not_ use this function once a connection is closed. </dd></dl>
 
-<p>Definition at line <a class="el" href="litm_8c-source.html#l00096">96</a> of file <a class="el" href="litm_8c-source.html">litm.c</a>.</p>
+<p>Definition at line <a class="el" href="litm_8c-source.html#l00111">111</a> of file <a class="el" href="litm_8c-source.html">litm.c</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -219,7 +279,7 @@ Here is the call graph for this function:</div>
 <div class="dynsection">
 <p><center><img src="litm_8c_2b6bffa08706c97ea5d9f6d670f8b359_cgraph.png" border="0" usemap="#litm_8c_2b6bffa08706c97ea5d9f6d670f8b359_cgraph_map" alt=""></center>
 <map name="litm_8c_2b6bffa08706c97ea5d9f6d670f8b359_cgraph_map">
-<area shape="rect" href="queue_8c.html#819eed56d043a96499116f087d928057" title="queue_get_nb" alt="" coords="167,5,268,32"></map>
+<area shape="rect" href="queue_8c.html#819eed56d043a96499116f087d928057" title="queue_get_nb" alt="" coords="167,5,268,32"><area shape="rect" href="queue_8c.html#223e84e07701aa14c2103fa27d08a101" title="__queue_get_safe" alt="" coords="317,5,445,32"></map>
 </div>
 
 </div>
@@ -251,7 +311,7 @@ Here is the call graph for this function:</div>
 
 <p>
 Receive with wait 
-<p>Definition at line <a class="el" href="litm_8c-source.html#l00115">115</a> of file <a class="el" href="litm_8c-source.html">litm.c</a>.</p>
+<p>Definition at line <a class="el" href="litm_8c-source.html#l00130">130</a> of file <a class="el" href="litm_8c-source.html">litm.c</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -259,7 +319,7 @@ Here is the call graph for this function:</div>
 <div class="dynsection">
 <p><center><img src="litm_8c_c3d5ff42f38bf4820ab8e842276062a9_cgraph.png" border="0" usemap="#litm_8c_c3d5ff42f38bf4820ab8e842276062a9_cgraph_map" alt=""></center>
 <map name="litm_8c_c3d5ff42f38bf4820ab8e842276062a9_cgraph_map">
-<area shape="rect" href="queue_8c.html#819eed56d043a96499116f087d928057" title="queue_get_nb" alt="" coords="181,5,283,32"><area shape="rect" href="queue_8c.html#95900f4ae8118e68b0343a1be6620ff8" title="queue_get_wait" alt="" coords="176,56,288,83"></map>
+<area shape="rect" href="queue_8c.html#819eed56d043a96499116f087d928057" title="queue_get_nb" alt="" coords="181,5,283,32"><area shape="rect" href="queue_8c.html#95900f4ae8118e68b0343a1be6620ff8" title="queue_get_wait" alt="" coords="176,56,288,83"><area shape="rect" href="queue_8c.html#223e84e07701aa14c2103fa27d08a101" title="__queue_get_safe" alt="" coords="336,31,464,57"></map>
 </div>
 
 </div>
@@ -292,7 +352,7 @@ Here is the call graph for this function:</div>
 <p>
 Release a message to LITM<p>
 This function should *ONLY* be used by client's as a result of finishing the processing of an envelope/message retrieved through ``litm_receive_nb''. 
-<p>Definition at line <a class="el" href="litm_8c-source.html#l00151">151</a> of file <a class="el" href="litm_8c-source.html">litm.c</a>.</p>
+<p>Definition at line <a class="el" href="litm_8c-source.html#l00166">166</a> of file <a class="el" href="litm_8c-source.html">litm.c</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -355,7 +415,7 @@ Send message on a ``bus``<p>
 </dl>
 If omitted, the default ``cleaner`` function will be <b>free()</b>.<p>
 If an error occurs, it is the responsibility of the sender to dispose of the ``messages`` appropriately. If the operation went LITM_CODE_OK, then once all recipients are finished with the message, the ``cleaner`` will be called with the message pointer OR if ``cleaner`` is NULL, the message will simply be freed with free(). 
-<p>Definition at line <a class="el" href="litm_8c-source.html#l00078">78</a> of file <a class="el" href="litm_8c-source.html">litm.c</a>.</p>
+<p>Definition at line <a class="el" href="litm_8c-source.html#l00084">84</a> of file <a class="el" href="litm_8c-source.html">litm.c</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -363,7 +423,71 @@ Here is the call graph for this function:</div>
 <div class="dynsection">
 <p><center><img src="litm_8c_bed13398c1bc31a6c81c3e50997e2f2c_cgraph.png" border="0" usemap="#litm_8c_bed13398c1bc31a6c81c3e50997e2f2c_cgraph_map" alt=""></center>
 <map name="litm_8c_bed13398c1bc31a6c81c3e50997e2f2c_cgraph_map">
-<area shape="rect" href="switch_8c.html#7ff2d602f713f81e854c172e842afcad" title="switch_send" alt="" coords="131,56,224,83"><area shape="rect" href="pool_8c.html#5a3eeccda0cfcf633af7177fad20c783" title="__litm_pool_get" alt="" coords="284,5,396,32"><area shape="rect" href="pool_8c.html#1266647a6ed7c20e9c5d08f4bef09dd3" title="__litm_pool_recycle" alt="" coords="272,56,408,83"><area shape="rect" href="queue_8c.html#e8939dc8316290db7846b56d38c7ff90" title="queue_put" alt="" coords="300,107,380,133"><area shape="rect" href="pool_8c.html#ad0b7166470e29cb5024efeca7d035af" title="__litm_pool_clean" alt="" coords="463,5,588,32"><area shape="rect" href="pool_8c.html#2f844d6f6d2a471a5a93c3c49c28eef2" title="__litm_pool_destroy" alt="" coords="457,56,593,83"><area shape="rect" href="queue_8c.html#24e3c9aaef201f1f66bcd8591b1e4c15" title="queue_put_safe" alt="" coords="469,107,581,133"></map>
+<area shape="rect" href="switch_8c.html#7ff2d602f713f81e854c172e842afcad" title="switch_send" alt="" coords="131,56,224,83"><area shape="rect" href="switch_8c.html#9b8ef3fb85a6655628b2e534bc7e4245" title="__switch_safe_send" alt="" coords="273,56,412,83"><area shape="rect" href="pool_8c.html#5a3eeccda0cfcf633af7177fad20c783" title="__litm_pool_get" alt="" coords="473,5,585,32"><area shape="rect" href="pool_8c.html#1266647a6ed7c20e9c5d08f4bef09dd3" title="__litm_pool_recycle" alt="" coords="461,56,597,83"><area shape="rect" href="queue_8c.html#e8939dc8316290db7846b56d38c7ff90" title="queue_put" alt="" coords="489,107,569,133"><area shape="rect" href="pool_8c.html#ad0b7166470e29cb5024efeca7d035af" title="__litm_pool_clean" alt="" coords="652,5,777,32"><area shape="rect" href="pool_8c.html#2f844d6f6d2a471a5a93c3c49c28eef2" title="__litm_pool_destroy" alt="" coords="647,56,783,83"><area shape="rect" href="queue_8c.html#24e3c9aaef201f1f66bcd8591b1e4c15" title="queue_put_safe" alt="" coords="659,107,771,133"></map>
+</div>
+
+</div>
+</div><p>
+<a class="anchor" name="9e932bb687ba4087d90eca7aa6583f0a"></a><!-- doxytag: member="litm.c::litm_send_shutdown" ref="9e932bb687ba4087d90eca7aa6583f0a" args="(litm_connection *conn, litm_bus bus_id, void *msg, void(*cleaner)(void *msg))" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a> litm_send_shutdown           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct__litm__connection.html">litm_connection</a> *&nbsp;</td>
+          <td class="paramname"> <em>conn</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="litm_8h.html#e7fcc1b5cd037f318d4fe40a2f9d30d3">litm_bus</a>&nbsp;</td>
+          <td class="paramname"> <em>bus_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&nbsp;</td>
+          <td class="paramname"> <em>msg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void(*)(void *msg)&nbsp;</td>
+          <td class="paramname"> <em>cleaner</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Send message on a _bus_ and shutdown<p>
+Sends the message around to the subscribers and once the message has been released by the last subscriber, performs a shutdown of the switch thread.<p>
+Each client subscriber is responsible for recognizing the message (since litm does not interpret client messages) and terminate its access to litm &amp; terminates its threads.<p>
+<dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="litm_8h.html#bed13398c1bc31a6c81c3e50997e2f2c">litm_send</a></dd></dl>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>*conn</em>&nbsp;</td><td>connection reference </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>bus_id</em>&nbsp;</td><td>the ``bus`` to send the message onto </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>*msg</em>&nbsp;</td><td>the pointer to the message </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>*cleaner</em>&nbsp;</td><td>the pointer to the cleaner function </td></tr>
+  </table>
+</dl>
+
+<p>Definition at line <a class="el" href="litm_8c-source.html#l00094">94</a> of file <a class="el" href="litm_8c-source.html">litm.c</a>.</p>
+
+<p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dynsection">
+<p><center><img src="litm_8c_9e932bb687ba4087d90eca7aa6583f0a_cgraph.png" border="0" usemap="#litm_8c_9e932bb687ba4087d90eca7aa6583f0a_cgraph_map" alt=""></center>
+<map name="litm_8c_9e932bb687ba4087d90eca7aa6583f0a_cgraph_map">
+<area shape="rect" href="switch_8c.html#cc4861fecbb5d0b20174fc1513539554" title="switch_send_shutdown" alt="" coords="196,56,351,83"><area shape="rect" href="switch_8c.html#9b8ef3fb85a6655628b2e534bc7e4245" title="__switch_safe_send" alt="" coords="401,56,540,83"><area shape="rect" href="pool_8c.html#5a3eeccda0cfcf633af7177fad20c783" title="__litm_pool_get" alt="" coords="601,5,713,32"><area shape="rect" href="pool_8c.html#1266647a6ed7c20e9c5d08f4bef09dd3" title="__litm_pool_recycle" alt="" coords="589,56,725,83"><area shape="rect" href="queue_8c.html#e8939dc8316290db7846b56d38c7ff90" title="queue_put" alt="" coords="617,107,697,133"><area shape="rect" href="pool_8c.html#ad0b7166470e29cb5024efeca7d035af" title="__litm_pool_clean" alt="" coords="780,5,905,32"><area shape="rect" href="pool_8c.html#2f844d6f6d2a471a5a93c3c49c28eef2" title="__litm_pool_destroy" alt="" coords="775,56,911,83"><area shape="rect" href="queue_8c.html#24e3c9aaef201f1f66bcd8591b1e4c15" title="queue_put_safe" alt="" coords="787,107,899,133"></map>
 </div>
 
 </div>
@@ -387,7 +511,7 @@ Here is the call graph for this function:</div>
 <p>
 Shutdown<p>
 This function attempts to shutdown all the connection threads in a graceful manner. This function is blocking. 
-<p>Definition at line <a class="el" href="litm_8c-source.html#l00158">158</a> of file <a class="el" href="litm_8c-source.html">litm.c</a>.</p>
+<p>Definition at line <a class="el" href="litm_8c-source.html#l00173">173</a> of file <a class="el" href="litm_8c-source.html">litm.c</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -435,7 +559,7 @@ Subscribe to a ``bus``<p>
   </table>
 </dl>
 
-<p>Definition at line <a class="el" href="litm_8c-source.html#l00065">65</a> of file <a class="el" href="litm_8c-source.html">litm.c</a>.</p>
+<p>Definition at line <a class="el" href="litm_8c-source.html#l00071">71</a> of file <a class="el" href="litm_8c-source.html">litm.c</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -472,7 +596,7 @@ Translates a code to a message pointer<p>
   </table>
 </dl>
 
-<p>Definition at line <a class="el" href="litm_8c-source.html#l00175">175</a> of file <a class="el" href="litm_8c-source.html">litm.c</a>.</p>
+<p>Definition at line <a class="el" href="litm_8c-source.html#l00190">190</a> of file <a class="el" href="litm_8c-source.html">litm.c</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -480,7 +604,7 @@ Here is the caller graph for this function:</div>
 <div class="dynsection">
 <p><center><img src="litm_8c_76f700b9bb8531fd8baf8931e67c4604_icgraph.png" border="0" usemap="#litm_8c_76f700b9bb8531fd8baf8931e67c4604_icgraph_map" alt=""></center>
 <map name="litm_8c_76f700b9bb8531fd8baf8931e67c4604_icgraph_map">
-<area shape="rect" href="switch_8c.html#195303a03d0b0c2a3f44951a38b2b0f6" title="__switch_handle_pending" alt="" coords="191,5,359,32"><area shape="rect" href="switch_8c.html#99ec0a50e5e594cb656f9ea1f7d39554" title="__switch_thread_function" alt="" coords="408,31,576,57"><area shape="rect" href="switch_8h.html#cf83bfcffad6990c781b1a668ec8209e" title="switch_init" alt="" coords="624,31,707,57"><area shape="rect" href="litm_8h.html#bc852d2eb14353e36adf21c33eab03a3" title="litm_connect" alt="" coords="755,31,851,57"></map>
+<area shape="rect" href="switch_8c.html#195303a03d0b0c2a3f44951a38b2b0f6" title="__switch_handle_pending" alt="" coords="191,5,359,32"><area shape="rect" href="switch_8c.html#99ec0a50e5e594cb656f9ea1f7d39554" title="__switch_thread_function" alt="" coords="408,31,576,57"><area shape="rect" href="switch_8h.html#cf83bfcffad6990c781b1a668ec8209e" title="switch_init" alt="" coords="624,31,707,57"><area shape="rect" href="litm_8h.html#7866d99d291588a5279844f2883fd3fa" title="litm_connect_ex" alt="" coords="756,31,871,57"><area shape="rect" href="litm_8h.html#bc852d2eb14353e36adf21c33eab03a3" title="litm_connect" alt="" coords="920,31,1016,57"></map>
 </div>
 
 </div>
@@ -520,7 +644,7 @@ Unsubscribe from a ``bus``<p>
   </table>
 </dl>
 
-<p>Definition at line <a class="el" href="litm_8c-source.html#l00072">72</a> of file <a class="el" href="litm_8c-source.html">litm.c</a>.</p>
+<p>Definition at line <a class="el" href="litm_8c-source.html#l00078">78</a> of file <a class="el" href="litm_8c-source.html">litm.c</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -564,7 +688,9 @@ Here is the call graph for this function:</div>
                 <span class="stringliteral">"LITM_CODE_ERROR_SUBSCRIPTION_NOT_FOUND"</span>,
                 <span class="stringliteral">"LITM_CODE_ERROR_BUS_FULL"</span>,
                 <span class="stringliteral">"LITM_CODE_BUSY_CONNECTIONS"</span>,
-                <span class="stringliteral">"LITM_CODE_ERROR_CONNECTION_NOT_ACTIVE"</span>
+                <span class="stringliteral">"LITM_CODE_ERROR_CONNECTION_NOT_ACTIVE"</span>,
+                <span class="stringliteral">"LITM_CODE_ERROR_END_OF_SUBSCRIBERS_LIST"</span>,
+                <span class="stringliteral">"LITM_CODE_ERROR_NO_SUBSCRIBERS"</span>
 }
 </pre></div>
 <p>Definition at line <a class="el" href="litm_8c-source.html#l00020">20</a> of file <a class="el" href="litm_8c-source.html">litm.c</a>.</p>
@@ -572,7 +698,7 @@ Here is the call graph for this function:</div>
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Tue May 12 12:21:05 2009 for LITM by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Wed May 13 10:37:50 2009 for LITM by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

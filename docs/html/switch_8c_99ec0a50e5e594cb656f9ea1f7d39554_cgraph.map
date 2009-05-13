@@ -1,14 +1,16 @@
 <area shape="rect" href="$switch_8c.html#149e07f06e61c0daee8f4cf38200dff2" title="__switch_finalize" alt="" coords="516,107,636,133">
-<area shape="rect" href="$switch_8c.html#428d719295458c6a33de960ab47a3594" title="__switch_get_next_subscriber" alt="" coords="223,360,417,387">
-<area shape="rect" href="$switch_8c.html#195303a03d0b0c2a3f44951a38b2b0f6" title="__switch_handle_pending" alt="" coords="236,208,404,235">
+<area shape="rect" href="$switch_8c.html#4d51cfe83ccbbb9248bbee852a1a3a65" title="__switch_get_next_subscriber" alt="" coords="223,360,417,387">
+<area shape="rect" href="$switch_8c.html#195303a03d0b0c2a3f44951a38b2b0f6" title="__switch_handle_pending" alt="" coords="236,157,404,184">
 <area shape="rect" href="$switch_8c.html#a915fa62ee3a445f9acac19e744005e3" title="__switch_try_sending_or_requeue" alt="" coords="468,208,684,235">
 <area shape="rect" href="$queue_8c.html#e8939dc8316290db7846b56d38c7ff90" title="queue_put" alt="" coords="804,309,884,336">
 <area shape="rect" href="$litm_8c.html#76f700b9bb8531fd8baf8931e67c4604" title="litm_translate_code" alt="" coords="509,259,643,285">
-<area shape="rect" href="$queue_8c.html#819eed56d043a96499116f087d928057" title="queue_get_nb" alt="" coords="269,411,371,437">
+<area shape="rect" href="$connection_8c.html#b88c123e1d85482158c20a43e1f302ab" title="litm_connection_get_id" alt="" coords="243,411,397,437">
+<area shape="rect" href="$queue_8c.html#819eed56d043a96499116f087d928057" title="queue_get_nb" alt="" coords="269,461,371,488">
 <area shape="rect" href="$pool_8c.html#1266647a6ed7c20e9c5d08f4bef09dd3" title="__litm_pool_recycle" alt="" coords="776,56,912,83">
 <area shape="rect" href="$pool_8c.html#2f844d6f6d2a471a5a93c3c49c28eef2" title="__litm_pool_destroy" alt="" coords="1037,5,1173,32">
-<area shape="rect" href="$switch_8c.html#a94aad98c23f36ddee68fa7c14b4dfba" title="__switch_find_match" alt="" coords="504,360,648,387">
-<area shape="rect" href="$switch_8c.html#6ff5c1db987d3bf46b124d28967954a4" title="__switch_find_next_non_match" alt="" coords="475,411,677,437">
+<area shape="rect" href="$switch_8c.html#789e706afab00720920bef8347ac87af" title="__switch_find_match" alt="" coords="504,411,648,437">
+<area shape="rect" href="$switch_8c.html#69410aeaf5f97afc41f6608cc00bd754" title="__switch_handle_first_subscriber" alt="" coords="469,360,683,387">
+<area shape="rect" href="$switch_8c.html#6ff5c1db987d3bf46b124d28967954a4" title="__switch_find_next_non_match" alt="" coords="743,360,945,387">
 <area shape="rect" href="$switch_8c.html#1025953257d7d23c8473d945dbf0c9db" title="__switch_try_sending_to_recipient" alt="" coords="735,208,953,235">
 <area shape="rect" href="$connection_8c.html#86230c9edffe9b05ec0ff384b1706716" title="_litm_connection_get_status" alt="" coords="1012,56,1199,83">
 <area shape="rect" href="$connection_8c.html#845538cd477e83b01381c22198ca318f" title="_litm_connection_lock" alt="" coords="1031,107,1180,133">
@@ -17,3 +19,4 @@
 <area shape="rect" href="$connection_8c.html#9e582b29253857b58f87ba89f8a6526f" title="_litm_connections_lock" alt="" coords="1027,259,1184,285">
 <area shape="rect" href="$connection_8c.html#c75b4b0413d3523574bda13549715447" title="_litm_connections_unlock" alt="" coords="1020,309,1191,336">
 <area shape="rect" href="$queue_8c.html#24e3c9aaef201f1f66bcd8591b1e4c15" title="queue_put_safe" alt="" coords="1049,360,1161,387">
+<area shape="rect" href="$queue_8c.html#223e84e07701aa14c2103fa27d08a101" title="__queue_get_safe" alt="" coords="512,461,640,488">

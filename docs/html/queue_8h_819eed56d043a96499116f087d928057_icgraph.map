@@ -2,4 +2,5 @@
 <area shape="rect" href="$litm_8h.html#2b6bffa08706c97ea5d9f6d670f8b359" title="litm_receive_nb" alt="" coords="185,56,297,83">
 <area shape="rect" href="$litm_8h.html#c3d5ff42f38bf4820ab8e842276062a9" title="litm_receive_wait" alt="" coords="181,107,301,133">
 <area shape="rect" href="$switch_8h.html#cf83bfcffad6990c781b1a668ec8209e" title="switch_init" alt="" coords="373,5,456,32">
-<area shape="rect" href="$litm_8h.html#bc852d2eb14353e36adf21c33eab03a3" title="litm_connect" alt="" coords="504,5,600,32">
+<area shape="rect" href="$litm_8h.html#7866d99d291588a5279844f2883fd3fa" title="litm_connect_ex" alt="" coords="505,5,620,32">
+<area shape="rect" href="$litm_8h.html#bc852d2eb14353e36adf21c33eab03a3" title="litm_connect" alt="" coords="669,5,765,32">

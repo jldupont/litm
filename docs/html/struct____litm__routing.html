@@ -40,7 +40,9 @@ Collaboration diagram for __litm_routing:</div>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="struct__litm__connection.html">litm_connection</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct____litm__routing.html#855edf29452572a9d83b7d551c2b3a3b">sender</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="struct__litm__connection.html">litm_connection</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct____litm__routing.html#30882ea416f664293fb2f0468cb09e8b">current</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct____litm__routing.html#924e5e6f639423525110fd4e8505d26c">current</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="struct__litm__connection.html">litm_connection</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct____litm__routing.html#0edb4c07ff4dae6d7ae5c7beca4caf94">current_conn</a></td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
@@ -50,11 +52,11 @@ Envelope Routing<p>
     <tr><td valign="top"></td><td valign="top"><em>pending</em>&nbsp;</td><td>Pending Status Flag </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>bus_id</em>&nbsp;</td><td>Destination ``bus`` </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>sender</em>&nbsp;</td><td>The sender's connection pointer </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>current</em>&nbsp;</td><td>The current recipient's connection pointer </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>current</em>&nbsp;</td><td>The index of the current recipient in the subscriber's list </td></tr>
   </table>
 </dl>
 
-<p>Definition at line <a class="el" href="litm_8h-source.html#l00184">184</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
+<p>Definition at line <a class="el" href="litm_8h-source.html#l00211">211</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
 <hr><h2>Field Documentation</h2>
 <a class="anchor" name="1f7b0cd5a23c153bf0a244fd7cba6689"></a><!-- doxytag: member="__litm_routing::bus_id" ref="1f7b0cd5a23c153bf0a244fd7cba6689" args="" -->
 <div class="memitem">
@@ -69,16 +71,16 @@ Envelope Routing<p>
 
 <p>
 
-<p>Definition at line <a class="el" href="litm_8h-source.html#l00186">186</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
+<p>Definition at line <a class="el" href="litm_8h-source.html#l00213">213</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
 
 </div>
 </div><p>
-<a class="anchor" name="30882ea416f664293fb2f0468cb09e8b"></a><!-- doxytag: member="__litm_routing::current" ref="30882ea416f664293fb2f0468cb09e8b" args="" -->
+<a class="anchor" name="924e5e6f639423525110fd4e8505d26c"></a><!-- doxytag: member="__litm_routing::current" ref="924e5e6f639423525110fd4e8505d26c" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="struct__litm__connection.html">litm_connection</a>* <a class="el" href="struct____litm__routing.html#30882ea416f664293fb2f0468cb09e8b">__litm_routing::current</a>          </td>
+          <td class="memname">int <a class="el" href="struct____litm__routing.html#924e5e6f639423525110fd4e8505d26c">__litm_routing::current</a>          </td>
         </tr>
       </table>
 </div>
@@ -86,7 +88,24 @@ Envelope Routing<p>
 
 <p>
 
-<p>Definition at line <a class="el" href="litm_8h-source.html#l00188">188</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
+<p>Definition at line <a class="el" href="litm_8h-source.html#l00215">215</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="0edb4c07ff4dae6d7ae5c7beca4caf94"></a><!-- doxytag: member="__litm_routing::current_conn" ref="0edb4c07ff4dae6d7ae5c7beca4caf94" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct__litm__connection.html">litm_connection</a>* <a class="el" href="struct____litm__routing.html#0edb4c07ff4dae6d7ae5c7beca4caf94">__litm_routing::current_conn</a>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+<p>Definition at line <a class="el" href="litm_8h-source.html#l00216">216</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
 
 </div>
 </div><p>
@@ -103,7 +122,7 @@ Envelope Routing<p>
 
 <p>
 
-<p>Definition at line <a class="el" href="litm_8h-source.html#l00185">185</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
+<p>Definition at line <a class="el" href="litm_8h-source.html#l00212">212</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
 
 </div>
 </div><p>
@@ -120,14 +139,14 @@ Envelope Routing<p>
 
 <p>
 
-<p>Definition at line <a class="el" href="litm_8h-source.html#l00187">187</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
+<p>Definition at line <a class="el" href="litm_8h-source.html#l00214">214</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
 
 </div>
 </div><p>
 <hr>The documentation for this struct was generated from the following file:<ul>
 <li>project/includes/<a class="el" href="litm_8h-source.html">litm.h</a></ul>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Tue May 12 12:21:05 2009 for LITM by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Wed May 13 10:37:55 2009 for LITM by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

@@ -1,4 +1,6 @@
-<area shape="rect" href="$switch_8c.html#428d719295458c6a33de960ab47a3594" title="__switch_get_next_subscriber" alt="" coords="260,5,455,32">
-<area shape="rect" href="$switch_8c.html#99ec0a50e5e594cb656f9ea1f7d39554" title="__switch_thread_function" alt="" coords="504,5,672,32">
-<area shape="rect" href="$switch_8h.html#cf83bfcffad6990c781b1a668ec8209e" title="switch_init" alt="" coords="720,5,803,32">
-<area shape="rect" href="$litm_8h.html#bc852d2eb14353e36adf21c33eab03a3" title="litm_connect" alt="" coords="851,5,947,32">
+<area shape="rect" href="$switch_8c.html#69410aeaf5f97afc41f6608cc00bd754" title="__switch_handle_first_subscriber" alt="" coords="259,5,472,32">
+<area shape="rect" href="$switch_8c.html#4d51cfe83ccbbb9248bbee852a1a3a65" title="__switch_get_next_subscriber" alt="" coords="521,5,716,32">
+<area shape="rect" href="$switch_8c.html#99ec0a50e5e594cb656f9ea1f7d39554" title="__switch_thread_function" alt="" coords="765,5,933,32">
+<area shape="rect" href="$switch_8h.html#cf83bfcffad6990c781b1a668ec8209e" title="switch_init" alt="" coords="981,5,1064,32">
+<area shape="rect" href="$litm_8h.html#7866d99d291588a5279844f2883fd3fa" title="litm_connect_ex" alt="" coords="1113,5,1228,32">
+<area shape="rect" href="$litm_8h.html#bc852d2eb14353e36adf21c33eab03a3" title="litm_connect" alt="" coords="1277,5,1373,32">
