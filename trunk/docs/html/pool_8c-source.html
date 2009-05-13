@@ -72,11 +72,11 @@
 <a name="l00050"></a>00050 
 <a name="l00051"></a>00051         <span class="comment">//can we recycle this one?</span>
 <a name="l00052"></a>00052         <span class="keywordflow">if</span> ( <a class="code" href="pool_8c.html#2e55d0fea0e1bfdcd9cad770a70e2afe">_top_stack</a> + 1 == <a class="code" href="pool_8h.html#82f68d9a84b4cd46e13dc7adf193a7eb">LITM_POOL_SIZE</a> ) {
-<a name="l00053"></a>00053                 <a class="code" href="logger_8h.html#21a2c7330a04ac78200a986f66609369">DEBUG_LOG</a>(LOG_DEBUG, <span class="stringliteral">"__litm_pool_recycle: destroying envelope [%x]"</span>, envlp );
+<a name="l00053"></a>00053                 <span class="comment">//DEBUG_LOG(LOG_DEBUG, "__litm_pool_recycle: destroying envelope [%x]", envlp );</span>
 <a name="l00054"></a>00054                 <a class="code" href="pool_8c.html#2f844d6f6d2a471a5a93c3c49c28eef2">__litm_pool_destroy</a>( envlp );
 <a name="l00055"></a>00055 
 <a name="l00056"></a>00056         } <span class="keywordflow">else</span> {
-<a name="l00057"></a>00057                 <a class="code" href="logger_8h.html#21a2c7330a04ac78200a986f66609369">DEBUG_LOG</a>(LOG_DEBUG, <span class="stringliteral">"__litm_pool_recycle: recycling envelope [%x]"</span>, envlp );
+<a name="l00057"></a>00057                 <span class="comment">//DEBUG_LOG(LOG_DEBUG, "__litm_pool_recycle: recycling envelope [%x] top_stack[%i]", envlp, _top_stack );</span>
 <a name="l00058"></a>00058                 <a class="code" href="pool_8c.html#2e55d0fea0e1bfdcd9cad770a70e2afe">_top_stack</a> ++;
 <a name="l00059"></a>00059                 _stack[<a class="code" href="pool_8c.html#2e55d0fea0e1bfdcd9cad770a70e2afe">_top_stack</a>] = envlp;
 <a name="l00060"></a>00060 
@@ -127,7 +127,7 @@
 <a name="l00105"></a>00105                 <span class="comment">// statistics...</span>
 <a name="l00106"></a>00106                 <a class="code" href="pool_8c.html#e388cd19bca797abf0835dea71037f44">_returned</a> ++;
 <a name="l00107"></a>00107 
-<a name="l00108"></a>00108                 <a class="code" href="logger_8h.html#21a2c7330a04ac78200a986f66609369">DEBUG_LOG</a>(LOG_DEBUG, <span class="stringliteral">"__litm_pool_get: returning recycled envelope [%x]"</span>, e );
+<a name="l00108"></a>00108                 <span class="comment">//DEBUG_LOG(LOG_DEBUG, "__litm_pool_get: returning recycled envelope [%x] top_stack[%i]", e, _top_stack );</span>
 <a name="l00109"></a>00109 
 <a name="l00110"></a>00110                 <span class="keywordflow">if</span> (0!=<a class="code" href="pool_8c.html#2e55d0fea0e1bfdcd9cad770a70e2afe">_top_stack</a>)
 <a name="l00111"></a>00111                         <a class="code" href="pool_8c.html#2e55d0fea0e1bfdcd9cad770a70e2afe">_top_stack</a>-- ;
@@ -144,7 +144,7 @@
 <a name="l00122"></a>00122                         <span class="comment">// statistics...</span>
 <a name="l00123"></a>00123                         <a class="code" href="pool_8c.html#9acc85c1d61a1322b66e9a6dec848ea3">_created</a> ++ ;
 <a name="l00124"></a>00124 
-<a name="l00125"></a>00125                         <a class="code" href="logger_8h.html#21a2c7330a04ac78200a986f66609369">DEBUG_LOG</a>(LOG_DEBUG, <span class="stringliteral">"__litm_pool_get: returning new envelope [%x]"</span>, e );
+<a name="l00125"></a>00125                         <span class="comment">//DEBUG_LOG(LOG_DEBUG, "__litm_pool_get: returning new envelope [%x]", e );</span>
 <a name="l00126"></a>00126                 }
 <a name="l00127"></a>00127 
 <a name="l00128"></a>00128         }
@@ -169,7 +169,7 @@
 <a name="l00147"></a>00147                 <a class="code" href="logger_8h.html#21a2c7330a04ac78200a986f66609369">DEBUG_LOG</a>( LOG_ERR, <span class="stringliteral">"__litm_pool_destroy: NULL envelope"</span>);
 <a name="l00148"></a>00148                 <span class="keywordflow">return</span>;
 <a name="l00149"></a>00149         }
-<a name="l00150"></a>00150         <a class="code" href="logger_8h.html#21a2c7330a04ac78200a986f66609369">DEBUG_LOG</a>(LOG_DEBUG, <span class="stringliteral">"__litm_pool_destroy: envelope [%x]"</span>, envlp );
+<a name="l00150"></a>00150         <span class="comment">//DEBUG_LOG(LOG_DEBUG, "__litm_pool_destroy: envelope [%x]", envlp );</span>
 <a name="l00151"></a>00151 
 <a name="l00152"></a>00152         free( envlp );
 <a name="l00153"></a>00153 
@@ -184,23 +184,25 @@
 <a name="l00162"></a>00162 <span class="comment"> */</span>
 <a name="l00163"></a>00163         <span class="keywordtype">void</span>
 <a name="l00164"></a><a class="code" href="pool_8h.html#ad0b7166470e29cb5024efeca7d035af">00164</a> <a class="code" href="pool_8c.html#ad0b7166470e29cb5024efeca7d035af">__litm_pool_clean</a>( <a class="code" href="struct__litm__envelope.html">litm_envelope</a> *envlp ) {
-<a name="l00165"></a>00165         <a class="code" href="logger_8h.html#5e74f7a89e89b195bba421ac1ed9a496">DEBUG_LOG_PTR</a>( envlp, LOG_ERR, <span class="stringliteral">"__litm_pool_clean: NULL"</span>);
+<a name="l00165"></a>00165         <span class="comment">//DEBUG_LOG_PTR( envlp, LOG_ERR, "__litm_pool_clean: NULL");</span>
 <a name="l00166"></a>00166 
 <a name="l00167"></a>00167         <span class="comment">//DEBUG_LOG(LOG_DEBUG, "__litm_pool_clean: envelope [%x]", envlp );</span>
 <a name="l00168"></a>00168 
 <a name="l00169"></a>00169         (envlp-&gt;<a class="code" href="struct__litm__envelope.html#7c7a351b72e9b4d084e526a00787a44f">routes</a>).bus_id  = 0;
-<a name="l00170"></a>00170         (envlp-&gt;<a class="code" href="struct__litm__envelope.html#7c7a351b72e9b4d084e526a00787a44f">routes</a>).current = NULL;
-<a name="l00171"></a>00171         (envlp-&gt;<a class="code" href="struct__litm__envelope.html#7c7a351b72e9b4d084e526a00787a44f">routes</a>).sender  = NULL;
-<a name="l00172"></a>00172         (envlp-&gt;<a class="code" href="struct__litm__envelope.html#7c7a351b72e9b4d084e526a00787a44f">routes</a>).pending = 0;
-<a name="l00173"></a>00173 
-<a name="l00174"></a>00174         envlp-&gt;<a class="code" href="struct__litm__envelope.html#9e1e2e92283fc88e458ab22c80ed5a10">cleaner</a> = NULL;
-<a name="l00175"></a>00175         envlp-&gt;<a class="code" href="struct__litm__envelope.html#5ed18526b98cb26460fdb273ea2178ac">msg</a>     = NULL;
-<a name="l00176"></a>00176 
-<a name="l00177"></a>00177         envlp-&gt;<a class="code" href="struct__litm__envelope.html#7102977c891a672bd99ade9a1927dd7c">delivery_count</a> = 0;
-<a name="l00178"></a>00178         envlp-&gt;<a class="code" href="struct__litm__envelope.html#34a68490d7f97acac5caa3ffc2aa6fb9">released_count</a> = 0;
-<a name="l00179"></a>00179 }<span class="comment">//</span>
+<a name="l00170"></a>00170         (envlp-&gt;<a class="code" href="struct__litm__envelope.html#7c7a351b72e9b4d084e526a00787a44f">routes</a>).current = 0;
+<a name="l00171"></a>00171         (envlp-&gt;<a class="code" href="struct__litm__envelope.html#7c7a351b72e9b4d084e526a00787a44f">routes</a>).current_conn = NULL;
+<a name="l00172"></a>00172         (envlp-&gt;<a class="code" href="struct__litm__envelope.html#7c7a351b72e9b4d084e526a00787a44f">routes</a>).sender  = NULL;
+<a name="l00173"></a>00173         (envlp-&gt;<a class="code" href="struct__litm__envelope.html#7c7a351b72e9b4d084e526a00787a44f">routes</a>).pending = 0;
+<a name="l00174"></a>00174 
+<a name="l00175"></a>00175         envlp-&gt;<a class="code" href="struct__litm__envelope.html#9e1e2e92283fc88e458ab22c80ed5a10">cleaner</a> = NULL;
+<a name="l00176"></a>00176         envlp-&gt;<a class="code" href="struct__litm__envelope.html#5ed18526b98cb26460fdb273ea2178ac">msg</a>     = NULL;
+<a name="l00177"></a>00177 
+<a name="l00178"></a>00178         envlp-&gt;<a class="code" href="struct__litm__envelope.html#7102977c891a672bd99ade9a1927dd7c">delivery_count</a> = 0;
+<a name="l00179"></a>00179         envlp-&gt;<a class="code" href="struct__litm__envelope.html#34a68490d7f97acac5caa3ffc2aa6fb9">released_count</a> = 0;
+<a name="l00180"></a>00180         envlp-&gt;<a class="code" href="struct__litm__envelope.html#af8c92fcc7ed19c5c9b852c9d02ce076">shutdown_flag</a>  = 0;
+<a name="l00181"></a>00181 }<span class="comment">//</span>
 </pre></div></div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Tue May 12 12:21:04 2009 for LITM by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Wed May 13 10:37:41 2009 for LITM by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>
