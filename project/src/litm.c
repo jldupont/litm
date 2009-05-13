@@ -10,12 +10,14 @@
  *
  */
 #include <errno.h>
+#include <stdlib.h>
 
 #include "litm.h"
 #include "connection.h"
 #include "queue.h"
 #include "pool.h"
 #include "logger.h"
+#include "utils.h"
 
 char *LITM_CODE_MESSAGES[] = {
 		"LITM_CODE_OK",
@@ -37,8 +39,16 @@ char *LITM_CODE_MESSAGES[] = {
 		"LITM_CODE_BUSY_CONNECTIONS",
 		"LITM_CODE_ERROR_CONNECTION_NOT_ACTIVE",
 		"LITM_CODE_ERROR_END_OF_SUBSCRIBERS_LIST",
-		"LITM_CODE_ERROR_NO_SUBSCRIBERS"
+		"LITM_CODE_ERROR_NO_SUBSCRIBERS",
+		"LITM_CODE_ERROR_CONNECTION_ERROR",
+		"LITM_CODE_ERROR_SUBSCRIPTION_ERROR",
+		"LITM_CODE_ERROR_SEND_ERROR"
 };
+
+// PRIVATE
+int __litm_compute_timeout(int timeout);
+// =====================================
+
 
 	litm_code
 litm_connect(litm_connection **conn) {
@@ -61,6 +71,41 @@ litm_connect_ex(litm_connection **conn, int id) {
 }
 
 	litm_code
+litm_connect_ex_wait(litm_connection **conn, int id, int timeout) {
+
+	litm_code code;
+	struct timeval *start, *current;
+	int computed_timeout = __litm_compute_timeout( timeout );
+
+	while(1) {
+
+		code = litm_connect_ex(conn, id);
+		if (LITM_CODE_OK==code)
+			break;
+
+		// an error we can't handle here?
+		if (LITM_CODE_BUSY!=code) {
+			break;
+		}
+
+		DEBUG_LOG(LOG_DEBUG, "litm_connect_ex_wait: NEED TO RETRY id[%i]", id);
+
+		// at this point, we just back-off an retry
+		int result = random_sleep_period(	start,
+											current,
+											LITM_DEFAULT_MAX_BACKOFF*1000*1000,
+											computed_timeout);
+		// expired period?
+		if (1==result) {
+			code = LITM_CODE_ERROR_CONNECTION_ERROR;
+			break;
+		}
+	}
+
+	return code;
+}
+
+	litm_code
 litm_disconnect(litm_connection *conn) {
 
 	return litm_connection_close(conn);
@@ -75,6 +120,42 @@ litm_subscribe(litm_connection *conn, litm_bus bus_id) {
 
 
 	litm_code
+litm_subscribe_wait(litm_connection *conn, litm_bus bus_id, int timeout) {
+
+	litm_code code;
+	struct timeval *start, *current;
+	int computed_timeout = __litm_compute_timeout( timeout );
+
+	while(1) {
+
+		code = switch_add_subscriber( conn, bus_id );
+		if (LITM_CODE_OK==code)
+			break;
+
+		// an error we can't handle here?
+		if (LITM_CODE_BUSY!=code) {
+			break;
+		}
+
+		DEBUG_LOG(LOG_DEBUG, "litm_subscribe_wait: NEED TO RETRY conn[%x] bus[%i]", conn, bus_id);
+
+		// at this point, we just back-off an retry
+		int result = random_sleep_period(	start,
+											current,
+											LITM_DEFAULT_MAX_BACKOFF*1000*1000,
+											computed_timeout);
+		// expired period?
+		if (1==result) {
+			code = LITM_CODE_ERROR_SUBSCRIPTION_ERROR;
+			break;
+		}
+
+	}
+
+	return code;
+}//
+
+	litm_code
 litm_unsubscribe(litm_connection *conn, litm_bus bus_id) {
 
 	return switch_remove_subscriber( conn, bus_id );
@@ -87,6 +168,47 @@ litm_send(	litm_connection *conn,
 			void (*cleaner)(void *msg) ) {
 
 	return switch_send(conn, bus_id, msg, cleaner);
+}//
+
+
+	litm_code
+litm_send_wait(	litm_connection *conn,
+				litm_bus bus_id,
+				void *msg,
+				void (*cleaner)(void *msg),
+				int timeout ) {
+
+	litm_code code;
+	struct timeval *start, *current;
+	int computed_timeout = __litm_compute_timeout( timeout );
+
+	while(1) {
+
+		code = switch_send(conn, bus_id, msg, cleaner);
+		if (LITM_CODE_OK==code)
+			break;
+
+		// an error we can't handle here?
+		if (LITM_CODE_BUSY!=code) {
+			break;
+		}
+
+		DEBUG_LOG(LOG_DEBUG, "litm_send_wait: NEED TO RETRY conn[%x] bus[%i]", conn, bus_id);
+
+		// at this point, we just back-off an retry
+		int result = random_sleep_period(	start,
+											current,
+											LITM_DEFAULT_MAX_BACKOFF*1000*1000,
+											computed_timeout);
+		// expired period?
+		if (1==result) {
+			code = LITM_CODE_ERROR_SEND_ERROR;
+			break;
+		}
+
+	}
+
+	return code;
 }//
 
 
@@ -145,8 +267,6 @@ litm_receive_wait(litm_connection *conn, litm_envelope **envlp) {
 
 	// ok, we really need to wait then...
 	*envlp = queue_get_wait( conn->input_queue );
-
-	// this shouldn't happen since we waited for a message!
 	if (NULL==*envlp) {
 		returnCode=LITM_CODE_NO_MESSAGE;
 	}
@@ -194,3 +314,25 @@ litm_translate_code(litm_code code) {
 
 	return LITM_CODE_MESSAGES[code];
 }//
+
+/**
+ * Translates a seconds based timeout to a
+ * useconds timeout value whilst adjusting for
+ * the default timeout value.
+ *
+ */
+	int
+__litm_compute_timeout(int timeout) {
+
+	int computed_timeout;
+
+	// adjust to default
+	if (0!=timeout) {
+		computed_timeout = timeout;
+	} else {
+		computed_timeout = LITM_DEFAULT_MAX_TIMEOUT;
+	}
+	computed_timeout *= 1000*1000;
+
+	return computed_timeout;
+}

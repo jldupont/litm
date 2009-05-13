@@ -144,8 +144,10 @@
 #	include <pthread.h>
 
 
-#	define LITM_CONNECTION_MAX 15
-#	define LITM_BUSSES_MAX     7
+#	define LITM_CONNECTION_MAX      15
+#	define LITM_BUSSES_MAX          7
+#	define LITM_DEFAULT_MAX_TIMEOUT 5
+#	define LITM_DEFAULT_MAX_BACKOFF 1
 
 		/**
 		 * Queue node - entry in a queue
@@ -242,7 +244,10 @@
 			LITM_CODE_BUSY_CONNECTIONS,
 			LITM_CODE_ERROR_CONNECTION_NOT_ACTIVE,
 			LITM_CODE_ERROR_END_OF_SUBSCRIBERS_LIST,
-			LITM_CODE_ERROR_NO_SUBSCRIBERS
+			LITM_CODE_ERROR_NO_SUBSCRIBERS,
+			LITM_CODE_ERROR_CONNECTION_ERROR,
+			LITM_CODE_ERROR_SUBSCRIPTION_ERROR,
+			LITM_CODE_ERROR_SEND_ERROR
 
 		} litm_code;
 
@@ -289,11 +294,28 @@
 		 * Opens a ``connection`` to the ``switch``
 		 *  and returns a pointer to the connection reference
 		 *
+		 * @see litm_connect
+		 *
 		 * @param **conn pointer to connection reference
 		 * @param id connection identifier
 		 *
 		 */
 		litm_code litm_connect_ex(litm_connection **conn, int id);
+
+		/**
+		 * Opens a ``connection`` to the ``switch``
+		 *  and returns a pointer to the connection reference.
+		 *  Waits for a maximum of ``timeout``.
+		 *
+		 * @see litm_connect
+		 *
+		 * @param **conn pointer to connection reference
+		 * @param id connection identifier
+		 * @param timeout timeout in seconds, 0 for the default
+		 *
+		 */
+		litm_code litm_connect_ex_wait(litm_connection **conn, int id, int timeout);
+
 
 		/**
 		 * Returns the connection associated with a valid connection
@@ -337,6 +359,11 @@
 
 
 		/**
+		 * @see litm_subscribe
+		 */
+		litm_code litm_subscribe_wait(litm_connection *conn, litm_bus bus_id, int timeout);
+
+		/**
 		 * Unsubscribe from a ``bus``
 		 *
 		 * @see litm_disconnect
@@ -372,6 +399,16 @@
 								litm_bus bus_id,
 								void *msg,
 								void (*cleaner)(void *msg)
+								);
+
+		/**
+		 * @see litm_send_wait
+		 */
+		litm_code litm_send_wait(	litm_connection *conn,
+									litm_bus bus_id,
+									void *msg,
+									void (*cleaner)(void *msg),
+									int timeout
 								);
 
 		/**
