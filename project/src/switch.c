@@ -74,7 +74,7 @@ switch_init(void) {
 
 
 		// init queue *before* launching thread!
-		_switch_queue = queue_create();
+		_switch_queue = queue_create(-1);
 		__switch_init_tables();
 
 		DEBUG_LOG(LOG_INFO, "switch_init: creating switch thread & queue, q[%x] ", _switch_queue);
@@ -219,6 +219,10 @@ __switch_thread_function(void *params) {
 		case LITM_CODE_OK:
 			break;
 
+		case LITM_CODE_ERROR_END_OF_SUBSCRIBERS_LIST:
+			__switch_finalize(e);
+			break;
+
 		case LITM_CODE_BUSY_OUTPUT_QUEUE:
 			DEBUG_LOG(LOG_DEBUG, thisMsg, next, err_msg);
 			break;
@@ -314,7 +318,7 @@ switch_release(litm_connection *conn, litm_envelope *envlp) {
 	}
 
 	int id = conn->id;
-	DEBUG_LOG(LOG_DEBUG, "switch_release: conn[%x][%i] envelope[%x]", conn, id, envlp );
+	//DEBUG_LOG(LOG_DEBUG, "switch_release: conn[%x][%i] envelope[%x]", conn, id, envlp );
 
 	// if a message comes this way, it means a client
 	// has finished processing it... get rid of the
@@ -357,6 +361,7 @@ __switch_try_sending_or_requeue(litm_connection *conn, litm_envelope *envlp) {
 
 	litm_code result = __switch_try_sending_to_recipient(conn, envlp);
 
+	// requeue in switch
 	if (LITM_CODE_BUSY_OUTPUT_QUEUE==result) {
 
 		(envlp->routes).pending = 1;
@@ -366,6 +371,7 @@ __switch_try_sending_or_requeue(litm_connection *conn, litm_envelope *envlp) {
 	// a connection dropped out... no big deal,
 	// just requeue as it was the first go
 	if (LITM_CODE_ERROR_CONNECTION_NOT_ACTIVE==result) {
+		(envlp->routes).pending = 0;
 		queue_put( _switch_queue, envlp );
 	}
 
@@ -398,6 +404,7 @@ __switch_try_sending_to_recipient(	litm_connection *conn,
 	litm_code returnCode = LITM_CODE_OK;
 	int code = 0;
 
+	//DEBUG_LOG(LOG_ERR, "__switch_try_sending_to_recipient: START conn[%x]",conn );
 	_litm_connections_lock();
 
 		code = _litm_connection_validate_safe(conn);
@@ -417,17 +424,20 @@ __switch_try_sending_to_recipient(	litm_connection *conn,
 		}
 
 	_litm_connections_unlock();
+	//DEBUG_LOG(LOG_ERR, "__switch_try_sending_to_recipient: STOP  conn[%x]", conn );
 
 	switch(code) {
 	case 0: //error
 		returnCode = LITM_CODE_ERROR_OUTPUT_QUEUING;
 		break;
 	case 1: //success
+		//DEBUG_LOG(LOG_ERR, "__switch_try_sending_to_recipient: DELIVERED conn[%x]", conn );
 		env->delivery_count++;
 		returnCode = LITM_CODE_OK;
 		break;
 	case -1: //busy
 		returnCode = LITM_CODE_BUSY_OUTPUT_QUEUE;
+		DEBUG_LOG(LOG_ERR, "__switch_try_sending_to_recipient: BUSY conn[%x]", conn );
 		break;
 	case 2:
 		returnCode = LITM_CODE_ERROR_CONNECTION_NOT_ACTIVE;
@@ -695,7 +705,7 @@ __switch_handle_first_subscriber(int bus_id, litm_connection *sender, litm_conne
 
 	litm_code returnCode;
 	int id = sender->id;
-	DEBUG_LOG(LOG_DEBUG, "__switch_handle_first_subscriber: FIRST SEND, sender[%x] conn_id[%i]", sender, id);
+	//DEBUG_LOG(LOG_DEBUG, "__switch_handle_first_subscriber: FIRST SEND, sender[%x] conn_id[%i]", sender, id);
 
 	int searchResultIndex;
 	searchResultIndex = __switch_find_next_non_match(sender, bus_id);

@@ -266,11 +266,12 @@ litm_receive_wait(litm_connection *conn, litm_envelope **envlp) {
 	}
 
 	// ok, we really need to wait then...
+	//DEBUG_LOG(LOG_DEBUG,"litm_receive_wait, START conn[%x]",conn);
 	*envlp = queue_get_wait( conn->input_queue );
 	if (NULL==*envlp) {
 		returnCode=LITM_CODE_NO_MESSAGE;
 	}
-
+	//DEBUG_LOG(LOG_DEBUG,"litm_receive_wait, STOP conn[%x]",conn);
 	return returnCode;
 }//
 

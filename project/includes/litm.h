@@ -172,6 +172,10 @@
 			pthread_cond_t  *cond;
 			pthread_mutex_t *mutex;
 			struct _queue_node *head, *tail;
+			int num;
+			int id;
+			int total_in;
+			int total_out;
 		} queue;
 
 
