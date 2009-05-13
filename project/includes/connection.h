@@ -13,6 +13,7 @@
 	 * Opens (creates) a new connection
 	 */
 	litm_code litm_connection_open(litm_connection **conn);
+	litm_code litm_connection_open_ex(litm_connection **conn, int id);
 
 	/**
 	 * Closes an opened connection

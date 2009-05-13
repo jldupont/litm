@@ -417,6 +417,7 @@ __switch_try_sending_to_recipient(	litm_connection *conn,
 		break;
 	case 1: //success
 		env->delivery_count++;
+		returnCode = LITM_CODE_OK;
 		break;
 	case -1: //busy
 		returnCode = LITM_CODE_BUSY_OUTPUT_QUEUE;
