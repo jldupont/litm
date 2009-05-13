@@ -23,6 +23,7 @@
 
 void *__queue_get_safe(queue *q);
 
+
 /**
  * Creates a queue
  */
@@ -366,6 +367,31 @@ void *queue_get_wait(queue *q) {
 	}
 
 	pthread_mutex_lock( q->mutex );
+	pthread_cond_wait( q->cond, q->mutex );
+
+		void *node=NULL;
+		node = __queue_get_safe(q);
+
+	pthread_mutex_unlock( q->mutex );
+
+	return node;
+}//
+
+/**
+ * Waits for a node in the queue
+ */
+void *queue_get_wait2(queue *q) {
+
+	if (NULL==q) {
+		DEBUG_LOG(LOG_DEBUG, "queue_get_wait: NULL queue ptr");
+		return NULL;
+	}
+
+	int result = pthread_mutex_trylock( q->mutex );
+	if (EBUSY==result) {
+		return NULL;
+	}
+
 	pthread_cond_wait( q->cond, q->mutex );
 
 		void *node=NULL;
