@@ -21,6 +21,7 @@
 #include "litm.h"
 #include "queue.h"
 
+void *__queue_get_safe(queue *q);
 
 /**
  * Creates a queue
@@ -214,13 +215,14 @@ int queue_put(queue *q, void *node) {
 
 	int code;
 
+	//DEBUG_LOG(LOG_DEBUG,"queue_put: q[%x] node[%x] BEGIN",q, node);
 	pthread_mutex_lock( q->mutex );
 
 		code = queue_put_safe( q, node );
 
 	pthread_mutex_unlock( q->mutex );
 
-	//DEBUG_LOG(LOG_DEBUG,"queue_put: END");
+	//DEBUG_LOG(LOG_DEBUG,"queue_put: q[%x] node[%x] END",q,node);
 
 	return code;
 }//[/queue_put]
@@ -292,9 +294,11 @@ int queue_put_nb(queue *q, void *node) {
 	if (EBUSY == pthread_mutex_trylock( q->mutex ))
 		return -1;
 
+		DEBUG_LOG(LOG_DEBUG,"queue_put_nb: q[%x] node[%x] BEGIN",q, node);
 		int returnCode = queue_put_safe( q, node );
 
 	pthread_mutex_unlock( q->mutex );
+	DEBUG_LOG(LOG_DEBUG,"queue_put_nb: q[%x] node[%x] END",q, node);
 
 	return returnCode;
 }//[/queue_put]
@@ -355,29 +359,12 @@ void *queue_get_nb(queue *q) {
 		return NULL;
 	}
 
-	queue_node *tmp = NULL;
-	void *node=NULL;
-
 	if (EBUSY==pthread_mutex_trylock( q->mutex )) {
 		return NULL;
 	}
 
-		tmp = q->head;
-		if (NULL!=tmp) {
-
-			// adjust tail: case if tail==head
-			//  ie. only one element present
-			if (q->head == q->tail) {
-				q->tail = NULL;
-			}
-
-			q->head = (q->head)->next;
-			node = tmp->node;
-
-			//DEBUG_LOG(LOG_DEBUG,"queue_get_nb: NODE PRESENT, q[%x] envlp[%x], freeing queue_node[%x]", q, node, tmp);
-			free(tmp);
-
-		}
+		void *node=NULL;
+		node = __queue_get_safe(q);
 
 	pthread_mutex_unlock( q->mutex );
 
@@ -395,32 +382,42 @@ void *queue_get_wait(queue *q) {
 		return NULL;
 	}
 
-	queue_node *tmp = NULL;
-	void *node=NULL;
-
 	pthread_mutex_lock( q->mutex );
 	pthread_cond_wait( q->cond, q->mutex );
 
-		tmp = q->head;
-		if (tmp!=NULL) {
+		void *node=NULL;
+		node = __queue_get_safe(q);
 
-			// adjust tail: case if tail==head
-			//  ie. only one element present
-			if (q->head == q->tail) {
-				q->tail = NULL;
-			}
+	pthread_mutex_unlock( q->mutex );
 
+	return node;
+}//
+
+void *__queue_get_safe(queue *q) {
+
+	queue_node *tmp = NULL;
+	void *node=NULL;
+
+	tmp = q->head;
+	if (tmp!=NULL) {
+
+		// the queue contained at least one node
+		node = tmp->node;
+
+		// adjust tail: case if tail==head
+		//  ie. only one element present
+		if (q->head == q->tail) {
+			q->tail = NULL;
+			q->head = NULL;
+		} else {
 			// adjust head : next pointer is already set
 			//  to NULL in queue_put
 			q->head = (q->head)->next;
-
-			node = tmp->node;
-
-			//DEBUG_LOG(LOG_DEBUG,"queue_get: MESSAGE PRESENT, freeing queue_node[%x]", tmp);
-			free(tmp);
 		}
 
-	pthread_mutex_unlock( q->mutex );
+		//DEBUG_LOG(LOG_DEBUG,"queue_get: MESSAGE PRESENT, freeing queue_node[%x]", tmp);
+		free(tmp);
+	}
 
 	return node;
 }//

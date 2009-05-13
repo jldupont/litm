@@ -75,11 +75,34 @@ litm_connection *_connections_pending_deletion[LITM_CONNECTION_MAX];
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 /**
+ * Returns the connection id
+ *
+ * @return -1 on error
+ */
+	int
+litm_connection_get_id(litm_connection *conn) {
+
+	if (NULL==conn) {
+		return -1;
+	}
+
+	return conn->id;
+}//
+
+/**
  * Opens a ``connection``
  *
  */
 	litm_code
 litm_connection_open(litm_connection **conn) {
+
+	return litm_connection_open_ex( conn, 0);
+
+}//
+
+
+	litm_code
+litm_connection_open_ex(litm_connection **conn, int id) {
 
 	//DEBUG_LOG(LOG_INFO, "litm_connection_open: BEGIN");
 
@@ -111,19 +134,19 @@ litm_connection_open(litm_connection **conn) {
 
 
 	_connections[target_index] = *conn;
+	(*conn)->id = id;
 	(*conn)->input_queue = q;
 	(*conn)->status = LITM_CONNECTION_STATUS_ACTIVE;
 
-	DEBUG_LOG(LOG_INFO, "litm_connection_open: OPENED, index[%u] ref[%x], q[%x]", target_index, *conn, q);
+	//DEBUG_LOG(LOG_INFO, "litm_connection_open: OPENED, index[%u] ref[%x], q[%x]", target_index, *conn, q);
 
 
 	pthread_mutex_unlock( &_connections_mutex );
 
 	//DEBUG_LOG(LOG_INFO, "litm_connection_open: END");
 	return LITM_CODE_OK;
+
 }//
-
-
 
 	litm_code
 litm_connection_close(litm_connection *conn) {

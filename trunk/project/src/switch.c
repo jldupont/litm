@@ -169,8 +169,8 @@ __switch_thread_function(void *params) {
 		bus_id  = (e->routes).bus_id;
 		sd_flag =  e->shutdown_flag;
 
-		//DEBUG_LOG(LOG_INFO, "__switch_thread_function: ENVELOPE NORMAL, bus[%u] sender[%x] current[%x] envelope[%x]", bus_id, sender, current, e);
-
+		int id = litm_connection_get_id( sender );
+		//DEBUG_LOG(LOG_INFO, "__switch_thread_function: bus[%u] sender[%x] current[%x] envelope[%x] sd[%i] conn_id[%i]", bus_id, sender, current, e, sd_flag, id);
 
 		code = __switch_get_next_subscriber(	&next,
 												sender,
@@ -183,11 +183,15 @@ __switch_thread_function(void *params) {
 
 		default:
 			err_msg = litm_translate_code(code);
-			DEBUG_LOG(LOG_DEBUG, "__switch_thread_function: ENVELOPE NORMAL... error[%s], finalize message", err_msg);
+			int sender_id  = sender->id;
+			int current_id = current->id;
+
+			DEBUG_LOG(LOG_DEBUG, "__switch_thread_function: code[%s] sender[%x][%i] current[%x][%i] sd[%i] finalize", err_msg, sender, sender_id, current,current_id, sd_flag);
 			__switch_finalize(e);
 
 			// last subscriber... and shutdown?
 			if (LITM_SHUTDOWN_FLAG_TRUE==sd_flag) {
+				DEBUG_LOG(LOG_DEBUG, "__switch_thread_function: RECEIVED SHUTDOWN FLAG !!!!!!!!!!!!");
 				shutdown_flag = LITM_SHUTDOWN_FLAG_TRUE;
 			}
 
@@ -206,6 +210,8 @@ __switch_thread_function(void *params) {
 
 		switch(code) {
 		case LITM_CODE_OK:
+			break;
+
 		case LITM_CODE_BUSY_OUTPUT_QUEUE:
 			DEBUG_LOG(LOG_DEBUG, thisMsg, next, err_msg);
 			break;
@@ -300,7 +306,8 @@ switch_release(litm_connection *conn, litm_envelope *envlp) {
 		return LITM_CODE_ERROR_INVALID_ENVELOPE;
 	}
 
-	DEBUG_LOG(LOG_DEBUG, "switch_release: conn[%x] envelope[%x]", conn, envlp );
+	int id = conn->id;
+	DEBUG_LOG(LOG_DEBUG, "switch_release: conn[%x][%i] envelope[%x]", conn, id, envlp );
 
 	// if a message comes this way, it means a client
 	// has finished processing it... get rid of the
@@ -310,6 +317,7 @@ switch_release(litm_connection *conn, litm_envelope *envlp) {
 
 	int result = queue_put(_switch_queue, (void *) envlp);
 	if (1 != result) {
+		DEBUG_LOG(LOG_DEBUG, "switch_release: RE-QUEUE ERROR, conn[%x] envelope[%x]", conn, envlp );
 		__switch_finalize( envlp );
 		return LITM_CODE_ERROR_MALLOC;
 	}
@@ -586,7 +594,7 @@ __switch_finalize(litm_envelope *envlp) {
 		return LITM_CODE_ERROR_INVALID_ENVELOPE;
 	}
 
-	DEBUG_LOG(LOG_DEBUG, "__switch_finalize: envelope[%x]", envlp );
+	//DEBUG_LOG(LOG_DEBUG, "__switch_finalize: envelope[%x]", envlp );
 
 	void (*cleaner)(void *msg) = envlp->cleaner;
 
@@ -655,9 +663,10 @@ __switch_get_next_subscriber(	litm_connection **result,
 
 			// FIND FIRST {{
 			if (NULL==current) {
-				DEBUG_LOG(LOG_DEBUG, "__switch_get_next_subscriber: FIRST SEND");
+				int id = sender->id;
+				DEBUG_LOG(LOG_DEBUG, "__switch_get_next_subscriber: FIRST SEND, sender[%x] conn_id[%i]", sender, id);
 
-				int searchResultIndex = 0;
+				int searchResultIndex;
 				searchResultIndex = __switch_find_next_non_match(sender, bus_id);
 
 				if (0!=searchResultIndex) {
@@ -687,9 +696,8 @@ __switch_get_next_subscriber(	litm_connection **result,
 
 				if (0==foundMatch) {
 					// can't find ``current``...
-					// maybe the connection was pull-off from our feet
+					// maybe the connection was pull-off from under our feet
 					returnCode = LITM_CODE_ERROR_SWITCH_NO_CURRENT;
-					bailOut = 1;
 				} else {
 					// we found ``current``...
 					// need the following subscriber
@@ -705,7 +713,7 @@ __switch_get_next_subscriber(	litm_connection **result,
 					}//for
 
 					if (0==foundNext)
-						returnCode = LITM_CODE_ERROR_SWITCH_NEXT_NOT_FOUND;
+						returnCode = LITM_CODE_ERROR_END_OF_SUBSCRIBERS_LIST;
 
 				}//foundMatch
 			}//bailOut
@@ -741,7 +749,7 @@ __switch_find_next_non_match(litm_connection *ref, litm_bus bus_id) {
 		}
 	}
 
-	DEBUG_LOG(LOG_DEBUG, "__switch_find_next_non_match: END, ref[%x] bus[%u] result[%u]", ref, bus_id, result);
+	//DEBUG_LOG(LOG_DEBUG, "__switch_find_next_non_match: END, ref[%x] bus[%u] result[%u]", ref, bus_id, result);
 
 	return result;
 }//
@@ -770,7 +778,7 @@ __switch_find_match(litm_connection *ref, litm_bus bus_id) {
 		}
 	}
 
-	DEBUG_LOG(LOG_DEBUG, "__switch_find_match: END, ref[%x] bus[%u] result[%u]", ref, bus_id, result);
+	//DEBUG_LOG(LOG_DEBUG, "__switch_find_match: END, ref[%x] bus[%u] result[%u]", ref, bus_id, result);
 
 	return result;
 }//

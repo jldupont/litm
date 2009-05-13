@@ -50,11 +50,11 @@ __litm_pool_recycle( litm_envelope *envlp ) {
 
 	//can we recycle this one?
 	if ( _top_stack + 1 == LITM_POOL_SIZE ) {
-		DEBUG_LOG(LOG_DEBUG, "__litm_pool_recycle: destroying envelope [%x]", envlp );
+		//DEBUG_LOG(LOG_DEBUG, "__litm_pool_recycle: destroying envelope [%x]", envlp );
 		__litm_pool_destroy( envlp );
 
 	} else {
-		DEBUG_LOG(LOG_DEBUG, "__litm_pool_recycle: recycling envelope [%x]", envlp );
+		//DEBUG_LOG(LOG_DEBUG, "__litm_pool_recycle: recycling envelope [%x]", envlp );
 		_top_stack ++;
 		_stack[_top_stack] = envlp;
 
@@ -105,7 +105,7 @@ __litm_pool_get(void) {
 		// statistics...
 		_returned ++;
 
-		DEBUG_LOG(LOG_DEBUG, "__litm_pool_get: returning recycled envelope [%x]", e );
+		//DEBUG_LOG(LOG_DEBUG, "__litm_pool_get: returning recycled envelope [%x]", e );
 
 		if (0!=_top_stack)
 			_top_stack-- ;
@@ -122,7 +122,7 @@ __litm_pool_get(void) {
 			// statistics...
 			_created ++ ;
 
-			DEBUG_LOG(LOG_DEBUG, "__litm_pool_get: returning new envelope [%x]", e );
+			//DEBUG_LOG(LOG_DEBUG, "__litm_pool_get: returning new envelope [%x]", e );
 		}
 
 	}
@@ -147,7 +147,7 @@ __litm_pool_destroy( litm_envelope *envlp ) {
 		DEBUG_LOG( LOG_ERR, "__litm_pool_destroy: NULL envelope");
 		return;
 	}
-	DEBUG_LOG(LOG_DEBUG, "__litm_pool_destroy: envelope [%x]", envlp );
+	//DEBUG_LOG(LOG_DEBUG, "__litm_pool_destroy: envelope [%x]", envlp );
 
 	free( envlp );
 
@@ -162,7 +162,7 @@ __litm_pool_destroy( litm_envelope *envlp ) {
  */
 	void
 __litm_pool_clean( litm_envelope *envlp ) {
-	DEBUG_LOG_PTR( envlp, LOG_ERR, "__litm_pool_clean: NULL");
+	//DEBUG_LOG_PTR( envlp, LOG_ERR, "__litm_pool_clean: NULL");
 
 	//DEBUG_LOG(LOG_DEBUG, "__litm_pool_clean: envelope [%x]", envlp );
 
@@ -176,4 +176,5 @@ __litm_pool_clean( litm_envelope *envlp ) {
 
 	envlp->delivery_count = 0;
 	envlp->released_count = 0;
+	envlp->shutdown_flag  = 0;
 }//
