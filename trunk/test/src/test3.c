@@ -198,7 +198,7 @@ void *threadFunction(void *params) {
 		}
 
 
-		//sleep(0.1);
+		usleep(10*1000);
 		//printf("Thread[%u] loop restart", thread_id);
 
 	}//while

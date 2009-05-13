@@ -35,8 +35,16 @@ void printMessage2(char *message, ...);
 void create_threads(void);
 void create_connections(void);
 void *threadFunction(void *params);
+void *leader_threadFunction(void *params);
 int my_random(void);
 void void_cleaner(void *msg);
+
+
+typedef struct _message {
+	int code;
+	char message[255];
+} message;
+
 
 
 int main(int argc, char **argv) {
@@ -74,7 +82,10 @@ void create_threads(void) {
 		tp.thread_id = i;
 		tp.conn = conns[i];
 
-		pthread_create( &threads[i], NULL, &threadFunction, (void *) &tp );
+		if (0==i)
+			pthread_create( &threads[i], NULL, &leader_threadFunction, (void *) &tp );
+		else
+			pthread_create( &threads[i], NULL, &threadFunction, (void *) &tp );
 
 		//printMessage2("* Thread started: %u \n", i);
 	}
@@ -89,7 +100,7 @@ void create_connections(void) {
 
 	for (i=0;i<LITM_CONNECTION_MAX;i++) {
 
-		code = litm_connect( &conns[i] );
+		code = litm_connect_ex( &conns[i], i );
 
 		printMessage(code, "* CREATED CONNECTION, code[%s] ...","id[%u] conn[%x]\n", i, conns[i] );
 	}
@@ -151,6 +162,39 @@ my_random(void) {
 // ===================================================================
 // ===================================================================
 
+void *leader_threadFunction(void *params) {
+
+	thread_params *tp = (thread_params *) params;
+
+	int thread_id, delivery=0, released=0;
+	litm_connection *conn = NULL;
+	litm_code code;
+	int subscribed = 0;
+
+	thread_id = tp->thread_id;
+	conn      = tp->conn;
+
+	// wait before sending shutdown message
+	sleep(5);
+
+	message msg;
+
+	msg.code = 1;
+	sprintf( msg.message, "shutdown from [%u]", thread_id );
+
+
+	while(1) {
+		code = litm_send_shutdown( conn, 1, &msg, &void_cleaner );
+		printMessage(code, "* LEADER Sent, code[%s]...","msg[%x] thread_id[%u] conn[%x]\n", &msg.message, thread_id, conn );
+		if (LITM_CODE_OK==code)
+			break;
+		sleep(1);
+	}
+
+	sleep(2);
+
+	printMessage2("LEADER Thread [%u] ENDING\n", thread_id);
+}
 
 
 void *threadFunction(void *params) {
@@ -177,15 +221,22 @@ void *threadFunction(void *params) {
 		sleep(1);
 	} while( LITM_CODE_OK != code );
 
-	char message[255];
-	sprintf( message, "message from [%u]", thread_id );
 
-	char *msg;
+	message _msg;
+
+	_msg.code = 2; // no shutdown
+	sprintf( _msg.message, "message from [%u]", thread_id );
+
+	int sd_flag;
+	message *msg;
 	litm_envelope *e;
 
+	// wait for everybody to subscribe... hopefully!
+	sleep(3);
+
 	while(1) {
-		code = litm_send( conn, 1, message, &void_cleaner );
-		printMessage(code, "* Sent, code[%s]...","msg[%x] thread_id[%u] conn[%x]\n", message, thread_id, conn );
+		code = litm_send( conn, 1, &_msg, &void_cleaner );
+		printMessage(code, "* Sent, code[%s]...","msg[%x] thread_id[%u] conn[%x]\n", &_msg, thread_id, conn );
 		if (LITM_CODE_OK==code)
 			break;
 		sleep(1);
@@ -195,13 +246,18 @@ void *threadFunction(void *params) {
 
 		code = litm_receive_wait(conn, &e);
 		if (LITM_CODE_OK==code) {
+
 			msg = e->msg;
+			sd_flag = msg->code;
+
 			delivery = e->delivery_count;
 			released = e->released_count;
-			printf("* thread[%u] received message[%s], msg[%x] envelope[%x] delivery[%u] released[%u] \n", thread_id, msg, msg, e, delivery, released);
+			printf("* thread[%u] rx msg[%s], sd[%i] msg[%x] envlp[%x] delv[%u] rel[%u] \n", thread_id, msg->message, sd_flag, msg, e, delivery, released);
 			litm_release(conn, e);
-		}
 
+			if (1==sd_flag)
+				break;
+		}
 
 		usleep(10*1000);
 		//printf("Thread[%u] loop restart", thread_id);
