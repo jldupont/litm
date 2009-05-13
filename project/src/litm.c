@@ -35,24 +35,29 @@ char *LITM_CODE_MESSAGES[] = {
 		"LITM_CODE_ERROR_SUBSCRIPTION_NOT_FOUND",
 		"LITM_CODE_ERROR_BUS_FULL",
 		"LITM_CODE_BUSY_CONNECTIONS",
-		"LITM_CODE_ERROR_CONNECTION_NOT_ACTIVE"
+		"LITM_CODE_ERROR_CONNECTION_NOT_ACTIVE",
+		"LITM_CODE_ERROR_END_OF_SUBSCRIBERS_LIST"
 };
 
 	litm_code
 litm_connect(litm_connection **conn) {
 
+	return litm_connect_ex( conn, 0);
+}//
+
+	litm_code
+litm_connect_ex(litm_connection **conn, int id) {
+
 	switch_init();
 
-	litm_code code = litm_connection_open(conn);
+	litm_code code = litm_connection_open_ex(conn, id);
 	if (LITM_CODE_OK!=code) {
 		*conn = NULL;
 		return code;
 	}
 
 	return LITM_CODE_OK;
-
-}//
-
+}
 
 	litm_code
 litm_disconnect(litm_connection *conn) {
