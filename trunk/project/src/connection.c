@@ -125,7 +125,7 @@ litm_connection_open_ex(litm_connection **conn, int id) {
 		return LITM_CODE_ERROR_MALLOC;
 	}
 
-	queue *q = queue_create();
+	queue *q = queue_create(id);
 	if (NULL==q) {
 		free(*conn);
 		pthread_mutex_unlock( &_connections_mutex );

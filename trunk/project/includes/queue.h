@@ -20,7 +20,7 @@
 
 	// Prototypes
 	// ==========
-	queue *queue_create(void);
+	queue *queue_create(int id);
 	void   queue_destroy(queue *queue);
 
 	int   queue_put_nb(queue *q, void *msg);
@@ -33,7 +33,6 @@
 	void *queue_get(queue *q);
 	void *queue_get_nb(queue *q);
 	void *queue_get_wait(queue *q);
-	void *queue_get_wait2(queue *q);
 
 	int   queue_peek(queue *q);
 

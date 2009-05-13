@@ -27,7 +27,7 @@ void *__queue_get_safe(queue *q);
 /**
  * Creates a queue
  */
-queue *queue_create(void) {
+queue *queue_create(int id) {
 
 	pthread_cond_t *cond = malloc( sizeof (pthread_cond_t) );
 	if (NULL == cond) {
@@ -45,6 +45,10 @@ queue *queue_create(void) {
 
 		q->head  = NULL;
 		q->tail  = NULL;
+		q->num   = 0;
+		q->id    = id;
+		q->total_in  = 0;
+		q->total_out = 0;
 
 		pthread_mutex_init( mutex, NULL );
 		q->mutex = mutex;
@@ -191,6 +195,8 @@ queue_put_head_safe( queue *q, void *msg ) {
 		//  signal the waiting thread(s)
 		pthread_cond_signal( q->cond );
 
+		q->num++;
+
 	} else {
 
 		code = 0;
@@ -248,11 +254,11 @@ int queue_put_nb(queue *q, void *node) {
 	if (EBUSY == pthread_mutex_trylock( q->mutex ))
 		return -1;
 
-		DEBUG_LOG(LOG_DEBUG,"queue_put_nb: q[%x] node[%x] BEGIN",q, node);
+		//DEBUG_LOG(LOG_DEBUG,"queue_put_nb: q[%x] node[%x] BEGIN",q, node);
 		int returnCode = queue_put_safe( q, node );
 
 	pthread_mutex_unlock( q->mutex );
-	DEBUG_LOG(LOG_DEBUG,"queue_put_nb: q[%x] node[%x] END",q, node);
+	//DEBUG_LOG(LOG_DEBUG,"queue_put_nb: q[%x] node[%x] END",q, node);
 
 	return returnCode;
 }//[/queue_put]
@@ -294,9 +300,13 @@ queue_put_safe( queue *q, void *node ) {
 		if (NULL==q->head)
 			q->head=new_node;
 
+		q->total_in++;
+		q->num++;
+		//DEBUG_LOG(LOG_DEBUG,"queue_put_safe: q[%x] id[%i] num[%i] in[%i] out[%i]", q, q->id, q->num, q->total_in, q->total_out);
+
 		// we were able to put an element:
 		//  signal the waiting thread(s)
-		int rc=pthread_cond_signal( q->cond );
+		int rc=pthread_cond_broadcast( q->cond );
 		if (rc) {
 			DEBUG_LOG(LOG_ERR,"queue_put_safe: ERROR during COND_SIGNAL");
 		}
@@ -395,31 +405,6 @@ void *queue_get_wait(queue *q) {
 	return node;
 }//
 
-/**
- * Waits for a node in the queue
- */
-void *queue_get_wait2(queue *q) {
-
-	if (NULL==q) {
-		DEBUG_LOG(LOG_DEBUG, "queue_get_wait: NULL queue ptr");
-		return NULL;
-	}
-
-	int result = pthread_mutex_trylock( q->mutex );
-	if (EBUSY==result) {
-		return NULL;
-	}
-
-	pthread_cond_wait( q->cond, q->mutex );
-
-		void *node=NULL;
-		node = __queue_get_safe(q);
-
-	pthread_mutex_unlock( q->mutex );
-
-	return node;
-}//
-
 void *__queue_get_safe(queue *q) {
 
 	queue_node *tmp = NULL;
@@ -444,6 +429,10 @@ void *__queue_get_safe(queue *q) {
 
 		//DEBUG_LOG(LOG_DEBUG,"queue_get: MESSAGE PRESENT, freeing queue_node[%x]", tmp);
 		free(tmp);
+
+		q->total_out++;
+		q->num--;
+		DEBUG_LOG(LOG_DEBUG,"__queue_get_safe: q[%x] id[%i] num[%i] in[%i] out[%i]", q, q->id, q->num, q->total_in, q->total_out);
 	}
 
 	return node;
