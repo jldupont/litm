@@ -117,8 +117,8 @@ if 'deb' in COMMAND_LINE_TARGETS:
 		print """scons: cloning ./packages/debian to /tmp/litm"""
 		safe_copytree('./packages/debian', '/tmp/litm', skip_dirs=['.svn',], dir_mode=0775, make_dirs=True)
 
-		print """scons: cloning 'Packages.gz'"""
-		shutil.copy("../dists/stable/main/binary-i386/Packages.gz", "/tmp/litm/Packages.gz")
+		#print """scons: cloning 'Packages.gz'"""
+		#shutil.copy("../dists/stable/main/binary-i386/Packages.gz", "/tmp/litm/Packages.gz")
 		
 		print """scons: adjusting permissions for `dkpg-deb` command-line"""
 		recursive_chmod("/tmp/litm", mode=0775)

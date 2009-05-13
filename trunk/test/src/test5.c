@@ -55,7 +55,7 @@ int main(int argc, char **argv) {
 	create_connections();
 	create_threads();
 
-	sleep(20);
+	sleep(25);
 
 	printf("*** ASKING FOR THREAD EXIT ***\n");
 	_exit_threads = 1;
@@ -100,7 +100,7 @@ void create_connections(void) {
 
 	for (i=0;i<LITM_CONNECTION_MAX;i++) {
 
-		code = litm_connect_ex( &conns[i], i );
+		code = litm_connect_ex( &conns[i], 100+i );
 
 		printMessage(code, "* CREATED CONNECTION, code[%s] ...","id[%u] conn[%x]\n", i, conns[i] );
 	}
@@ -175,7 +175,7 @@ void *leader_threadFunction(void *params) {
 	conn      = tp->conn;
 
 	// wait before sending shutdown message
-	sleep(5);
+	sleep(10);
 
 	message msg;
 
@@ -225,7 +225,7 @@ void *threadFunction(void *params) {
 	message _msg;
 
 	_msg.code = 2; // no shutdown
-	sprintf( _msg.message, "message from [%u]", thread_id );
+	sprintf( &_msg.message, "message from [%u]", thread_id );
 
 	int sd_flag;
 	message *msg;
@@ -239,12 +239,14 @@ void *threadFunction(void *params) {
 		printMessage(code, "* Sent, code[%s]...","msg[%x] thread_id[%u] conn[%x]\n", &_msg, thread_id, conn );
 		if (LITM_CODE_OK==code)
 			break;
-		sleep(1);
+		usleep(10*1000);
 	}
+
+	sleep(2);
 
 	while (0==_exit_threads) {
 
-		code = litm_receive_wait(conn, &e);
+		code = litm_receive_nb(conn, &e);
 		if (LITM_CODE_OK==code) {
 
 			msg = e->msg;
