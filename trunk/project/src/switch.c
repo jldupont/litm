@@ -188,6 +188,11 @@ __switch_thread_function(void *params) {
 		case LITM_CODE_OK:
 			break;
 
+		case LITM_CODE_ERROR_END_OF_SUBSCRIBERS_LIST:
+			__switch_finalize(e);
+			continue;
+
+
 		default:
 			err_msg = litm_translate_code(code);
 			int sender_id  = sender->id;
