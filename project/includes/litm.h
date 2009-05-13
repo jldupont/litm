@@ -206,13 +206,14 @@
 		 * @param pending Pending Status Flag
 		 * @param bus_id  Destination ``bus``
 		 * @param sender  The sender's connection pointer
-		 * @param current The current recipient's connection pointer
+		 * @param current The index of the current recipient in the subscriber's list
 		 */
 		typedef struct {
 			int				 pending;
 			litm_bus         bus_id;
 			litm_connection *sender;
-			litm_connection *current;
+			int 			current;
+			litm_connection *current_conn;
 		} __litm_routing;
 
 
@@ -240,7 +241,8 @@
 			LITM_CODE_ERROR_BUS_FULL,
 			LITM_CODE_BUSY_CONNECTIONS,
 			LITM_CODE_ERROR_CONNECTION_NOT_ACTIVE,
-			LITM_CODE_ERROR_END_OF_SUBSCRIBERS_LIST
+			LITM_CODE_ERROR_END_OF_SUBSCRIBERS_LIST,
+			LITM_CODE_ERROR_NO_SUBSCRIBERS
 
 		} litm_code;
 
