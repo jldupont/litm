@@ -274,7 +274,8 @@ __switch_thread_function(void *params) {
  */
 	void
 __switch_handle_pending(litm_envelope *e) {
-	DEBUG_LOG(LOG_INFO, "__switch_handle_pending: BEGIN");
+
+	//DEBUG_LOG(LOG_INFO, "__switch_handle_pending: BEGIN");
 
 	litm_connection *conn;
 	litm_code code;

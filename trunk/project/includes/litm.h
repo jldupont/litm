@@ -170,6 +170,7 @@
 		 */
 		typedef struct {
 			pthread_cond_t  *cond;
+			pthread_mutex_t *cond_mutex;
 			pthread_mutex_t *mutex;
 			struct _queue_node *head, *tail;
 			int num;
@@ -254,7 +255,8 @@
 			LITM_CODE_ERROR_NO_SUBSCRIBERS,
 			LITM_CODE_ERROR_CONNECTION_ERROR,
 			LITM_CODE_ERROR_SUBSCRIPTION_ERROR,
-			LITM_CODE_ERROR_SEND_ERROR
+			LITM_CODE_ERROR_SEND_ERROR,
+			LITM_CODE_ERROR_RECEIVE_WAIT
 
 		} litm_code;
 

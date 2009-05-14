@@ -42,7 +42,8 @@ char *LITM_CODE_MESSAGES[] = {
 		"LITM_CODE_ERROR_NO_SUBSCRIBERS",
 		"LITM_CODE_ERROR_CONNECTION_ERROR",
 		"LITM_CODE_ERROR_SUBSCRIPTION_ERROR",
-		"LITM_CODE_ERROR_SEND_ERROR"
+		"LITM_CODE_ERROR_SEND_ERROR",
+		"LITM_CODE_ERROR_RECEIVE_WAIT"
 };
 
 // PRIVATE
@@ -258,24 +259,30 @@ litm_receive_wait(litm_connection *conn, litm_envelope **envlp) {
 	}
 	int returnCode = LITM_CODE_OK; //optimistic
 
-	// let's see first if we need to bother with the
-	// conditional waiting on the queue.
-	// This also takes care of the probability of
-	//  missing a signal for whatever reason
-	*envlp = queue_get_nb( conn->input_queue );
-	if (NULL!=*envlp) {
-		returnCode=LITM_CODE_OK;
-		conn->received++;
-	}
+	while(1) {
 
-	// ok, we really need to wait then...
-	//DEBUG_LOG(LOG_DEBUG,"litm_receive_wait, START conn[%x]",conn);
-	*envlp = queue_get_wait( conn->input_queue );
-	if (NULL==*envlp) {
-		returnCode=LITM_CODE_NO_MESSAGE;
-	} else {
-		conn->received++;
-	}
+		// let's see first if we need to bother with the
+		// conditional waiting on the queue.
+		// This also takes care of the probability of
+		//  missing a signal for whatever reason
+		*envlp = queue_get_nb( conn->input_queue );
+		if (NULL!=*envlp) {
+
+			conn->received++;
+			break;
+		}
+
+		int rc= queue_wait( conn->input_queue );
+		if (rc) {
+			returnCode = LITM_CODE_ERROR_RECEIVE_WAIT;
+			break;
+		}
+		// try again... this time around,
+		// we have been signaled that a message is
+		// ready... we should get lucky!
+
+	}//while
+
 	//DEBUG_LOG(LOG_DEBUG,"litm_receive_wait, STOP conn[%x]",conn);
 	return returnCode;
 }//

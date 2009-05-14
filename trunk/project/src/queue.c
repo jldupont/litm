@@ -29,11 +29,14 @@ void *__queue_get_safe(queue *q);
  */
 queue *queue_create(int id) {
 
+	pthread_mutex_t *cond_mutex = malloc( sizeof(pthread_mutex_t) );
+	if (NULL==cond_mutex) {
+		return NULL;
+	}
+
 	pthread_cond_t *cond = malloc( sizeof (pthread_cond_t) );
 	if (NULL == cond) {
 		return NULL;
-	} else {
-		pthread_cond_init( cond, NULL );
 	}
 
 	// if this malloc fails,
@@ -51,8 +54,12 @@ queue *queue_create(int id) {
 		q->total_out = 0;
 
 		pthread_mutex_init( mutex, NULL );
-		q->mutex = mutex;
-		q->cond  = cond;
+		pthread_mutex_init( cond_mutex, NULL );
+		pthread_cond_init( cond, NULL );
+
+		q->mutex      = mutex;
+		q->cond_mutex = cond_mutex;
+		q->cond       = cond;
 
 	} else {
 
@@ -62,7 +69,10 @@ queue *queue_create(int id) {
 			free(q);
 
 		if (NULL!=mutex)
-			free(mutex);
+			pthread_mutex_destroy(mutex);
+
+		if (NULL!=cond_mutex)
+			pthread_mutex_destroy(cond_mutex);
 	}
 
 	return q;
@@ -89,6 +99,7 @@ void queue_destroy(queue *q) {
 		return;
 	}
 	pthread_mutex_t *mutex = q->mutex;
+	pthread_mutex_t *cond_mutex = q->cond_mutex;
 	pthread_cond_t  *cond  = q->cond;
 
 	pthread_mutex_lock( mutex );
@@ -97,6 +108,7 @@ void queue_destroy(queue *q) {
 	pthread_mutex_unlock( mutex );
 
 	pthread_mutex_destroy(mutex);
+	pthread_mutex_destroy(cond_mutex);
 	pthread_cond_destroy(cond);
 
 }//
@@ -376,42 +388,34 @@ void *queue_get_nb(queue *q) {
 
 /**
  * Waits for a node in the queue
+ *
+ * @return 0 SUCCESS
+ * @return 1 FAILURE
+ *
  */
-void *queue_get_wait(queue *q) {
+int queue_wait(queue *q) {
 
 	if (NULL==q) {
 		DEBUG_LOG(LOG_DEBUG, "queue_get_wait: NULL queue ptr");
-		return NULL;
+		return 1;
 	}
-	int rc;
-	void *node=NULL;
 
-	pthread_mutex_lock( q->mutex );
-
-		//first, try to get a node from the queue:
-		// no use waiting if one is already available!
-		node = __queue_get_safe(q);
-		if (NULL!=node) {
-			pthread_mutex_unlock( q->mutex );
-			return node;
-		}
+	pthread_mutex_lock( q->cond_mutex );
 
 		// it seems we need to wait...
 		//DEBUG_LOG(LOG_DEBUG,"queue_get_wait: waiting on q[%x][%i]",q,q->id);
-		rc = pthread_cond_wait( q->cond, q->mutex );
+		int rc = pthread_cond_wait( q->cond, q->cond_mutex );
 
-		int result2 = pthread_mutex_trylock( q->mutex );
+		//int result2 = pthread_mutex_trylock( q->mutex );
 		//DEBUG_LOG(LOG_DEBUG,"queue_get_wait: TRYLOCK q[%x][%i] result[%i] ",q,q->id,result2==EBUSY);
 
 		if (rc) {
 			DEBUG_LOG(LOG_ERR,"queue_get_wait: CONDITION WAIT ERROR");
-		} else {
-			node = __queue_get_safe(q);
 		}
 
-	pthread_mutex_unlock( q->mutex );
+	pthread_mutex_unlock( q->cond_mutex );
 
-	return node;
+	return rc;
 }//
 
 void *__queue_get_safe(queue *q) {
@@ -441,7 +445,20 @@ void *__queue_get_safe(queue *q) {
 
 		q->total_out++;
 		q->num--;
-		//DEBUG_LOG(LOG_DEBUG,"__queue_get_safe: q[%x] id[%i] num[%i] in[%i] out[%i]", q, q->id, q->num, q->total_in, q->total_out);
+
+		//{
+		int count=0, in=q->total_in, out=q->total_out;
+		tmp = q->head;
+		while(tmp) {
+			count++;
+			tmp = tmp->next;
+		}
+		DEBUG_LOG(LOG_DEBUG,"QQQ: q[%x] id[%3i] num[%3i] in[%4i] out[%4i] COUNT[%4i]", q, q->id, q->num, q->total_in, q->total_out, count);
+		if ((in-out) != count) {
+			DEBUG_LOG(LOG_ERR, "QQQ: >>> ERROR <<<");
+		}
+		//}
+
 	}
 
 	return node;
