@@ -34,6 +34,8 @@ Collaboration diagram for _litm_envelope:</div>
 <table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Data Fields</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__litm__envelope.html#6bd38f81b9c6a7e6d897cc2711383e7e">requeued</a></td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__litm__envelope.html#af8c92fcc7ed19c5c9b852c9d02ce076">shutdown_flag</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="struct__litm__envelope.html#34a68490d7f97acac5caa3ffc2aa6fb9">released_count</a></td></tr>
@@ -58,7 +60,7 @@ Collaboration diagram for _litm_envelope:</div>
 </dl>
 Contains the pointer to the message as well as a ``routing`` structure used to deliver the said message to all bus which have at least 1 subscriber.<p>
 The client (ie. receiver of the envelope) must not tamper with the message (ie. msg) as it is shared with other client(s). 
-<p>Definition at line <a class="el" href="litm_8h-source.html#l00268">268</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
+<p>Definition at line <a class="el" href="litm_8h-source.html#l00282">282</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
 <hr><h2>Field Documentation</h2>
 <a class="anchor" name="9e1e2e92283fc88e458ab22c80ed5a10"></a><!-- doxytag: member="_litm_envelope::cleaner" ref="9e1e2e92283fc88e458ab22c80ed5a10" args=")(void *msg)" -->
 <div class="memitem">
@@ -88,7 +90,7 @@ The client (ie. receiver of the envelope) must not tamper with the message (ie. 
 
 <p>
 
-<p>Definition at line <a class="el" href="litm_8h-source.html#l00272">272</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
+<p>Definition at line <a class="el" href="litm_8h-source.html#l00287">287</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
 
 </div>
 </div><p>
@@ -105,7 +107,7 @@ The client (ie. receiver of the envelope) must not tamper with the message (ie. 
 
 <p>
 
-<p>Definition at line <a class="el" href="litm_8h-source.html#l00275">275</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
+<p>Definition at line <a class="el" href="litm_8h-source.html#l00290">290</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
 
 </div>
 </div><p>
@@ -122,7 +124,24 @@ The client (ie. receiver of the envelope) must not tamper with the message (ie. 
 
 <p>
 
-<p>Definition at line <a class="el" href="litm_8h-source.html#l00271">271</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
+<p>Definition at line <a class="el" href="litm_8h-source.html#l00286">286</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="6bd38f81b9c6a7e6d897cc2711383e7e"></a><!-- doxytag: member="_litm_envelope::requeued" ref="6bd38f81b9c6a7e6d897cc2711383e7e" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="struct__litm__envelope.html#6bd38f81b9c6a7e6d897cc2711383e7e">_litm_envelope::requeued</a>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+<p>Definition at line <a class="el" href="litm_8h-source.html#l00284">284</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
 
 </div>
 </div><p>
@@ -139,7 +158,7 @@ The client (ie. receiver of the envelope) must not tamper with the message (ie. 
 
 <p>
 
-<p>Definition at line <a class="el" href="litm_8h-source.html#l00274">274</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
+<p>Definition at line <a class="el" href="litm_8h-source.html#l00289">289</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
 
 </div>
 </div><p>
@@ -156,14 +175,14 @@ The client (ie. receiver of the envelope) must not tamper with the message (ie. 
 
 <p>
 
-<p>Definition at line <a class="el" href="litm_8h-source.html#l00270">270</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
+<p>Definition at line <a class="el" href="litm_8h-source.html#l00285">285</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
 
 </div>
 </div><p>
 <hr>The documentation for this struct was generated from the following file:<ul>
 <li>project/includes/<a class="el" href="litm_8h-source.html">litm.h</a></ul>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Wed May 13 10:37:55 2009 for LITM by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu May 14 13:00:55 2009 for LITM by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

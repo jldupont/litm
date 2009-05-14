@@ -37,6 +37,7 @@
       <li><a href="#index_d"><span>d</span></a></li>
       <li><a href="#index_l"><span>l</span></a></li>
       <li><a href="#index_q"><span>q</span></a></li>
+      <li><a href="#index_r"><span>r</span></a></li>
       <li><a href="#index_s"><span>s</span></a></li>
     </ul>
   </div>
@@ -45,6 +46,8 @@
 &nbsp;
 <p>
 <h3><a class="anchor" name="index__">- _ -</a></h3><ul>
+<li>__litm_compute_timeout()
+: <a class="el" href="litm_8c.html#2da7b55584eb9bfdd2202a3b4ecb4c0d">litm.c</a>
 <li>__litm_connection_get_free_index()
 : <a class="el" href="connection_8c.html#720256527350db29d5e743a32d908151">connection.c</a>
 <li>__litm_connection_get_index()
@@ -55,8 +58,8 @@
 : <a class="el" href="pool_8c.html#ad0b7166470e29cb5024efeca7d035af">pool.c</a>
 , <a class="el" href="pool_8h.html#ad0b7166470e29cb5024efeca7d035af">pool.h</a>
 <li>__litm_pool_destroy()
-: <a class="el" href="pool_8c.html#2f844d6f6d2a471a5a93c3c49c28eef2">pool.c</a>
-, <a class="el" href="pool_8h.html#2f844d6f6d2a471a5a93c3c49c28eef2">pool.h</a>
+: <a class="el" href="pool_8h.html#2f844d6f6d2a471a5a93c3c49c28eef2">pool.h</a>
+, <a class="el" href="pool_8c.html#2f844d6f6d2a471a5a93c3c49c28eef2">pool.c</a>
 <li>__litm_pool_get()
 : <a class="el" href="pool_8c.html#5a3eeccda0cfcf633af7177fad20c783">pool.c</a>
 , <a class="el" href="pool_8h.html#5a3eeccda0cfcf633af7177fad20c783">pool.h</a>
@@ -69,12 +72,8 @@
 : <a class="el" href="switch_8c.html#149e07f06e61c0daee8f4cf38200dff2">switch.c</a>
 <li>__switch_find_match()
 : <a class="el" href="switch_8c.html#789e706afab00720920bef8347ac87af">switch.c</a>
-<li>__switch_find_next_non_match()
-: <a class="el" href="switch_8c.html#6ff5c1db987d3bf46b124d28967954a4">switch.c</a>
 <li>__switch_get_next_subscriber()
 : <a class="el" href="switch_8c.html#4d51cfe83ccbbb9248bbee852a1a3a65">switch.c</a>
-<li>__switch_handle_first_subscriber()
-: <a class="el" href="switch_8c.html#69410aeaf5f97afc41f6608cc00bd754">switch.c</a>
 <li>__switch_handle_pending()
 : <a class="el" href="switch_8c.html#195303a03d0b0c2a3f44951a38b2b0f6">switch.c</a>
 <li>__switch_index_to_connection()
@@ -105,8 +104,8 @@
 : <a class="el" href="connection_8c.html#200b813c910cd4a83c36aa907bd52dbe">connection.c</a>
 , <a class="el" href="connection_8h.html#200b813c910cd4a83c36aa907bd52dbe">connection.h</a>
 <li>_litm_connections_lock()
-: <a class="el" href="connection_8h.html#9e582b29253857b58f87ba89f8a6526f">connection.h</a>
-, <a class="el" href="connection_8c.html#9e582b29253857b58f87ba89f8a6526f">connection.c</a>
+: <a class="el" href="connection_8c.html#9e582b29253857b58f87ba89f8a6526f">connection.c</a>
+, <a class="el" href="connection_8h.html#9e582b29253857b58f87ba89f8a6526f">connection.h</a>
 <li>_litm_connections_trylock()
 : <a class="el" href="connection_8h.html#6b2986abb5453019ea29678d1d75383f">connection.h</a>
 , <a class="el" href="connection_8c.html#6b2986abb5453019ea29678d1d75383f">connection.c</a>
@@ -126,12 +125,15 @@
 <li>litm_connect_ex()
 : <a class="el" href="litm_8h.html#7866d99d291588a5279844f2883fd3fa">litm.h</a>
 , <a class="el" href="litm_8c.html#7866d99d291588a5279844f2883fd3fa">litm.c</a>
+<li>litm_connect_ex_wait()
+: <a class="el" href="litm_8c.html#eff57ac5ec37914599624703229ba8ca">litm.c</a>
+, <a class="el" href="litm_8h.html#eff57ac5ec37914599624703229ba8ca">litm.h</a>
 <li>litm_connection_close()
-: <a class="el" href="connection_8c.html#8e4dadbbe89d174acfa60f3f44b66c00">connection.c</a>
-, <a class="el" href="connection_8h.html#8e4dadbbe89d174acfa60f3f44b66c00">connection.h</a>
+: <a class="el" href="connection_8h.html#8e4dadbbe89d174acfa60f3f44b66c00">connection.h</a>
+, <a class="el" href="connection_8c.html#8e4dadbbe89d174acfa60f3f44b66c00">connection.c</a>
 <li>litm_connection_get_id()
-: <a class="el" href="litm_8h.html#b88c123e1d85482158c20a43e1f302ab">litm.h</a>
-, <a class="el" href="connection_8c.html#b88c123e1d85482158c20a43e1f302ab">connection.c</a>
+: <a class="el" href="connection_8c.html#b88c123e1d85482158c20a43e1f302ab">connection.c</a>
+, <a class="el" href="litm_8h.html#b88c123e1d85482158c20a43e1f302ab">litm.h</a>
 <li>litm_connection_open()
 : <a class="el" href="connection_8c.html#1c62b68cf084828184eed29d17c6498c">connection.c</a>
 , <a class="el" href="connection_8h.html#1c62b68cf084828184eed29d17c6498c">connection.h</a>
@@ -139,11 +141,11 @@
 : <a class="el" href="connection_8c.html#cdc49bd9a413a0db444340b5ffa35543">connection.c</a>
 , <a class="el" href="connection_8h.html#cdc49bd9a413a0db444340b5ffa35543">connection.h</a>
 <li>litm_disconnect()
-: <a class="el" href="litm_8c.html#11d169394b16263d121989e5ac965606">litm.c</a>
-, <a class="el" href="litm_8h.html#11d169394b16263d121989e5ac965606">litm.h</a>
+: <a class="el" href="litm_8h.html#11d169394b16263d121989e5ac965606">litm.h</a>
+, <a class="el" href="litm_8c.html#11d169394b16263d121989e5ac965606">litm.c</a>
 <li>litm_get_message()
-: <a class="el" href="litm_8h.html#aeb4655eae7753e131a710ff5a64b9f7">litm.h</a>
-, <a class="el" href="litm_8c.html#aeb4655eae7753e131a710ff5a64b9f7">litm.c</a>
+: <a class="el" href="litm_8c.html#aeb4655eae7753e131a710ff5a64b9f7">litm.c</a>
+, <a class="el" href="litm_8h.html#aeb4655eae7753e131a710ff5a64b9f7">litm.h</a>
 <li>litm_receive_nb()
 : <a class="el" href="litm_8c.html#2b6bffa08706c97ea5d9f6d670f8b359">litm.c</a>
 , <a class="el" href="litm_8h.html#2b6bffa08706c97ea5d9f6d670f8b359">litm.h</a>
@@ -154,28 +156,31 @@
 : <a class="el" href="litm_8c.html#21def412c9b064fc929e0822f28d2a2a">litm.c</a>
 , <a class="el" href="litm_8h.html#21def412c9b064fc929e0822f28d2a2a">litm.h</a>
 <li>litm_send()
-: <a class="el" href="litm_8h.html#bed13398c1bc31a6c81c3e50997e2f2c">litm.h</a>
-, <a class="el" href="litm_8c.html#bed13398c1bc31a6c81c3e50997e2f2c">litm.c</a>
+: <a class="el" href="litm_8c.html#bed13398c1bc31a6c81c3e50997e2f2c">litm.c</a>
+, <a class="el" href="litm_8h.html#bed13398c1bc31a6c81c3e50997e2f2c">litm.h</a>
 <li>litm_send_shutdown()
 : <a class="el" href="litm_8c.html#9e932bb687ba4087d90eca7aa6583f0a">litm.c</a>
 , <a class="el" href="litm_8h.html#9e932bb687ba4087d90eca7aa6583f0a">litm.h</a>
-<li>litm_shutdown()
-: <a class="el" href="litm_8h.html#4a5e0afddfcac684951623218de962b9">litm.h</a>
-, <a class="el" href="litm_8c.html#4a5e0afddfcac684951623218de962b9">litm.c</a>
+<li>litm_send_wait()
+: <a class="el" href="litm_8c.html#f3f6e0026de45f6a16f234a28a0d003b">litm.c</a>
+, <a class="el" href="litm_8h.html#f3f6e0026de45f6a16f234a28a0d003b">litm.h</a>
 <li>litm_subscribe()
-: <a class="el" href="litm_8c.html#1c8191e4aca778b346954933c7bdf3ff">litm.c</a>
-, <a class="el" href="litm_8h.html#1c8191e4aca778b346954933c7bdf3ff">litm.h</a>
+: <a class="el" href="litm_8h.html#1c8191e4aca778b346954933c7bdf3ff">litm.h</a>
+, <a class="el" href="litm_8c.html#1c8191e4aca778b346954933c7bdf3ff">litm.c</a>
+<li>litm_subscribe_wait()
+: <a class="el" href="litm_8c.html#6d62a2a46ae6be134168a00b386afe0d">litm.c</a>
+, <a class="el" href="litm_8h.html#6d62a2a46ae6be134168a00b386afe0d">litm.h</a>
 <li>litm_translate_code()
-: <a class="el" href="litm_8h.html#76f700b9bb8531fd8baf8931e67c4604">litm.h</a>
-, <a class="el" href="litm_8c.html#76f700b9bb8531fd8baf8931e67c4604">litm.c</a>
+: <a class="el" href="litm_8c.html#76f700b9bb8531fd8baf8931e67c4604">litm.c</a>
+, <a class="el" href="litm_8h.html#76f700b9bb8531fd8baf8931e67c4604">litm.h</a>
 <li>litm_unsubscribe()
-: <a class="el" href="litm_8h.html#50225024a2292b63a5eb95cca00f2545">litm.h</a>
-, <a class="el" href="litm_8c.html#50225024a2292b63a5eb95cca00f2545">litm.c</a>
+: <a class="el" href="litm_8c.html#50225024a2292b63a5eb95cca00f2545">litm.c</a>
+, <a class="el" href="litm_8h.html#50225024a2292b63a5eb95cca00f2545">litm.h</a>
 </ul>
 <h3><a class="anchor" name="index_q">- q -</a></h3><ul>
 <li>queue_create()
-: <a class="el" href="queue_8c.html#404f283e7764be86026fda0714b6b7b6">queue.c</a>
-, <a class="el" href="queue_8h.html#404f283e7764be86026fda0714b6b7b6">queue.h</a>
+: <a class="el" href="queue_8c.html#fb5475fae1028dd41cf622ef2dc84036">queue.c</a>
+, <a class="el" href="queue_8h.html#fb5475fae1028dd41cf622ef2dc84036">queue.h</a>
 <li>queue_destroy()
 : <a class="el" href="queue_8h.html#740d8fcab43ff4358053fd70e10238dc">queue.h</a>
 , <a class="el" href="queue_8c.html#21d75708e816b8fc3299ac8e6f7109eb">queue.c</a>
@@ -185,9 +190,6 @@
 <li>queue_get_nb()
 : <a class="el" href="queue_8h.html#819eed56d043a96499116f087d928057">queue.h</a>
 , <a class="el" href="queue_8c.html#819eed56d043a96499116f087d928057">queue.c</a>
-<li>queue_get_wait()
-: <a class="el" href="queue_8c.html#95900f4ae8118e68b0343a1be6620ff8">queue.c</a>
-, <a class="el" href="queue_8h.html#95900f4ae8118e68b0343a1be6620ff8">queue.h</a>
 <li>queue_peek()
 : <a class="el" href="queue_8c.html#df77941d73a75b551595b7b74b00f62d">queue.c</a>
 , <a class="el" href="queue_8h.html#df77941d73a75b551595b7b74b00f62d">queue.h</a>
@@ -198,8 +200,8 @@
 : <a class="el" href="queue_8c.html#8ef73c0a37ef99ebc486eaa88bd19cef">queue.c</a>
 , <a class="el" href="queue_8h.html#5a5ec0893ace49a628bf1902c2f3999d">queue.h</a>
 <li>queue_put_head_nb()
-: <a class="el" href="queue_8c.html#451122872903237ffff449a74b52608d">queue.c</a>
-, <a class="el" href="queue_8h.html#451122872903237ffff449a74b52608d">queue.h</a>
+: <a class="el" href="queue_8h.html#451122872903237ffff449a74b52608d">queue.h</a>
+, <a class="el" href="queue_8c.html#451122872903237ffff449a74b52608d">queue.c</a>
 <li>queue_put_head_safe()
 : <a class="el" href="queue_8c.html#7cbe5e82f09ea3421f17797ce05c8479">queue.c</a>
 , <a class="el" href="queue_8h.html#145cb346a7b7660c1fdf011298d6ff5d">queue.h</a>
@@ -207,8 +209,22 @@
 : <a class="el" href="queue_8c.html#ad63e2d2e97a079465ca5651b5b7c36e">queue.c</a>
 , <a class="el" href="queue_8h.html#8cd65d2ab7ec27b19a655e9835de832c">queue.h</a>
 <li>queue_put_safe()
-: <a class="el" href="queue_8h.html#24e3c9aaef201f1f66bcd8591b1e4c15">queue.h</a>
-, <a class="el" href="queue_8c.html#24e3c9aaef201f1f66bcd8591b1e4c15">queue.c</a>
+: <a class="el" href="queue_8c.html#24e3c9aaef201f1f66bcd8591b1e4c15">queue.c</a>
+, <a class="el" href="queue_8h.html#24e3c9aaef201f1f66bcd8591b1e4c15">queue.h</a>
+<li>queue_signal()
+: <a class="el" href="queue_8c.html#a1c32f105f2a17f2255cbe6dfaf66f78">queue.c</a>
+, <a class="el" href="queue_8h.html#a1c32f105f2a17f2255cbe6dfaf66f78">queue.h</a>
+<li>queue_wait()
+: <a class="el" href="queue_8h.html#506b0fed202c45ae1d42b1b9d5cd6b30">queue.h</a>
+, <a class="el" href="queue_8c.html#506b0fed202c45ae1d42b1b9d5cd6b30">queue.c</a>
+</ul>
+<h3><a class="anchor" name="index_r">- r -</a></h3><ul>
+<li>random_sleep()
+: <a class="el" href="utils_8c.html#5d9e6e6aa5ed16d2aab765ba46de50fc">utils.c</a>
+, <a class="el" href="utils_8h.html#5d9e6e6aa5ed16d2aab765ba46de50fc">utils.h</a>
+<li>random_sleep_period()
+: <a class="el" href="utils_8c.html#e026bd95646ab598d1f1d98c4e874194">utils.c</a>
+, <a class="el" href="utils_8h.html#e026bd95646ab598d1f1d98c4e874194">utils.h</a>
 </ul>
 <h3><a class="anchor" name="index_s">- s -</a></h3><ul>
 <li>switch_add_subscriber()
@@ -231,12 +247,11 @@
 , <a class="el" href="switch_8h.html#cc4861fecbb5d0b20174fc1513539554">switch.h</a>
 <li>switch_shutdown()
 : <a class="el" href="switch_8h.html#fae3098df985d2dfb04f4fa646b0e771">switch.h</a>
-, <a class="el" href="switch_8c.html#fae3098df985d2dfb04f4fa646b0e771">switch.c</a>
 <li>switch_thread_function()
 : <a class="el" href="switch_8h.html#e3d353fd292b45761954aa21d793017d">switch.h</a>
 </ul>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Wed May 13 10:37:56 2009 for LITM by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu May 14 13:00:55 2009 for LITM by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

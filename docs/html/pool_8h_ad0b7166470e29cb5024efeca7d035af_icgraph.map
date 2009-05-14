@@ -1,6 +1,7 @@
-<area shape="rect" href="$pool_8h.html#5a3eeccda0cfcf633af7177fad20c783" title="__litm_pool_get" alt="" coords="179,31,291,57">
-<area shape="rect" href="$switch_8c.html#9b8ef3fb85a6655628b2e534bc7e4245" title="__switch_safe_send" alt="" coords="340,31,479,57">
-<area shape="rect" href="$switch_8h.html#7ff2d602f713f81e854c172e842afcad" title="switch_send" alt="" coords="560,5,653,32">
-<area shape="rect" href="$switch_8h.html#cc4861fecbb5d0b20174fc1513539554" title="switch_send_shutdown" alt="" coords="529,56,684,83">
+<area shape="rect" href="$pool_8h.html#5a3eeccda0cfcf633af7177fad20c783" title="__litm_pool_get" alt="" coords="179,81,291,108">
+<area shape="rect" href="$switch_8c.html#9b8ef3fb85a6655628b2e534bc7e4245" title="__switch_safe_send" alt="" coords="340,81,479,108">
+<area shape="rect" href="$switch_8h.html#7ff2d602f713f81e854c172e842afcad" title="switch_send" alt="" coords="560,56,653,83">
+<area shape="rect" href="$switch_8h.html#cc4861fecbb5d0b20174fc1513539554" title="switch_send_shutdown" alt="" coords="529,107,684,133">
 <area shape="rect" href="$litm_8h.html#bed13398c1bc31a6c81c3e50997e2f2c" title="litm_send" alt="" coords="765,5,843,32">
-<area shape="rect" href="$litm_8h.html#9e932bb687ba4087d90eca7aa6583f0a" title="litm_send_shutdown" alt="" coords="735,56,873,83">
+<area shape="rect" href="$litm_8h.html#f3f6e0026de45f6a16f234a28a0d003b" title="litm_send_wait" alt="" coords="751,56,857,83">
+<area shape="rect" href="$litm_8h.html#9e932bb687ba4087d90eca7aa6583f0a" title="litm_send_shutdown" alt="" coords="735,107,873,133">

@@ -36,11 +36,21 @@ Collaboration diagram for queue:</div>
 <tr><td colspan="2"><br><h2>Data Fields</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">pthread_cond_t *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structqueue.html#b77ef899a0aea3e84357d38f9096ce0a">cond</a></td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">pthread_mutex_t *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structqueue.html#553fed30964fce889acc9169dae29da2">cond_mutex</a></td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">pthread_mutex_t *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structqueue.html#493c1d1593f4f6e965797c8139e668b2">mutex</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">struct <a class="el" href="struct__queue__node.html">_queue_node</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structqueue.html#81dcef2865e1f424a58e993d02ad9faf">head</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">struct <a class="el" href="struct__queue__node.html">_queue_node</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structqueue.html#971bce1db86a08e9bdf934c6805861b5">tail</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structqueue.html#c444a43bcf86f12052bfb9cb1d6d5f9a">num</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structqueue.html#001f6e1ba37b1c3cabd934457ff2eff9">id</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structqueue.html#1b696c999f2cb159fd04fae3436fa464">total_in</a></td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structqueue.html#e46b7db9efc7b5bb27185af926b19e79">total_out</a></td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
@@ -54,7 +64,7 @@ Queue - thread-safe<p>
   </table>
 </dl>
 
-<p>Definition at line <a class="el" href="litm_8h-source.html#l00169">169</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
+<p>Definition at line <a class="el" href="litm_8h-source.html#l00171">171</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
 <hr><h2>Field Documentation</h2>
 <a class="anchor" name="b77ef899a0aea3e84357d38f9096ce0a"></a><!-- doxytag: member="queue::cond" ref="b77ef899a0aea3e84357d38f9096ce0a" args="" -->
 <div class="memitem">
@@ -69,7 +79,24 @@ Queue - thread-safe<p>
 
 <p>
 
-<p>Definition at line <a class="el" href="litm_8h-source.html#l00170">170</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
+<p>Definition at line <a class="el" href="litm_8h-source.html#l00172">172</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="553fed30964fce889acc9169dae29da2"></a><!-- doxytag: member="queue::cond_mutex" ref="553fed30964fce889acc9169dae29da2" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">pthread_mutex_t* <a class="el" href="structqueue.html#553fed30964fce889acc9169dae29da2">queue::cond_mutex</a>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+<p>Definition at line <a class="el" href="litm_8h-source.html#l00173">173</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
 
 </div>
 </div><p>
@@ -86,7 +113,24 @@ Queue - thread-safe<p>
 
 <p>
 
-<p>Definition at line <a class="el" href="litm_8h-source.html#l00172">172</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
+<p>Definition at line <a class="el" href="litm_8h-source.html#l00175">175</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="001f6e1ba37b1c3cabd934457ff2eff9"></a><!-- doxytag: member="queue::id" ref="001f6e1ba37b1c3cabd934457ff2eff9" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="structqueue.html#001f6e1ba37b1c3cabd934457ff2eff9">queue::id</a>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+<p>Definition at line <a class="el" href="litm_8h-source.html#l00177">177</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
 
 </div>
 </div><p>
@@ -103,7 +147,24 @@ Queue - thread-safe<p>
 
 <p>
 
-<p>Definition at line <a class="el" href="litm_8h-source.html#l00171">171</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
+<p>Definition at line <a class="el" href="litm_8h-source.html#l00174">174</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="c444a43bcf86f12052bfb9cb1d6d5f9a"></a><!-- doxytag: member="queue::num" ref="c444a43bcf86f12052bfb9cb1d6d5f9a" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="structqueue.html#c444a43bcf86f12052bfb9cb1d6d5f9a">queue::num</a>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+<p>Definition at line <a class="el" href="litm_8h-source.html#l00176">176</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
 
 </div>
 </div><p>
@@ -120,14 +181,48 @@ Queue - thread-safe<p>
 
 <p>
 
-<p>Definition at line <a class="el" href="litm_8h-source.html#l00172">172</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
+<p>Definition at line <a class="el" href="litm_8h-source.html#l00175">175</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="1b696c999f2cb159fd04fae3436fa464"></a><!-- doxytag: member="queue::total_in" ref="1b696c999f2cb159fd04fae3436fa464" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="structqueue.html#1b696c999f2cb159fd04fae3436fa464">queue::total_in</a>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+<p>Definition at line <a class="el" href="litm_8h-source.html#l00178">178</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="e46b7db9efc7b5bb27185af926b19e79"></a><!-- doxytag: member="queue::total_out" ref="e46b7db9efc7b5bb27185af926b19e79" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="structqueue.html#e46b7db9efc7b5bb27185af926b19e79">queue::total_out</a>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+<p>Definition at line <a class="el" href="litm_8h-source.html#l00179">179</a> of file <a class="el" href="litm_8h-source.html">litm.h</a>.</p>
 
 </div>
 </div><p>
 <hr>The documentation for this struct was generated from the following file:<ul>
 <li>project/includes/<a class="el" href="litm_8h-source.html">litm.h</a></ul>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Wed May 13 10:37:55 2009 for LITM by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu May 14 13:00:55 2009 for LITM by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>
