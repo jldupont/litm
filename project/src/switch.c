@@ -39,9 +39,6 @@ int _switchThread_status=0; //not created
 pthread_mutex_t _subscribers_mutex = PTHREAD_MUTEX_INITIALIZER;
 litm_connection *_subscribers[LITM_BUSSES_MAX][LITM_CONNECTION_MAX+1]; // index 0 is not used
 
-// "Signal"
-volatile int __switch_signal_shutdown = 0; // FALSE
-
 
 // PRIVATE
 // -------
@@ -76,7 +73,7 @@ switch_init(void) {
 		_switch_queue = queue_create(-1);
 		__switch_init_tables();
 
-		DEBUG_LOG(LOG_INFO, "switch_init: creating switch thread & queue, q[%x] ", _switch_queue);
+		DEBUG_LOG(LOG_INFO, "switch_init: queue[%x] ", _switch_queue);
 
 		pthread_create(&_switchThread, NULL, &__switch_thread_function, NULL);
 		_switchThread_status = 1; //created
@@ -91,14 +88,6 @@ __switch_init_tables(void) {
 		for (c=0;c<=LITM_CONNECTION_MAX;c++)
 			_subscribers[b][c] = NULL;
 }
-
-	void
-switch_shutdown(void) {
-
-	__switch_signal_shutdown = 1;
-
-	pthread_join( _switchThread, (void **)NULL );
-}//
 
 
 /**
@@ -119,12 +108,12 @@ __switch_thread_function(void *params) {
 	int current;
 	static char *thisMsg = "__switch_thread_function: conn[%x] code[%s]";
 
-	DEBUG_LOG(LOG_INFO, "__switch_thread_function: starting");
+	DEBUG_LOG(LOG_INFO, "__switch_thread_function: STARTING");
 
 	while(1) {
 
 		//shutdown signaled?
-		if ((1==__switch_signal_shutdown) || (LITM_SHUTDOWN_FLAG_TRUE==shutdown_flag)) {
+		if (LITM_SHUTDOWN_FLAG_TRUE==shutdown_flag) {
 			break;
 		}
 
@@ -199,6 +188,11 @@ __switch_thread_function(void *params) {
 
 		case LITM_CODE_ERROR_END_OF_SUBSCRIBERS_LIST:
 			__switch_finalize(e);
+			// last subscriber... and shutdown?
+			if (LITM_SHUTDOWN_FLAG_TRUE==sd_flag) {
+				DEBUG_LOG(LOG_DEBUG, "__switch_thread_function: SHUTDOWN");
+				shutdown_flag = LITM_SHUTDOWN_FLAG_TRUE;
+			}
 			continue;
 
 
@@ -208,12 +202,6 @@ __switch_thread_function(void *params) {
 
 			DEBUG_LOG(LOG_DEBUG, "__switch_thread_function: code[%s] sender[%x][%i] current[%x][%i] sd[%i] finalize", err_msg, sender, sender_id, current_conn, current, sd_flag);
 			__switch_finalize(e);
-
-			// last subscriber... and shutdown?
-			if (LITM_SHUTDOWN_FLAG_TRUE==sd_flag) {
-				DEBUG_LOG(LOG_DEBUG, "__switch_thread_function: RECEIVED SHUTDOWN FLAG !!!!!!!!!!!!");
-				shutdown_flag = LITM_SHUTDOWN_FLAG_TRUE;
-			}
 
 			continue; // <=======================================
 		}
@@ -354,6 +342,10 @@ switch_release(litm_connection *conn, litm_envelope *envlp) {
 		__switch_finalize( envlp );
 		return LITM_CODE_ERROR_MALLOC;
 	}
+
+	// if this was the last 'shutdown' message to be released
+	//  ... or we got stuck somehow
+	queue_signal( _switch_queue );
 
 	return LITM_CODE_OK;
 }//

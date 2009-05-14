@@ -35,6 +35,7 @@
 	int queue_wait(queue *q);
 
 	int   queue_peek(queue *q);
+	void queue_signal(queue *q);
 
 	int queue_put_safe( queue *q, void *node );
 

@@ -281,6 +281,13 @@ int queue_put_nb(queue *q, void *node) {
 }//[/queue_put]
 
 
+void queue_signal(queue *q) {
+	int rc = pthread_cond_signal( q->cond );
+	if (rc)
+		DEBUG_LOG(LOG_DEBUG,"queue_signal: SIGNAL ERROR");
+}
+
+
 /**
  * Queue_put_safe
  *

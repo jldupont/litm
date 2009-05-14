@@ -485,14 +485,6 @@
 		litm_code litm_release(litm_connection *conn, litm_envelope *envlp);
 
 
-		/**
-		 * Shutdown
-		 *
-		 * This function attempts to shutdown all the connection
-		 * threads in a graceful manner.  This function is blocking.
-		 */
-		void litm_shutdown(void);
-
 
 		/**
 		 * Returns a copy of the pointer to the message.
