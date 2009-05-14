@@ -32,7 +32,7 @@
 
 	void *queue_get(queue *q);
 	void *queue_get_nb(queue *q);
-	void *queue_get_wait(queue *q);
+	int queue_wait(queue *q);
 
 	int   queue_peek(queue *q);
 
