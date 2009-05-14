@@ -1,11 +1,11 @@
 /*
- * test3.c
+ * test6.c
  *
  *  Created on: 2009-04-27
  *      Author: Jean-Lou Dupont
  *
  *
- *  Subscription / Unsubscription Test
+ *  Test for litm_connect_ex_wait, and litm_subscribe_wait
  *
  */
 
@@ -35,8 +35,16 @@ void printMessage2(char *message, ...);
 void create_threads(void);
 void create_connections(void);
 void *threadFunction(void *params);
+void *leader_threadFunction(void *params);
 int my_random(void);
 void void_cleaner(void *msg);
+
+
+typedef struct _message {
+	int code;
+	char message[255];
+} message;
+
 
 
 int main(int argc, char **argv) {
@@ -47,16 +55,12 @@ int main(int argc, char **argv) {
 	create_connections();
 	create_threads();
 
-	sleep(20);
+	printf("*** WAITING FOR THREAD EXIT ***\n");
 
-	printf("*** ASKING FOR THREAD EXIT ***\n");
-	_exit_threads = 1;
-
-	sleep(15);
-
-	//printf("*** ASKING FOR LITM SHUTDOWN ***\n");
-	//litm_shutdown();
-	//sleep(2);
+	int i;
+	for (i=0;i<LITM_CONNECTION_MAX;i++) {
+		pthread_join( threads[i], NULL );
+	}
 
 	printf("#main: END\n");
 	return 0;
@@ -74,7 +78,10 @@ void create_threads(void) {
 		tp.thread_id = i;
 		tp.conn = conns[i];
 
-		pthread_create( &threads[i], NULL, &threadFunction, (void *) &tp );
+		if (0==i)
+			pthread_create( &threads[i], NULL, &leader_threadFunction, (void *) &tp );
+		else
+			pthread_create( &threads[i], NULL, &threadFunction, (void *) &tp );
 
 		//printMessage2("* Thread started: %u \n", i);
 	}
@@ -89,7 +96,7 @@ void create_connections(void) {
 
 	for (i=0;i<LITM_CONNECTION_MAX;i++) {
 
-		code = litm_connect( &conns[i] );
+		code = litm_connect_ex_wait( &conns[i], 100+i, 0 );
 
 		printMessage(code, "* CREATED CONNECTION, code[%s] ...","id[%u] conn[%x]\n", i, conns[i] );
 	}
@@ -151,6 +158,39 @@ my_random(void) {
 // ===================================================================
 // ===================================================================
 
+void *leader_threadFunction(void *params) {
+
+	thread_params *tp = (thread_params *) params;
+
+	int thread_id, delivery=0, released=0;
+	litm_connection *conn = NULL;
+	litm_code code;
+	int subscribed = 0;
+
+	thread_id = tp->thread_id;
+	conn      = tp->conn;
+
+	// wait before sending shutdown message
+	sleep(10);
+
+	message msg;
+
+	msg.code = 1;
+	sprintf( msg.message, "shutdown from [%u]", thread_id );
+
+
+	while(1) {
+		code = litm_send_shutdown( conn, 1, &msg, &void_cleaner );
+		printMessage(code, "* LEADER Sent, code[%s]...","msg[%x] thread_id[%u] conn[%x]\n", &msg.message, thread_id, conn );
+		if (LITM_CODE_OK==code)
+			break;
+		sleep(1);
+	}
+
+	sleep(2);
+
+	printMessage2("LEADER Thread [%u] ENDING\n", thread_id);
+}
 
 
 void *threadFunction(void *params) {
@@ -167,51 +207,70 @@ void *threadFunction(void *params) {
 
 	//printMessage2("Thread [%u] started, conn[%x]\n", thread_id, conn);
 
-	code = litm_subscribe(conn, 1);
+	code = litm_subscribe_wait(conn, 1, 0);
 	printMessage(code, "* Subscribed, code[%s]...","thread_id[%u]\n", thread_id );
-	if (LITM_CODE_OK==code)
+
+	if (LITM_CODE_OK==code) {
 		subscribed = 1;
+	}
 
-	char message[255];
-	sprintf( message, "message from [%u]", thread_id );
+	sleep(2);
 
-	char *msg;
+	message _msg;
+
+	_msg.code = 2; // no shutdown
+	sprintf( &_msg.message, "message from [%u]", thread_id );
+
+	int sd_flag;
+	message *msg;
 	litm_envelope *e;
 
-	while(1) {
-		code = litm_send( conn, 1, message, &void_cleaner );
-		printMessage(code, "* Sent, code[%s]...","msg[%x] thread_id[%u] conn[%x]\n", message, thread_id, conn );
-		if (LITM_CODE_OK==code)
-			break;
-		sleep(1);
-	}
+	int my_received=0, my_released=0;
+
+	code = litm_send_wait( conn, 1, &_msg, &void_cleaner, 0 );
+	printMessage(code, "* Sent, code[%s]...","msg[%x] thread_id[%3u] conn[%x]\n", &_msg, thread_id, conn );
 
 	while (0==_exit_threads) {
 
-		code = litm_receive_nb(conn, &e);
+		code = litm_receive_wait(conn, &e);
 		if (LITM_CODE_OK==code) {
+			my_received++;
 			msg = e->msg;
-			delivery = e->delivery_count;
-			released = e->released_count;
-			printf("* thread[%u] received message[%s], msg[%x] envelope[%x] delivery[%u] released[%u] \n", thread_id, msg, msg, e, delivery, released);
+			sd_flag = msg->code;
+
+			//delivery = e->delivery_count;
+			//released = e->released_count;
+			//printf("* thread[%u] rx msg[%s], sd[%i] msg[%x] envlp[%x] delv[%u] rel[%u] \n", thread_id, msg->message, sd_flag, msg, e, delivery, released);
+
+			if (1==sd_flag) {
+				//printf("!!! Thread [%u] conn[%x][%i] queue num[%i]\n", thread_id, conn, conn->id, conn->input_queue->num);
+			}
+
+			//releasing is blocking
 			litm_release(conn, e);
+			my_released++;
+
+			if (1==sd_flag)
+				break;
 		}
 
-
-		usleep(10*1000);
+		//usleep(1*1000);
 		//printf("Thread[%u] loop restart", thread_id);
 
 	}//while
 
 	if (1==subscribed) {
 		code = litm_unsubscribe(conn, 1);
-		printMessage(code, "* Unsubscribed, code[%s]...","thread_id[%u]\n", thread_id );
+		//printMessage(code, "* Unsubscribed, code[%s]...","thread_id[%u]  RECEIVED[%i] \n", thread_id, received );
 	} else {
 		printf("Thread [%u] wasn't subscribed\n", thread_id);
 	}
+	queue *q = (conn->input_queue);
+	int qnum  = q->num;
+	printf("Thread [%3u] conn[%x][%3i] sent[%3i] received[%3i] my_received[%3i] my_released[%3i] qnum[%3i]\n", thread_id, conn, conn->id, conn->sent, conn->received,
+			my_received, my_released, qnum);
 
-
-	printMessage2("Thread [%u] ENDING\n", thread_id);
+	//printMessage2("Thread [%u] ENDING\n", thread_id);
 }//
 
 void void_cleaner(void *msg) {

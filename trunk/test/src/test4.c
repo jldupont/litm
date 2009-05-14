@@ -54,9 +54,9 @@ int main(int argc, char **argv) {
 
 	sleep(15);
 
-	printf("*** ASKING FOR LITM SHUTDOWN ***\n");
-	litm_shutdown();
-	sleep(2);
+	//printf("*** ASKING FOR LITM SHUTDOWN ***\n");
+	//litm_shutdown();
+	//sleep(2);
 
 	printf("#main: END\n");
 	return 0;

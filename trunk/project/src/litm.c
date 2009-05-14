@@ -303,13 +303,6 @@ litm_release(litm_connection *conn, litm_envelope *envlp) {
 }//
 
 
-	void
-litm_shutdown(void) {
-
-	switch_shutdown();
-
-}
-
 	void *
 litm_get_message(litm_envelope *envlp) {
 
