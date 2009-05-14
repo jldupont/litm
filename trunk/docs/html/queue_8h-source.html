@@ -42,7 +42,7 @@
 <a name="l00020"></a>00020 
 <a name="l00021"></a>00021         <span class="comment">// Prototypes</span>
 <a name="l00022"></a>00022         <span class="comment">// ==========</span>
-<a name="l00023"></a>00023         <a class="code" href="structqueue.html">queue</a> *<a class="code" href="queue_8c.html#404f283e7764be86026fda0714b6b7b6">queue_create</a>(<span class="keywordtype">void</span>);
+<a name="l00023"></a>00023         <a class="code" href="structqueue.html">queue</a> *<a class="code" href="queue_8c.html#fb5475fae1028dd41cf622ef2dc84036">queue_create</a>(<span class="keywordtype">int</span> <span class="keywordtype">id</span>);
 <a name="l00024"></a>00024         <span class="keywordtype">void</span>   <a class="code" href="queue_8c.html#21d75708e816b8fc3299ac8e6f7109eb">queue_destroy</a>(<a class="code" href="structqueue.html">queue</a> *<a class="code" href="structqueue.html">queue</a>);
 <a name="l00025"></a>00025 
 <a name="l00026"></a>00026         <span class="keywordtype">int</span>   <a class="code" href="queue_8c.html#ad63e2d2e97a079465ca5651b5b7c36e">queue_put_nb</a>(<a class="code" href="structqueue.html">queue</a> *q, <span class="keywordtype">void</span> *msg);
@@ -54,15 +54,16 @@
 <a name="l00032"></a>00032 
 <a name="l00033"></a>00033         <span class="keywordtype">void</span> *<a class="code" href="queue_8c.html#d27389bec0979099c38222da98b9cade">queue_get</a>(<a class="code" href="structqueue.html">queue</a> *q);
 <a name="l00034"></a>00034         <span class="keywordtype">void</span> *<a class="code" href="queue_8c.html#819eed56d043a96499116f087d928057">queue_get_nb</a>(<a class="code" href="structqueue.html">queue</a> *q);
-<a name="l00035"></a>00035         <span class="keywordtype">void</span> *<a class="code" href="queue_8c.html#95900f4ae8118e68b0343a1be6620ff8">queue_get_wait</a>(<a class="code" href="structqueue.html">queue</a> *q);
+<a name="l00035"></a>00035         <span class="keywordtype">int</span> <a class="code" href="queue_8c.html#506b0fed202c45ae1d42b1b9d5cd6b30">queue_wait</a>(<a class="code" href="structqueue.html">queue</a> *q);
 <a name="l00036"></a>00036 
 <a name="l00037"></a>00037         <span class="keywordtype">int</span>   <a class="code" href="queue_8c.html#df77941d73a75b551595b7b74b00f62d">queue_peek</a>(<a class="code" href="structqueue.html">queue</a> *q);
-<a name="l00038"></a>00038 
-<a name="l00039"></a>00039         <span class="keywordtype">int</span> <a class="code" href="queue_8c.html#24e3c9aaef201f1f66bcd8591b1e4c15">queue_put_safe</a>( <a class="code" href="structqueue.html">queue</a> *q, <span class="keywordtype">void</span> *node );
-<a name="l00040"></a>00040 
-<a name="l00041"></a>00041 <span class="preprocessor">#endif </span><span class="comment">/* QUEUE_H_ */</span>
+<a name="l00038"></a>00038         <span class="keywordtype">void</span> <a class="code" href="queue_8c.html#a1c32f105f2a17f2255cbe6dfaf66f78">queue_signal</a>(<a class="code" href="structqueue.html">queue</a> *q);
+<a name="l00039"></a>00039 
+<a name="l00040"></a>00040         <span class="keywordtype">int</span> <a class="code" href="queue_8c.html#24e3c9aaef201f1f66bcd8591b1e4c15">queue_put_safe</a>( <a class="code" href="structqueue.html">queue</a> *q, <span class="keywordtype">void</span> *node );
+<a name="l00041"></a>00041 
+<a name="l00042"></a>00042 <span class="preprocessor">#endif </span><span class="comment">/* QUEUE_H_ */</span>
 </pre></div></div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Wed May 13 10:37:41 2009 for LITM by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu May 14 13:00:43 2009 for LITM by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>
