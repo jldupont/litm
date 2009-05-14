@@ -228,7 +228,6 @@ int queue_put(queue *q, void *node) {
 		code = queue_put_safe( q, node );
 
 	pthread_mutex_unlock( q->mutex );
-
 	if (code)
 		pthread_cond_signal( q->cond );
 
@@ -312,10 +311,10 @@ queue_put_safe( queue *q, void *node ) {
 
 		// we were able to put an element:
 		//  signal the waiting thread(s)
-		int rc=pthread_cond_broadcast( q->cond );
-		if (rc) {
-			DEBUG_LOG(LOG_ERR,"queue_put_safe: ERROR during COND_SIGNAL");
-		}
+		//int rc=pthread_cond_signal( q->cond );
+		//if (rc) {
+		//	DEBUG_LOG(LOG_ERR,"queue_put_safe: ERROR during COND_SIGNAL");
+		//}
 
 	} else {
 
@@ -398,8 +397,11 @@ void *queue_get_wait(queue *q) {
 		}
 
 		// it seems we need to wait...
-		DEBUG_LOG(LOG_DEBUG,"queue_get_wait: waiting on q[%x]",q);
+		//DEBUG_LOG(LOG_DEBUG,"queue_get_wait: waiting on q[%x][%i]",q,q->id);
 		rc = pthread_cond_wait( q->cond, q->mutex );
+
+		int result2 = pthread_mutex_trylock( q->mutex );
+		//DEBUG_LOG(LOG_DEBUG,"queue_get_wait: TRYLOCK q[%x][%i] result[%i] ",q,q->id,result2==EBUSY);
 
 		if (rc) {
 			DEBUG_LOG(LOG_ERR,"queue_get_wait: CONDITION WAIT ERROR");
@@ -439,7 +441,7 @@ void *__queue_get_safe(queue *q) {
 
 		q->total_out++;
 		q->num--;
-		DEBUG_LOG(LOG_DEBUG,"__queue_get_safe: q[%x] id[%i] num[%i] in[%i] out[%i]", q, q->id, q->num, q->total_in, q->total_out);
+		//DEBUG_LOG(LOG_DEBUG,"__queue_get_safe: q[%x] id[%i] num[%i] in[%i] out[%i]", q, q->id, q->num, q->total_in, q->total_out);
 	}
 
 	return node;

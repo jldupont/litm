@@ -109,13 +109,14 @@ switch_shutdown(void) {
 	void *
 __switch_thread_function(void *params) {
 
-	char *err_msg;
-	int pending, action, sd_flag=LITM_SHUTDOWN_FLAG_FALSE, shutdown_flag=LITM_SHUTDOWN_FLAG_FALSE;
 	litm_code code;
 	litm_envelope *e;
 	litm_connection *next, *sender, *current_conn;
-	int current;
 	litm_bus bus_id;
+
+	char *err_msg;
+	int pending, action, sd_flag=LITM_SHUTDOWN_FLAG_FALSE, shutdown_flag=LITM_SHUTDOWN_FLAG_FALSE;
+	int current;
 	static char *thisMsg = "__switch_thread_function: conn[%x] code[%s]";
 
 	DEBUG_LOG(LOG_INFO, "__switch_thread_function: starting");
@@ -156,7 +157,7 @@ __switch_thread_function(void *params) {
 
 		// message was processed and just sits pending
 
-		if (1==e->routes.pending) {
+		if (1==(e->routes).pending) {
 
 			__switch_handle_pending(e);
 			continue; // <===================================================
@@ -278,7 +279,7 @@ __switch_handle_pending(litm_envelope *e) {
 	litm_connection *conn;
 	litm_code code;
 
-	conn = e->routes.current_conn;
+	conn = (e->routes).current_conn;
 	code = __switch_try_sending_or_requeue( conn, e );
 
 	// if the message was sent or requeued,
@@ -295,6 +296,10 @@ __switch_handle_pending(litm_envelope *e) {
 	switch(code) {
 
 	case LITM_CODE_OK:
+		(e->routes).pending = 0;
+		DEBUG_LOG(LOG_DEBUG, ">>> PENDING DELIVERED conn[%x][%i] envlp[%x]", conn, conn->id, e);
+		break;
+
 	case LITM_CODE_BUSY_OUTPUT_QUEUE:
 	case LITM_CODE_BUSY_CONNECTIONS:
 	case LITM_CODE_ERROR_BAD_CONNECTION:
@@ -325,14 +330,16 @@ switch_release(litm_connection *conn, litm_envelope *envlp) {
 		return LITM_CODE_ERROR_INVALID_ENVELOPE;
 	}
 
-	int id = conn->id;
-	//DEBUG_LOG(LOG_DEBUG, "switch_release: conn[%x][%i] envelope[%x]", conn, id, envlp );
-
 	// if a message comes this way, it means a client
 	// has finished processing it... get rid of the
 	// "pending" state if at all present.
 	(envlp->routes).pending = 0;
 	envlp->released_count ++;
+	conn->released++;
+
+	//{
+	DEBUG_LOG(LOG_DEBUG, "~~~ RELEASE conn[%x][%i] released[%i] envelope[%x] sender[%x][%i]", conn, conn->id, conn->released, envlp, (envlp->routes).sender, (envlp->routes).sender->id);
+	//}
 
 	int result = queue_put(_switch_queue, (void *) envlp);
 	if (1 != result) {
@@ -357,35 +364,26 @@ __switch_try_sending_or_requeue(litm_connection *conn, litm_envelope *envlp) {
 	if (NULL==envlp)
 		return LITM_CODE_ERROR_INVALID_ENVELOPE;
 
-	//int code = _litm_connections_trylock();
-	//if (EBUSY==code)
-	//	return LITM_CODE_BUSY_CONNECTIONS;
-
-	//code = _litm_connection_validate_safe(conn);
-	//if (1!=code) {
-	//	_litm_connections_unlock();
-	//	return LITM_CODE_ERROR_BAD_CONNECTION;
-	//}
-
 	litm_code result = __switch_try_sending_to_recipient(conn, envlp);
 
 	// requeue in switch
 	if (LITM_CODE_BUSY_OUTPUT_QUEUE==result) {
 
+		envlp->requeued++;
 		(envlp->routes).pending = 1;
 		queue_put( _switch_queue, envlp );
-		envlp->requeued++;
+
 	}
 
 	// a connection dropped out... no big deal,
 	// just requeue as it was the first go
 	if (LITM_CODE_ERROR_CONNECTION_NOT_ACTIVE==result) {
+
+		envlp->requeued++;
 		(envlp->routes).pending = 0;
 		queue_put( _switch_queue, envlp );
-		envlp->requeued++;
-	}
 
-	//_litm_connections_unlock();
+	}
 
 	return result;
 }//
@@ -410,30 +408,31 @@ __switch_try_sending_to_recipient(	litm_connection *conn,
 		return LITM_CODE_ERROR_INVALID_ENVELOPE;
 	}
 
-	litm_connection_status status;
+
 	litm_code returnCode = LITM_CODE_OK;
 	int code = 0;
 
 	//DEBUG_LOG(LOG_ERR, "__switch_try_sending_to_recipient: START conn[%x]",conn );
-	_litm_connections_lock();
+	//_litm_connections_lock();
 
-		code = _litm_connection_validate_safe(conn);
-		if (1==code) {
+		//code = _litm_connection_validate_safe(conn);
+		//if (1==code) {
 
-			_litm_connection_lock(conn);
-				status = _litm_connection_get_status( conn );
-				if (LITM_CONNECTION_STATUS_ACTIVE!=status) {
-					code = 2;
-				} else {
-					code = queue_put_safe( conn->input_queue, (void *) env);
-				}
-			_litm_connection_unlock(conn);
+			//_litm_connection_lock(conn);
+				//litm_connection_status status;
+				//status = _litm_connection_get_status( conn );
+				//if (LITM_CONNECTION_STATUS_ACTIVE!=status) {
+					//code = 2;
+				//} else {
+					code = queue_put_nb( conn->input_queue, (void *) env);
+				//}
+			//_litm_connection_unlock(conn);
 
-		} else {
-			code = 2;
-		}
+		//} else {
+			//code = 2;
+		//}
 
-	_litm_connections_unlock();
+	//_litm_connections_unlock();
 	//DEBUG_LOG(LOG_ERR, "__switch_try_sending_to_recipient: STOP  conn[%x]", conn );
 
 	switch(code) {
@@ -441,15 +440,16 @@ __switch_try_sending_to_recipient(	litm_connection *conn,
 		returnCode = LITM_CODE_ERROR_OUTPUT_QUEUING;
 		break;
 	case 1: //success
-		//DEBUG_LOG(LOG_ERR, "__switch_try_sending_to_recipient: DELIVERED conn[%x]", conn );
+		DEBUG_LOG(LOG_DEBUG, "__switch_try_sending_to_recipient: DELIVERED to conn[%x][%i] envlp[%x] sender[%x][%i]", conn, conn->id, env, (env->routes).sender, (env->routes).sender->id);
 		env->delivery_count++;
 		returnCode = LITM_CODE_OK;
 		break;
 	case -1: //busy
 		returnCode = LITM_CODE_BUSY_OUTPUT_QUEUE;
-		DEBUG_LOG(LOG_ERR, "__switch_try_sending_to_recipient: BUSY conn[%x]", conn );
+		DEBUG_LOG(LOG_ERR, ">>> BUSY conn[%x][%i]", conn, conn->id );
 		break;
 	case 2:
+		// TODO this definitely needs fixing!
 		returnCode = LITM_CODE_ERROR_CONNECTION_NOT_ACTIVE;
 		(env->routes).current = -1;
 		(env->routes).current_conn = NULL;
@@ -487,7 +487,7 @@ switch_add_subscriber(litm_connection *conn, litm_bus bus_id) {
 				if (NULL==_subscribers[bus_id][index]) {
 					_subscribers[bus_id][index] = conn;
 					result = LITM_CODE_OK;
-					DEBUG_LOG(LOG_DEBUG,"switch_add_subscriber: conn[%x] index[%i]", conn, index);
+					//DEBUG_LOG(LOG_DEBUG,"switch_add_subscriber: conn[%x] index[%i]", conn, index);
 					break;
 				}
 			}
@@ -589,6 +589,7 @@ __switch_safe_send( litm_connection *sender,
 					void (*cleaner)(void *msg),
 					int shutdown_flag ) {
 
+	DEBUG_LOG(LOG_DEBUG, "__SWITCH_SAFE_SEND: sender[%x][%i] bus[%i] sent[%i]", sender, sender->id, bus_id, sender->sent);
 	litm_envelope *e=__litm_pool_get();
 	e->cleaner = cleaner;
 	(e->routes).pending = 0; //FALSE
@@ -630,7 +631,7 @@ __switch_finalize(litm_envelope *envlp) {
 		return LITM_CODE_ERROR_INVALID_ENVELOPE;
 	}
 
-	//DEBUG_LOG(LOG_DEBUG, "__switch_finalize: envelope[%x]", envlp );
+	DEBUG_LOG(LOG_DEBUG, "__switch_finalize: envlp[%x] rel[%i] del[%i]", envlp, envlp->released_count, envlp->delivery_count );
 
 	void (*cleaner)(void *msg) = envlp->cleaner;
 
@@ -739,7 +740,7 @@ __switch_find_match(litm_connection *sender, int ref, litm_bus bus_id) {
 		}
 	}
 
-	//DEBUG_LOG(LOG_DEBUG, "__switch_find_match: END, ref[%x] bus[%u] result[%u]", ref, bus_id, result);
+	DEBUG_LOG(LOG_DEBUG, "### MATCH: sender[%x][%i] ref[%i] bus[%u] result[%u]", sender, sender->id, ref, bus_id, result);
 
 	return result;
 }//

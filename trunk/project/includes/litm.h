@@ -199,6 +199,8 @@
 		 * @param input_queue the connection's input queue
 		 */
 		typedef struct _litm_connection {
+			int received;
+			int released;
 			int sent;
 			int id;
 			litm_connection_status status;

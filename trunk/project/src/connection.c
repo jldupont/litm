@@ -134,8 +134,10 @@ litm_connection_open_ex(litm_connection **conn, int id) {
 
 
 	_connections[target_index] = *conn;
-	(*conn)->sent = 0;
-	(*conn)->id   = id;
+	(*conn)->received = 0;
+	(*conn)->released = 0;
+	(*conn)->sent     = 0;
+	(*conn)->id       = id;
 	(*conn)->input_queue = q;
 	(*conn)->status = LITM_CONNECTION_STATUS_ACTIVE;
 
