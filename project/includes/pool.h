@@ -9,7 +9,7 @@
 #define POOL_H_
 
 
-#	define LITM_POOL_SIZE 4 //max pool size
+#	define LITM_POOL_SIZE 128 //max pool size
 
 
 	/**
