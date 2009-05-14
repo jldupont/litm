@@ -51,7 +51,7 @@ litm_code __switch_get_next_subscriber(	litm_connection **result,
 										litm_connection *sender,
 										int current,
 										litm_bus bus_id);
-int __switch_find_next_non_match(litm_connection *ref, litm_bus bus_id);
+
 int __switch_find_match(litm_connection *sender, int ref, litm_bus bus_id);
 litm_code __switch_try_sending_to_recipient(	litm_connection *recipient, litm_envelope *env);
 litm_code __switch_finalize(litm_envelope *envlp);
@@ -60,7 +60,6 @@ void __switch_init_tables(void);
 void __switch_handle_pending(litm_envelope *e);
 litm_code __switch_safe_send( litm_connection *conn, litm_bus bus_id, void *msg, void (*cleaner)(void *msg), int shutdown_flag );
 
-litm_code __switch_handle_first_subscriber(int bus_id, litm_connection *sender, litm_connection **result, int *index);
 litm_connection *__switch_index_to_connection( int bus_id, int index );
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -122,20 +121,23 @@ __switch_thread_function(void *params) {
 	DEBUG_LOG(LOG_INFO, "__switch_thread_function: starting");
 
 	while(1) {
+
+		//shutdown signaled?
+		if ((1==__switch_signal_shutdown) || (LITM_SHUTDOWN_FLAG_TRUE==shutdown_flag)) {
+			break;
+		}
+
 		// we block here since if we have no messages
 		//  to process, we don't have anything else to do...
 		e=(litm_envelope *) queue_get_nb( _switch_queue );
 
 		if (NULL==e) {
 
-			//shutdown signaled?
-			if ((1==__switch_signal_shutdown) || (LITM_SHUTDOWN_FLAG_TRUE==shutdown_flag)) {
-				break;
-			}
-
 			usleep(50*1000);
-			continue;
+			continue;  // <===============================================
 		}
+
+
 
 		//DEBUG_LOG(LOG_INFO, "__switch_thread_function: GOT ENVELOPE");
 
@@ -168,13 +170,13 @@ __switch_thread_function(void *params) {
 		//       the normal case where all recipients have
 		//       had the chance to glance over the message.
 
-		sender  = (e->routes).sender;
-		current = (e->routes).current;
+		sender       = (e->routes).sender;
+		current      = (e->routes).current;
 		current_conn = (e->routes).current_conn;
-		bus_id  = (e->routes).bus_id;
-		sd_flag =  e->shutdown_flag;
+		bus_id       = (e->routes).bus_id;
+		sd_flag      =  e->shutdown_flag;
 
-		int id = litm_connection_get_id( sender );
+		//int id = litm_connection_get_id( sender );
 		//DEBUG_LOG(LOG_INFO, "__switch_thread_function: bus[%u] sender[%x] current[%x] envelope[%x] sd[%i] conn_id[%i]", bus_id, sender, current, e, sd_flag, id);
 
 		int next_index;
@@ -229,6 +231,7 @@ __switch_thread_function(void *params) {
 			break;
 
 		case LITM_CODE_BUSY_OUTPUT_QUEUE:
+		case LITM_CODE_BUSY_CONNECTIONS:
 			DEBUG_LOG(LOG_DEBUG, thisMsg, next, err_msg);
 			break;
 
@@ -371,6 +374,7 @@ __switch_try_sending_or_requeue(litm_connection *conn, litm_envelope *envlp) {
 
 		(envlp->routes).pending = 1;
 		queue_put( _switch_queue, envlp );
+		envlp->requeued++;
 	}
 
 	// a connection dropped out... no big deal,
@@ -378,6 +382,7 @@ __switch_try_sending_or_requeue(litm_connection *conn, litm_envelope *envlp) {
 	if (LITM_CODE_ERROR_CONNECTION_NOT_ACTIVE==result) {
 		(envlp->routes).pending = 0;
 		queue_put( _switch_queue, envlp );
+		envlp->requeued++;
 	}
 
 	//_litm_connections_unlock();
@@ -482,6 +487,7 @@ switch_add_subscriber(litm_connection *conn, litm_bus bus_id) {
 				if (NULL==_subscribers[bus_id][index]) {
 					_subscribers[bus_id][index] = conn;
 					result = LITM_CODE_OK;
+					DEBUG_LOG(LOG_DEBUG,"switch_add_subscriber: conn[%x] index[%i]", conn, index);
 					break;
 				}
 			}
@@ -577,7 +583,7 @@ switch_send(litm_connection *conn, litm_bus bus_id, void *msg,
 
 
 	litm_code
-__switch_safe_send( litm_connection *conn,
+__switch_safe_send( litm_connection *sender,
 					litm_bus bus_id,
 					void *msg,
 					void (*cleaner)(void *msg),
@@ -587,13 +593,14 @@ __switch_safe_send( litm_connection *conn,
 	e->cleaner = cleaner;
 	(e->routes).pending = 0; //FALSE
 	(e->routes).bus_id = bus_id;
-	(e->routes).sender = conn;
+	(e->routes).sender = sender;
 	(e->routes).current = -1;  // First time sent
 	(e->routes).current_conn = NULL;  // First time sent
 	e->msg = msg;
 	e->delivery_count = 0;
 	e->released_count = 0;
 	e->shutdown_flag = shutdown_flag;
+	e->requeued = 0;
 
 	/*
 	 *  Initial message submission: if something goes
@@ -603,13 +610,17 @@ __switch_safe_send( litm_connection *conn,
 	if (1 != result) {
 		__litm_pool_recycle( e );
 		return LITM_CODE_ERROR_MALLOC;
+	} else {
+		sender->sent++;
 	}
 
 	return LITM_CODE_OK;
 }//
 
 /**
- * Finalizes a message
+ * Finalizes a message contained
+ * in an envelope & recycles the
+ * envelope
  *
  */
 	litm_code
@@ -668,23 +679,22 @@ __switch_get_next_subscriber(	litm_connection **result,
 
 	litm_code returnCode = LITM_CODE_OK; //optimistic
 
-	int index=1;
-	int foundNext = 0;
-	int foundFirst=0; //FALSE
-	litm_connection *c=NULL;
 	*result = NULL; //precaution
+	int ref;
+
 
 	// FIND FIRST {{
 	if (-1==current) {
-		return __switch_handle_first_subscriber(bus_id, sender, result, result_index);
-	}//if
+		ref = 0;
+	} else {
+		ref = current;
+	}
 	// }}
-
 
 	// at this point, we are looking for the recipient
 	// after ``current`` but that isn't ``sender`` nor NULL, end-of-subscribers
 
-	int foundMatch = __switch_find_match(sender, current, bus_id);
+	int foundMatch = __switch_find_match(sender, ref, bus_id);
 
 	if (0==foundMatch) {
 		*result = NULL;
@@ -703,59 +713,6 @@ __switch_get_next_subscriber(	litm_connection **result,
 	//DEBUG_LOG(LOG_DEBUG, "__switch_get_next_subscriber: END");
 
 	return returnCode;
-}//
-
-	litm_code
-__switch_handle_first_subscriber(int bus_id, litm_connection *sender, litm_connection **result, int *index) {
-
-	litm_code returnCode;
-	int id = sender->id;
-	//DEBUG_LOG(LOG_DEBUG, "__switch_handle_first_subscriber: FIRST SEND, sender[%x] conn_id[%i]", sender, id);
-
-	int searchResultIndex;
-	searchResultIndex = __switch_find_next_non_match(sender, bus_id);
-
-	if (0!=searchResultIndex) {
-		// non-null && non-sender
-		*result = _subscribers[bus_id][searchResultIndex];
-		*index = searchResultIndex;
-		returnCode = LITM_CODE_OK;
-	} else {
-		// first time the message is sent... but no subscribers
-		// it would appear...
-		*index = -1;
-		*result = NULL;
-		returnCode = LITM_CODE_ERROR_SWITCH_NEXT_NOT_FOUND;
-	}
-
-	return returnCode;
-}
-
-/**
- * Find the next ``non-match`` and non-NULL
- *
- * THIS FUNCTION IS NOT *CONNECTION SAFE*
- */
-	int
-__switch_find_next_non_match(litm_connection *ref, litm_bus bus_id) {
-
-	//DEBUG_LOG(LOG_DEBUG, "__switch_find_next_non_match: BEGIN, ref[%x] bus[%u]", ref, bus_id);
-
-	int index, result = 0;
-	litm_connection *current;
-
-	for (index=1; index<=LITM_CONNECTION_MAX; index++) {
-
-		current=_subscribers[bus_id][index];
-		if ((current!=ref) && (current!=NULL)) {
-			result = index;
-			break;
-		}
-	}
-
-	//DEBUG_LOG(LOG_DEBUG, "__switch_find_next_non_match: END, ref[%x] bus[%u] result[%u]", ref, bus_id, result);
-
-	return result;
 }//
 
 /**

@@ -193,7 +193,7 @@ queue_put_head_safe( queue *q, void *msg ) {
 
 		// we were able to put an element:
 		//  signal the waiting thread(s)
-		pthread_cond_signal( q->cond );
+		//pthread_cond_signal( q->cond );
 
 		q->num++;
 
@@ -229,6 +229,9 @@ int queue_put(queue *q, void *node) {
 
 	pthread_mutex_unlock( q->mutex );
 
+	if (code)
+		pthread_cond_signal( q->cond );
+
 	//DEBUG_LOG(LOG_DEBUG,"queue_put: q[%x] node[%x] END",q,node);
 
 	return code;
@@ -255,12 +258,15 @@ int queue_put_nb(queue *q, void *node) {
 		return -1;
 
 		//DEBUG_LOG(LOG_DEBUG,"queue_put_nb: q[%x] node[%x] BEGIN",q, node);
-		int returnCode = queue_put_safe( q, node );
+		int code = queue_put_safe( q, node );
 
 	pthread_mutex_unlock( q->mutex );
+	if (code)
+		pthread_cond_signal( q->cond );
+
 	//DEBUG_LOG(LOG_DEBUG,"queue_put_nb: q[%x] node[%x] END",q, node);
 
-	return returnCode;
+	return code;
 }//[/queue_put]
 
 
@@ -383,22 +389,23 @@ void *queue_get_wait(queue *q) {
 
 	pthread_mutex_lock( q->mutex );
 
-	//first, try to get a node from the queue:
-	// no use waiting if one is already available!
-	node = __queue_get_safe(q);
-	if (NULL!=node) {
-		pthread_mutex_unlock( q->mutex );
-		return node;
-	}
-
-	// it seems we need to wait...
-	rc = pthread_cond_wait( q->cond, q->mutex );
-
-	if (rc) {
-		DEBUG_LOG(LOG_ERR,"queue_get_wait: CONDITION WAIT ERROR");
-	} else {
+		//first, try to get a node from the queue:
+		// no use waiting if one is already available!
 		node = __queue_get_safe(q);
-	}
+		if (NULL!=node) {
+			pthread_mutex_unlock( q->mutex );
+			return node;
+		}
+
+		// it seems we need to wait...
+		DEBUG_LOG(LOG_DEBUG,"queue_get_wait: waiting on q[%x]",q);
+		rc = pthread_cond_wait( q->cond, q->mutex );
+
+		if (rc) {
+			DEBUG_LOG(LOG_ERR,"queue_get_wait: CONDITION WAIT ERROR");
+		} else {
+			node = __queue_get_safe(q);
+		}
 
 	pthread_mutex_unlock( q->mutex );
 
