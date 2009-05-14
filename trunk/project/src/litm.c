@@ -194,7 +194,8 @@ litm_send_wait(	litm_connection *conn,
 			break;
 		}
 
-		DEBUG_LOG(LOG_DEBUG, "litm_send_wait: NEED TO RETRY conn[%x] bus[%i]", conn, bus_id);
+		DEBUG_LOG(LOG_DEBUG, "litm_send_wait: NEED TO RETRY conn[%x][%3i] bus[%3i]", conn, conn->id, bus_id);
+		usleep( 10*1000 );
 
 		// at this point, we just back-off an retry
 		int result = random_sleep_period(	start,

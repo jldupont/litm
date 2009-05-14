@@ -128,13 +128,19 @@ __switch_thread_function(void *params) {
 			break;
 		}
 
+		//usleep(50*1000);
+
 		// we block here since if we have no messages
 		//  to process, we don't have anything else to do...
 		e=(litm_envelope *) queue_get_nb( _switch_queue );
 
 		if (NULL==e) {
 
-			usleep(50*1000);
+			int result = queue_wait( _switch_queue );
+			if (result) {
+				DEBUG_LOG(LOG_ERR, "__switch_thread_function: ERROR whilst queue_wait");
+				break;
+			}
 			continue;  // <===============================================
 		}
 
@@ -339,7 +345,7 @@ switch_release(litm_connection *conn, litm_envelope *envlp) {
 	conn->released++;
 
 	//{
-	DEBUG_LOG(LOG_DEBUG, "~~~ RELEASE conn[%x][%i] released[%i] envelope[%x] sender[%x][%i]", conn, conn->id, conn->released, envlp, (envlp->routes).sender, (envlp->routes).sender->id);
+	//DEBUG_LOG(LOG_DEBUG, "~~~ RELEASE conn[%x][%i] released[%i] envelope[%x] sender[%x][%i]", conn, conn->id, conn->released, envlp, (envlp->routes).sender, (envlp->routes).sender->id);
 	//}
 
 	int result = queue_put(_switch_queue, (void *) envlp);
@@ -441,7 +447,7 @@ __switch_try_sending_to_recipient(	litm_connection *conn,
 		returnCode = LITM_CODE_ERROR_OUTPUT_QUEUING;
 		break;
 	case 1: //success
-		DEBUG_LOG(LOG_DEBUG, "__switch_try_sending_to_recipient: DELIVERED to conn[%x][%i] envlp[%x] sender[%x][%i]", conn, conn->id, env, (env->routes).sender, (env->routes).sender->id);
+		//DEBUG_LOG(LOG_DEBUG, "__switch_try_sending_to_recipient: DELIVERED to conn[%x][%i] envlp[%x] sender[%x][%i]", conn, conn->id, env, (env->routes).sender, (env->routes).sender->id);
 		env->delivery_count++;
 		returnCode = LITM_CODE_OK;
 		break;
@@ -590,7 +596,8 @@ __switch_safe_send( litm_connection *sender,
 					void (*cleaner)(void *msg),
 					int shutdown_flag ) {
 
-	DEBUG_LOG(LOG_DEBUG, "__SWITCH_SAFE_SEND: sender[%x][%i] bus[%i] sent[%i]", sender, sender->id, bus_id, sender->sent);
+	//DEBUG_LOG(LOG_DEBUG, "__SWITCH_SAFE_SEND: sender[%x][%i] bus[%i] sent[%i]", sender, sender->id, bus_id, sender->sent);
+
 	litm_envelope *e=__litm_pool_get();
 	e->cleaner = cleaner;
 	(e->routes).pending = 0; //FALSE
@@ -608,15 +615,28 @@ __switch_safe_send( litm_connection *sender,
 	 *  Initial message submission: if something goes
 	 *  wrong, we need to get rid of envelope.
 	 */
-	int result = queue_put(_switch_queue, (void *) e);
-	if (1 != result) {
-		__litm_pool_recycle( e );
-		return LITM_CODE_ERROR_MALLOC;
-	} else {
+	int result = queue_put_nb(_switch_queue, (void *) e);
+	litm_code code;
+	switch(result) {
+
+	// BUSY
+	case -1:
+		code = LITM_CODE_BUSY;
+		break;
+
+	// OK
+	case 1:
+		code = LITM_CODE_OK;
 		sender->sent++;
+		break;
+
+	default:
+		code = LITM_CODE_ERROR_MALLOC;
+		__litm_pool_recycle( e );
+		break;
 	}
 
-	return LITM_CODE_OK;
+	return code;
 }//
 
 /**
@@ -632,7 +652,7 @@ __switch_finalize(litm_envelope *envlp) {
 		return LITM_CODE_ERROR_INVALID_ENVELOPE;
 	}
 
-	DEBUG_LOG(LOG_DEBUG, "__switch_finalize: envlp[%x] rel[%i] del[%i]", envlp, envlp->released_count, envlp->delivery_count );
+	//DEBUG_LOG(LOG_DEBUG, "__switch_finalize: envlp[%x] rel[%i] del[%i]", envlp, envlp->released_count, envlp->delivery_count );
 
 	void (*cleaner)(void *msg) = envlp->cleaner;
 
@@ -741,7 +761,7 @@ __switch_find_match(litm_connection *sender, int ref, litm_bus bus_id) {
 		}
 	}
 
-	DEBUG_LOG(LOG_DEBUG, "### MATCH: sender[%x][%i] ref[%i] bus[%u] result[%u]", sender, sender->id, ref, bus_id, result);
+	//DEBUG_LOG(LOG_DEBUG, "### MATCH: sender[%x][%i] ref[%i] bus[%u] result[%u]", sender, sender->id, ref, bus_id, result);
 
 	return result;
 }//
