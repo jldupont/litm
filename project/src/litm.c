@@ -240,6 +240,8 @@ litm_receive_nb(litm_connection *conn, litm_envelope **envlp) {
 	*envlp = queue_get_nb( conn->input_queue );
 	if (NULL==*envlp) {
 		returnCode=LITM_CODE_NO_MESSAGE;
+	} else {
+		conn->received++;
 	}
 
 	return returnCode;
@@ -263,6 +265,7 @@ litm_receive_wait(litm_connection *conn, litm_envelope **envlp) {
 	*envlp = queue_get_nb( conn->input_queue );
 	if (NULL!=*envlp) {
 		returnCode=LITM_CODE_OK;
+		conn->received++;
 	}
 
 	// ok, we really need to wait then...
@@ -270,6 +273,8 @@ litm_receive_wait(litm_connection *conn, litm_envelope **envlp) {
 	*envlp = queue_get_wait( conn->input_queue );
 	if (NULL==*envlp) {
 		returnCode=LITM_CODE_NO_MESSAGE;
+	} else {
+		conn->received++;
 	}
 	//DEBUG_LOG(LOG_DEBUG,"litm_receive_wait, STOP conn[%x]",conn);
 	return returnCode;
