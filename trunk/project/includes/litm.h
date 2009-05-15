@@ -132,7 +132,12 @@
  *								\li Added _queue_put_head_ support for high priority messaging
  *								\li Added _litm_send_shutdown_ function: coordinated shutdown
  *
- * \todo Better shutdown system
+ *		\subsection release_0_4 Release 0.4
+ *
+ *								\li Added support for quicker shutdown procedure (put shutdown message at ``head`` of queue(s))
+ *								\li Removed litm_shutdown function
+ *								\li Added coordination for all queue activity through pthread condition variable: no useless blocking
+ *
  * \todo Better connection close
  *
  */
@@ -445,6 +450,8 @@
 										void *msg,
 										void (*cleaner)(void *msg)
 									);
+
+		void litm_wait_shutdown(void);
 
 
 		/**

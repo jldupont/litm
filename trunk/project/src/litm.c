@@ -343,3 +343,10 @@ __litm_compute_timeout(int timeout) {
 
 	return computed_timeout;
 }
+
+	void
+litm_wait_shutdown(void){
+
+	__switch_wait_shutdown();
+
+}
