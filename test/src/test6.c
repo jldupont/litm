@@ -226,7 +226,7 @@ void *threadFunction(void *params) {
 	int my_received=0, my_released=0;
 
 	int j;
-	for (j=0;j<1000;j++) {
+	for (j=0;j<10000;j++) {
 		code = litm_send_wait( conn, 1, &_msg, &void_cleaner, 0 );
 		if (LITM_CODE_OK!=code)
 			printMessage(code, "* Sent, code[%s]...","msg[%x] thread_id[%3u] conn[%x]\n", &_msg, thread_id, conn );

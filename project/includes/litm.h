@@ -181,6 +181,7 @@
  *
  *		\subsection release_0_4 Release 0.4
  *
+ *								\li Notable speed increase (added forced interleaving of client threads through usleep)
  *								\li Added support for quicker shutdown procedure (put shutdown message at ``head`` of queue(s))
  *								\li Removed litm_shutdown function
  *								\li Added coordination for all queue activity through pthread condition variable: no useless blocking
