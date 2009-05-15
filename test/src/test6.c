@@ -214,8 +214,6 @@ void *threadFunction(void *params) {
 		subscribed = 1;
 	}
 
-	sleep(2);
-
 	message _msg;
 
 	_msg.code = 2; // no shutdown
