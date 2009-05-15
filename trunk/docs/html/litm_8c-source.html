@@ -217,156 +217,169 @@
 <a name="l00195"></a>00195                 }
 <a name="l00196"></a>00196 
 <a name="l00197"></a>00197                 <a class="code" href="logger_8h.html#21a2c7330a04ac78200a986f66609369">DEBUG_LOG</a>(LOG_DEBUG, <span class="stringliteral">"litm_send_wait: NEED TO RETRY conn[%x][%3i] bus[%3i]"</span>, conn, conn-&gt;<a class="code" href="struct__litm__connection.html#a1eb504742c0b16aa0c2e373ae1ac336">id</a>, bus_id);
-<a name="l00198"></a>00198                 usleep( 10*1000 );
-<a name="l00199"></a>00199 
-<a name="l00200"></a>00200                 <span class="comment">// at this point, we just back-off an retry</span>
-<a name="l00201"></a>00201                 <span class="keywordtype">int</span> result = <a class="code" href="utils_8c.html#e026bd95646ab598d1f1d98c4e874194">random_sleep_period</a>(       start,
-<a name="l00202"></a>00202                                                                                         current,
-<a name="l00203"></a>00203                                                                                         <a class="code" href="litm_8h.html#245f65270b5f3b9b1ac4c9c2fee8e23c">LITM_DEFAULT_MAX_BACKOFF</a>*1000*1000,
-<a name="l00204"></a>00204                                                                                         computed_timeout);
-<a name="l00205"></a>00205                 <span class="comment">// expired period?</span>
-<a name="l00206"></a>00206                 <span class="keywordflow">if</span> (1==result) {
-<a name="l00207"></a>00207                         code = <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622938f8cfa0727b1b39564436759de43cc99">LITM_CODE_ERROR_SEND_ERROR</a>;
-<a name="l00208"></a>00208                         <span class="keywordflow">break</span>;
-<a name="l00209"></a>00209                 }
-<a name="l00210"></a>00210 
-<a name="l00211"></a>00211         }
-<a name="l00212"></a>00212 
-<a name="l00213"></a>00213         <span class="keywordflow">return</span> code;
-<a name="l00214"></a>00214 }<span class="comment">//</span>
-<a name="l00215"></a>00215 
+<a name="l00198"></a>00198                 sched_yield();
+<a name="l00199"></a>00199                 <span class="comment">//usleep( 10*1000 );</span>
+<a name="l00200"></a>00200 
+<a name="l00201"></a>00201                 <span class="comment">// at this point, we just back-off an retry</span>
+<a name="l00202"></a>00202                 <span class="keywordtype">int</span> result = <a class="code" href="utils_8c.html#e026bd95646ab598d1f1d98c4e874194">random_sleep_period</a>(       start,
+<a name="l00203"></a>00203                                                                                         current,
+<a name="l00204"></a>00204                                                                                         <a class="code" href="litm_8h.html#245f65270b5f3b9b1ac4c9c2fee8e23c">LITM_DEFAULT_MAX_BACKOFF</a>*1000*1000,
+<a name="l00205"></a>00205                                                                                         computed_timeout);
+<a name="l00206"></a>00206                 <span class="comment">// expired period?</span>
+<a name="l00207"></a>00207                 <span class="keywordflow">if</span> (1==result) {
+<a name="l00208"></a>00208                         code = <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622938f8cfa0727b1b39564436759de43cc99">LITM_CODE_ERROR_SEND_ERROR</a>;
+<a name="l00209"></a>00209                         <span class="keywordflow">break</span>;
+<a name="l00210"></a>00210                 }
+<a name="l00211"></a>00211 
+<a name="l00212"></a>00212         }
+<a name="l00213"></a>00213 
+<a name="l00214"></a>00214         <span class="keywordflow">return</span> code;
+<a name="l00215"></a>00215 }<span class="comment">//</span>
 <a name="l00216"></a>00216 
-<a name="l00217"></a>00217         <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a>
-<a name="l00218"></a><a class="code" href="litm_8h.html#9e932bb687ba4087d90eca7aa6583f0a">00218</a> <a class="code" href="litm_8c.html#9e932bb687ba4087d90eca7aa6583f0a">litm_send_shutdown</a>(     <a class="code" href="struct__litm__connection.html">litm_connection</a> *conn,
-<a name="l00219"></a>00219                                                 <a class="code" href="litm_8h.html#e7fcc1b5cd037f318d4fe40a2f9d30d3">litm_bus</a> bus_id,
-<a name="l00220"></a>00220                                                 <span class="keywordtype">void</span> *msg,
-<a name="l00221"></a>00221                                                 <span class="keywordtype">void</span> (*cleaner)(<span class="keywordtype">void</span> *msg) ) {
-<a name="l00222"></a>00222 
-<a name="l00223"></a>00223         <span class="keywordflow">return</span> <a class="code" href="switch_8c.html#cc4861fecbb5d0b20174fc1513539554">switch_send_shutdown</a>(conn, bus_id, msg, cleaner);
-<a name="l00224"></a>00224 }<span class="comment">//</span>
-<a name="l00225"></a>00225 <span class="comment"></span>
-<a name="l00226"></a>00226 <span class="comment">/**</span>
-<a name="l00227"></a>00227 <span class="comment"> * Receive (non-blocking) function for clients</span>
-<a name="l00228"></a>00228 <span class="comment"> *</span>
-<a name="l00229"></a>00229 <span class="comment"> * \note It is the responsibility of the client</span>
-<a name="l00230"></a>00230 <span class="comment"> *       to _not_ use this function once a</span>
-<a name="l00231"></a>00231 <span class="comment"> *       connection is closed.</span>
-<a name="l00232"></a>00232 <span class="comment"> *</span>
-<a name="l00233"></a>00233 <span class="comment"> */</span>
-<a name="l00234"></a>00234         <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a>
-<a name="l00235"></a><a class="code" href="litm_8h.html#2b6bffa08706c97ea5d9f6d670f8b359">00235</a> <a class="code" href="litm_8c.html#2b6bffa08706c97ea5d9f6d670f8b359">litm_receive_nb</a>(<a class="code" href="struct__litm__connection.html">litm_connection</a> *conn, <a class="code" href="struct__litm__envelope.html">litm_envelope</a> **envlp) {
-<a name="l00236"></a>00236 
-<a name="l00237"></a>00237         <span class="keywordflow">if</span> (NULL==conn) {
-<a name="l00238"></a>00238                 <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293030ffb6b9de7d729330056b0c40eeaa4">LITM_CODE_ERROR_BAD_CONNECTION</a>;
-<a name="l00239"></a>00239         }
-<a name="l00240"></a>00240         <span class="keywordtype">int</span> returnCode = <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622930b651a4f84388b526d32980e3b43c4a2">LITM_CODE_OK</a>; <span class="comment">//optimistic</span>
-<a name="l00241"></a>00241 
-<a name="l00242"></a>00242         *envlp = <a class="code" href="queue_8c.html#819eed56d043a96499116f087d928057">queue_get_nb</a>( conn-&gt;<a class="code" href="struct__litm__connection.html#92412056140d8e635b20b0681fa32c9a">input_queue</a> );
-<a name="l00243"></a>00243         <span class="keywordflow">if</span> (NULL==*envlp) {
-<a name="l00244"></a>00244                 returnCode=<a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293c4db0bf4a6b68b3ae976c9cbe323da3e">LITM_CODE_NO_MESSAGE</a>;
-<a name="l00245"></a>00245         } <span class="keywordflow">else</span> {
-<a name="l00246"></a>00246                 conn-&gt;<a class="code" href="struct__litm__connection.html#532194a5ef4d0b23c7020bafab537c43">received</a>++;
-<a name="l00247"></a>00247         }
-<a name="l00248"></a>00248 
-<a name="l00249"></a>00249         <span class="keywordflow">return</span> returnCode;
-<a name="l00250"></a>00250 }<span class="comment">//</span>
-<a name="l00251"></a>00251 <span class="comment"></span>
-<a name="l00252"></a>00252 <span class="comment">/**</span>
-<a name="l00253"></a>00253 <span class="comment"> * Receive with wait</span>
-<a name="l00254"></a>00254 <span class="comment"> */</span>
-<a name="l00255"></a>00255         <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a>
-<a name="l00256"></a><a class="code" href="litm_8h.html#c3d5ff42f38bf4820ab8e842276062a9">00256</a> <a class="code" href="litm_8c.html#c3d5ff42f38bf4820ab8e842276062a9">litm_receive_wait</a>(<a class="code" href="struct__litm__connection.html">litm_connection</a> *conn, <a class="code" href="struct__litm__envelope.html">litm_envelope</a> **envlp) {
-<a name="l00257"></a>00257 
-<a name="l00258"></a>00258         <span class="keywordflow">if</span> (NULL==conn) {
-<a name="l00259"></a>00259                 <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293030ffb6b9de7d729330056b0c40eeaa4">LITM_CODE_ERROR_BAD_CONNECTION</a>;
-<a name="l00260"></a>00260         }
-<a name="l00261"></a>00261         <span class="keywordtype">int</span> returnCode = <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622930b651a4f84388b526d32980e3b43c4a2">LITM_CODE_OK</a>; <span class="comment">//optimistic</span>
-<a name="l00262"></a>00262 
-<a name="l00263"></a>00263         <span class="keywordflow">while</span>(1) {
-<a name="l00264"></a>00264 
-<a name="l00265"></a>00265                 <span class="comment">// let's see first if we need to bother with the</span>
-<a name="l00266"></a>00266                 <span class="comment">// conditional waiting on the queue.</span>
-<a name="l00267"></a>00267                 <span class="comment">// This also takes care of the probability of</span>
-<a name="l00268"></a>00268                 <span class="comment">//  missing a signal for whatever reason</span>
-<a name="l00269"></a>00269                 *envlp = <a class="code" href="queue_8c.html#819eed56d043a96499116f087d928057">queue_get_nb</a>( conn-&gt;<a class="code" href="struct__litm__connection.html#92412056140d8e635b20b0681fa32c9a">input_queue</a> );
-<a name="l00270"></a>00270                 <span class="keywordflow">if</span> (NULL!=*envlp) {
-<a name="l00271"></a>00271 
-<a name="l00272"></a>00272                         conn-&gt;<a class="code" href="struct__litm__connection.html#532194a5ef4d0b23c7020bafab537c43">received</a>++;
-<a name="l00273"></a>00273                         <span class="keywordflow">break</span>;
-<a name="l00274"></a>00274                 }
-<a name="l00275"></a>00275 
-<a name="l00276"></a>00276                 <span class="keywordtype">int</span> rc= <a class="code" href="queue_8c.html#506b0fed202c45ae1d42b1b9d5cd6b30">queue_wait</a>( conn-&gt;<a class="code" href="struct__litm__connection.html#92412056140d8e635b20b0681fa32c9a">input_queue</a> );
-<a name="l00277"></a>00277                 <span class="keywordflow">if</span> (rc) {
-<a name="l00278"></a>00278                         returnCode = <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d6229332fd981ccf3722bfd9635b2f03a3a2ca">LITM_CODE_ERROR_RECEIVE_WAIT</a>;
-<a name="l00279"></a>00279                         <span class="keywordflow">break</span>;
-<a name="l00280"></a>00280                 }
-<a name="l00281"></a>00281                 <span class="comment">// try again... this time around,</span>
-<a name="l00282"></a>00282                 <span class="comment">// we have been signaled that a message is</span>
-<a name="l00283"></a>00283                 <span class="comment">// ready... we should get lucky!</span>
-<a name="l00284"></a>00284 
-<a name="l00285"></a>00285         }<span class="comment">//while</span>
-<a name="l00286"></a>00286 
-<a name="l00287"></a>00287         <span class="comment">//DEBUG_LOG(LOG_DEBUG,"litm_receive_wait, STOP conn[%x]",conn);</span>
-<a name="l00288"></a>00288         <span class="keywordflow">return</span> returnCode;
-<a name="l00289"></a>00289 }<span class="comment">//</span>
-<a name="l00290"></a>00290 <span class="comment"></span>
-<a name="l00291"></a>00291 <span class="comment">/**</span>
-<a name="l00292"></a>00292 <span class="comment"> * Release a message to LITM</span>
-<a name="l00293"></a>00293 <span class="comment"> *</span>
-<a name="l00294"></a>00294 <span class="comment"> * This function should *ONLY* be used by client's</span>
-<a name="l00295"></a>00295 <span class="comment"> *  as a result of finishing the processing of an</span>
-<a name="l00296"></a>00296 <span class="comment"> *  envelope/message retrieved through ``litm_receive_nb''.</span>
-<a name="l00297"></a>00297 <span class="comment"> *</span>
-<a name="l00298"></a>00298 <span class="comment"> */</span>
-<a name="l00299"></a>00299         <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a>
-<a name="l00300"></a><a class="code" href="litm_8h.html#21def412c9b064fc929e0822f28d2a2a">00300</a> <a class="code" href="litm_8c.html#21def412c9b064fc929e0822f28d2a2a">litm_release</a>(<a class="code" href="struct__litm__connection.html">litm_connection</a> *conn, <a class="code" href="struct__litm__envelope.html">litm_envelope</a> *envlp) {
-<a name="l00301"></a>00301 
-<a name="l00302"></a>00302         <span class="keywordflow">return</span> <a class="code" href="switch_8c.html#2bab91639e612d51d0d7d8a3a64d0ace">switch_release</a>( conn, envlp );
-<a name="l00303"></a>00303 }<span class="comment">//</span>
-<a name="l00304"></a>00304 
-<a name="l00305"></a>00305 
-<a name="l00306"></a>00306         <span class="keywordtype">void</span> *
-<a name="l00307"></a><a class="code" href="litm_8h.html#aeb4655eae7753e131a710ff5a64b9f7">00307</a> <a class="code" href="litm_8c.html#aeb4655eae7753e131a710ff5a64b9f7">litm_get_message</a>(<a class="code" href="struct__litm__envelope.html">litm_envelope</a> *envlp) {
-<a name="l00308"></a>00308 
-<a name="l00309"></a>00309         <span class="keywordflow">if</span> (NULL==envlp) {
-<a name="l00310"></a>00310                 <span class="keywordflow">return</span> NULL;
-<a name="l00311"></a>00311         }
-<a name="l00312"></a>00312 
-<a name="l00313"></a>00313         <span class="keywordflow">return</span> envlp-&gt;<a class="code" href="struct__litm__envelope.html#5ed18526b98cb26460fdb273ea2178ac">msg</a>;
-<a name="l00314"></a>00314 }<span class="comment">//</span>
-<a name="l00315"></a>00315 
-<a name="l00316"></a>00316         <span class="keywordtype">char</span> *
-<a name="l00317"></a><a class="code" href="litm_8h.html#76f700b9bb8531fd8baf8931e67c4604">00317</a> <a class="code" href="litm_8c.html#76f700b9bb8531fd8baf8931e67c4604">litm_translate_code</a>(<a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a> code) {
-<a name="l00318"></a>00318 
-<a name="l00319"></a>00319         <span class="keywordflow">if</span> ((<span class="keyword">sizeof</span>(<a class="code" href="litm_8c.html#9ee7e0b55262f024b08cdf1f5d446dfb">LITM_CODE_MESSAGES</a>)/<span class="keyword">sizeof</span>(<span class="keywordtype">char</span> *)) &lt;= code )
-<a name="l00320"></a>00320                 <span class="keywordflow">return</span> NULL;
-<a name="l00321"></a>00321 
-<a name="l00322"></a>00322         <span class="keywordflow">return</span> <a class="code" href="litm_8c.html#9ee7e0b55262f024b08cdf1f5d446dfb">LITM_CODE_MESSAGES</a>[code];
-<a name="l00323"></a>00323 }<span class="comment">//</span>
-<a name="l00324"></a>00324 <span class="comment"></span>
-<a name="l00325"></a>00325 <span class="comment">/**</span>
-<a name="l00326"></a>00326 <span class="comment"> * Translates a seconds based timeout to a</span>
-<a name="l00327"></a>00327 <span class="comment"> * useconds timeout value whilst adjusting for</span>
-<a name="l00328"></a>00328 <span class="comment"> * the default timeout value.</span>
-<a name="l00329"></a>00329 <span class="comment"> *</span>
-<a name="l00330"></a>00330 <span class="comment"> */</span>
-<a name="l00331"></a>00331         <span class="keywordtype">int</span>
-<a name="l00332"></a><a class="code" href="litm_8c.html#2da7b55584eb9bfdd2202a3b4ecb4c0d">00332</a> <a class="code" href="litm_8c.html#2da7b55584eb9bfdd2202a3b4ecb4c0d">__litm_compute_timeout</a>(<span class="keywordtype">int</span> timeout) {
-<a name="l00333"></a>00333 
-<a name="l00334"></a>00334         <span class="keywordtype">int</span> computed_timeout;
-<a name="l00335"></a>00335 
-<a name="l00336"></a>00336         <span class="comment">// adjust to default</span>
-<a name="l00337"></a>00337         <span class="keywordflow">if</span> (0!=timeout) {
-<a name="l00338"></a>00338                 computed_timeout = timeout;
-<a name="l00339"></a>00339         } <span class="keywordflow">else</span> {
-<a name="l00340"></a>00340                 computed_timeout = <a class="code" href="litm_8h.html#806db96f4405b4e9f7d091c52f835fff">LITM_DEFAULT_MAX_TIMEOUT</a>;
-<a name="l00341"></a>00341         }
-<a name="l00342"></a>00342         computed_timeout *= 1000*1000;
-<a name="l00343"></a>00343 
-<a name="l00344"></a>00344         <span class="keywordflow">return</span> computed_timeout;
-<a name="l00345"></a>00345 }
+<a name="l00217"></a>00217 
+<a name="l00218"></a>00218         <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a>
+<a name="l00219"></a><a class="code" href="litm_8h.html#9e932bb687ba4087d90eca7aa6583f0a">00219</a> <a class="code" href="litm_8c.html#9e932bb687ba4087d90eca7aa6583f0a">litm_send_shutdown</a>(     <a class="code" href="struct__litm__connection.html">litm_connection</a> *conn,
+<a name="l00220"></a>00220                                                 <a class="code" href="litm_8h.html#e7fcc1b5cd037f318d4fe40a2f9d30d3">litm_bus</a> bus_id,
+<a name="l00221"></a>00221                                                 <span class="keywordtype">void</span> *msg,
+<a name="l00222"></a>00222                                                 <span class="keywordtype">void</span> (*cleaner)(<span class="keywordtype">void</span> *msg) ) {
+<a name="l00223"></a>00223 
+<a name="l00224"></a>00224         <span class="keywordflow">return</span> <a class="code" href="switch_8c.html#cc4861fecbb5d0b20174fc1513539554">switch_send_shutdown</a>(conn, bus_id, msg, cleaner);
+<a name="l00225"></a>00225 }<span class="comment">//</span>
+<a name="l00226"></a>00226 <span class="comment"></span>
+<a name="l00227"></a>00227 <span class="comment">/**</span>
+<a name="l00228"></a>00228 <span class="comment"> * Receive (non-blocking) function for clients</span>
+<a name="l00229"></a>00229 <span class="comment"> *</span>
+<a name="l00230"></a>00230 <span class="comment"> * \note It is the responsibility of the client</span>
+<a name="l00231"></a>00231 <span class="comment"> *       to _not_ use this function once a</span>
+<a name="l00232"></a>00232 <span class="comment"> *       connection is closed.</span>
+<a name="l00233"></a>00233 <span class="comment"> *</span>
+<a name="l00234"></a>00234 <span class="comment"> */</span>
+<a name="l00235"></a>00235         <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a>
+<a name="l00236"></a><a class="code" href="litm_8h.html#2b6bffa08706c97ea5d9f6d670f8b359">00236</a> <a class="code" href="litm_8c.html#2b6bffa08706c97ea5d9f6d670f8b359">litm_receive_nb</a>(<a class="code" href="struct__litm__connection.html">litm_connection</a> *conn, <a class="code" href="struct__litm__envelope.html">litm_envelope</a> **envlp) {
+<a name="l00237"></a>00237 
+<a name="l00238"></a>00238         <span class="keywordflow">if</span> (NULL==conn) {
+<a name="l00239"></a>00239                 <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293030ffb6b9de7d729330056b0c40eeaa4">LITM_CODE_ERROR_BAD_CONNECTION</a>;
+<a name="l00240"></a>00240         }
+<a name="l00241"></a>00241         <span class="keywordtype">int</span> returnCode = <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622930b651a4f84388b526d32980e3b43c4a2">LITM_CODE_OK</a>; <span class="comment">//optimistic</span>
+<a name="l00242"></a>00242 
+<a name="l00243"></a>00243         *envlp = <a class="code" href="queue_8c.html#819eed56d043a96499116f087d928057">queue_get_nb</a>( conn-&gt;<a class="code" href="struct__litm__connection.html#92412056140d8e635b20b0681fa32c9a">input_queue</a> );
+<a name="l00244"></a>00244         <span class="keywordflow">if</span> (NULL==*envlp) {
+<a name="l00245"></a>00245                 returnCode=<a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293c4db0bf4a6b68b3ae976c9cbe323da3e">LITM_CODE_NO_MESSAGE</a>;
+<a name="l00246"></a>00246         } <span class="keywordflow">else</span> {
+<a name="l00247"></a>00247                 conn-&gt;<a class="code" href="struct__litm__connection.html#532194a5ef4d0b23c7020bafab537c43">received</a>++;
+<a name="l00248"></a>00248         }
+<a name="l00249"></a>00249 
+<a name="l00250"></a>00250         <span class="keywordflow">return</span> returnCode;
+<a name="l00251"></a>00251 }<span class="comment">//</span>
+<a name="l00252"></a>00252 <span class="comment"></span>
+<a name="l00253"></a>00253 <span class="comment">/**</span>
+<a name="l00254"></a>00254 <span class="comment"> * Receive with wait</span>
+<a name="l00255"></a>00255 <span class="comment"> */</span>
+<a name="l00256"></a>00256         <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a>
+<a name="l00257"></a><a class="code" href="litm_8h.html#c3d5ff42f38bf4820ab8e842276062a9">00257</a> <a class="code" href="litm_8c.html#c3d5ff42f38bf4820ab8e842276062a9">litm_receive_wait</a>(<a class="code" href="struct__litm__connection.html">litm_connection</a> *conn, <a class="code" href="struct__litm__envelope.html">litm_envelope</a> **envlp) {
+<a name="l00258"></a>00258 
+<a name="l00259"></a>00259         <span class="keywordflow">if</span> (NULL==conn) {
+<a name="l00260"></a>00260                 <span class="keywordflow">return</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d62293030ffb6b9de7d729330056b0c40eeaa4">LITM_CODE_ERROR_BAD_CONNECTION</a>;
+<a name="l00261"></a>00261         }
+<a name="l00262"></a>00262         <span class="keywordtype">int</span> returnCode = <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622930b651a4f84388b526d32980e3b43c4a2">LITM_CODE_OK</a>; <span class="comment">//optimistic</span>
+<a name="l00263"></a>00263 
+<a name="l00264"></a>00264         <span class="keywordflow">while</span>(1) {
+<a name="l00265"></a>00265 
+<a name="l00266"></a>00266                 <span class="comment">// let's see first if we need to bother with the</span>
+<a name="l00267"></a>00267                 <span class="comment">// conditional waiting on the queue.</span>
+<a name="l00268"></a>00268                 <span class="comment">// This also takes care of the probability of</span>
+<a name="l00269"></a>00269                 <span class="comment">//  missing a signal for whatever reason</span>
+<a name="l00270"></a>00270                 *envlp = <a class="code" href="queue_8c.html#819eed56d043a96499116f087d928057">queue_get_nb</a>( conn-&gt;<a class="code" href="struct__litm__connection.html#92412056140d8e635b20b0681fa32c9a">input_queue</a> );
+<a name="l00271"></a>00271                 <span class="keywordflow">if</span> (NULL!=*envlp) {
+<a name="l00272"></a>00272 
+<a name="l00273"></a>00273                         conn-&gt;<a class="code" href="struct__litm__connection.html#532194a5ef4d0b23c7020bafab537c43">received</a>++;
+<a name="l00274"></a>00274                         <span class="keywordflow">break</span>;
+<a name="l00275"></a>00275                 }
+<a name="l00276"></a>00276 
+<a name="l00277"></a>00277                 <span class="comment">//give the chance to another thread</span>
+<a name="l00278"></a>00278                 usleep(1);
+<a name="l00279"></a>00279                 <span class="comment">//sched_yield();</span>
+<a name="l00280"></a>00280 
+<a name="l00281"></a>00281                 <span class="keywordtype">int</span> rc= <a class="code" href="queue_8c.html#506b0fed202c45ae1d42b1b9d5cd6b30">queue_wait</a>( conn-&gt;<a class="code" href="struct__litm__connection.html#92412056140d8e635b20b0681fa32c9a">input_queue</a> );
+<a name="l00282"></a>00282                 <span class="keywordflow">if</span> (rc) {
+<a name="l00283"></a>00283                         returnCode = <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d6229332fd981ccf3722bfd9635b2f03a3a2ca">LITM_CODE_ERROR_RECEIVE_WAIT</a>;
+<a name="l00284"></a>00284                         <span class="keywordflow">break</span>;
+<a name="l00285"></a>00285                 }
+<a name="l00286"></a>00286                 <span class="comment">// try again... this time around,</span>
+<a name="l00287"></a>00287                 <span class="comment">// we have been signaled that a message is</span>
+<a name="l00288"></a>00288                 <span class="comment">// ready... we should get lucky!</span>
+<a name="l00289"></a>00289 
+<a name="l00290"></a>00290         }<span class="comment">//while</span>
+<a name="l00291"></a>00291 
+<a name="l00292"></a>00292         <span class="comment">//DEBUG_LOG(LOG_DEBUG,"litm_receive_wait, STOP conn[%x]",conn);</span>
+<a name="l00293"></a>00293         <span class="keywordflow">return</span> returnCode;
+<a name="l00294"></a>00294 }<span class="comment">//</span>
+<a name="l00295"></a>00295 <span class="comment"></span>
+<a name="l00296"></a>00296 <span class="comment">/**</span>
+<a name="l00297"></a>00297 <span class="comment"> * Release a message to LITM</span>
+<a name="l00298"></a>00298 <span class="comment"> *</span>
+<a name="l00299"></a>00299 <span class="comment"> * This function should *ONLY* be used by client's</span>
+<a name="l00300"></a>00300 <span class="comment"> *  as a result of finishing the processing of an</span>
+<a name="l00301"></a>00301 <span class="comment"> *  envelope/message retrieved through ``litm_receive_nb''.</span>
+<a name="l00302"></a>00302 <span class="comment"> *</span>
+<a name="l00303"></a>00303 <span class="comment"> */</span>
+<a name="l00304"></a>00304         <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a>
+<a name="l00305"></a><a class="code" href="litm_8h.html#21def412c9b064fc929e0822f28d2a2a">00305</a> <a class="code" href="litm_8c.html#21def412c9b064fc929e0822f28d2a2a">litm_release</a>(<a class="code" href="struct__litm__connection.html">litm_connection</a> *conn, <a class="code" href="struct__litm__envelope.html">litm_envelope</a> *envlp) {
+<a name="l00306"></a>00306 
+<a name="l00307"></a>00307         <span class="keywordflow">return</span> <a class="code" href="switch_8c.html#2bab91639e612d51d0d7d8a3a64d0ace">switch_release</a>( conn, envlp );
+<a name="l00308"></a>00308 }<span class="comment">//</span>
+<a name="l00309"></a>00309 
+<a name="l00310"></a>00310 
+<a name="l00311"></a>00311         <span class="keywordtype">void</span> *
+<a name="l00312"></a><a class="code" href="litm_8h.html#aeb4655eae7753e131a710ff5a64b9f7">00312</a> <a class="code" href="litm_8c.html#aeb4655eae7753e131a710ff5a64b9f7">litm_get_message</a>(<a class="code" href="struct__litm__envelope.html">litm_envelope</a> *envlp) {
+<a name="l00313"></a>00313 
+<a name="l00314"></a>00314         <span class="keywordflow">if</span> (NULL==envlp) {
+<a name="l00315"></a>00315                 <span class="keywordflow">return</span> NULL;
+<a name="l00316"></a>00316         }
+<a name="l00317"></a>00317 
+<a name="l00318"></a>00318         <span class="keywordflow">return</span> envlp-&gt;<a class="code" href="struct__litm__envelope.html#5ed18526b98cb26460fdb273ea2178ac">msg</a>;
+<a name="l00319"></a>00319 }<span class="comment">//</span>
+<a name="l00320"></a>00320 
+<a name="l00321"></a>00321         <span class="keywordtype">char</span> *
+<a name="l00322"></a><a class="code" href="litm_8h.html#76f700b9bb8531fd8baf8931e67c4604">00322</a> <a class="code" href="litm_8c.html#76f700b9bb8531fd8baf8931e67c4604">litm_translate_code</a>(<a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a> code) {
+<a name="l00323"></a>00323 
+<a name="l00324"></a>00324         <span class="keywordflow">if</span> ((<span class="keyword">sizeof</span>(<a class="code" href="litm_8c.html#9ee7e0b55262f024b08cdf1f5d446dfb">LITM_CODE_MESSAGES</a>)/<span class="keyword">sizeof</span>(<span class="keywordtype">char</span> *)) &lt;= code )
+<a name="l00325"></a>00325                 <span class="keywordflow">return</span> NULL;
+<a name="l00326"></a>00326 
+<a name="l00327"></a>00327         <span class="keywordflow">return</span> <a class="code" href="litm_8c.html#9ee7e0b55262f024b08cdf1f5d446dfb">LITM_CODE_MESSAGES</a>[code];
+<a name="l00328"></a>00328 }<span class="comment">//</span>
+<a name="l00329"></a>00329 <span class="comment"></span>
+<a name="l00330"></a>00330 <span class="comment">/**</span>
+<a name="l00331"></a>00331 <span class="comment"> * Translates a seconds based timeout to a</span>
+<a name="l00332"></a>00332 <span class="comment"> * useconds timeout value whilst adjusting for</span>
+<a name="l00333"></a>00333 <span class="comment"> * the default timeout value.</span>
+<a name="l00334"></a>00334 <span class="comment"> *</span>
+<a name="l00335"></a>00335 <span class="comment"> */</span>
+<a name="l00336"></a>00336         <span class="keywordtype">int</span>
+<a name="l00337"></a><a class="code" href="litm_8c.html#2da7b55584eb9bfdd2202a3b4ecb4c0d">00337</a> <a class="code" href="litm_8c.html#2da7b55584eb9bfdd2202a3b4ecb4c0d">__litm_compute_timeout</a>(<span class="keywordtype">int</span> timeout) {
+<a name="l00338"></a>00338 
+<a name="l00339"></a>00339         <span class="keywordtype">int</span> computed_timeout;
+<a name="l00340"></a>00340 
+<a name="l00341"></a>00341         <span class="comment">// adjust to default</span>
+<a name="l00342"></a>00342         <span class="keywordflow">if</span> (0!=timeout) {
+<a name="l00343"></a>00343                 computed_timeout = timeout;
+<a name="l00344"></a>00344         } <span class="keywordflow">else</span> {
+<a name="l00345"></a>00345                 computed_timeout = <a class="code" href="litm_8h.html#806db96f4405b4e9f7d091c52f835fff">LITM_DEFAULT_MAX_TIMEOUT</a>;
+<a name="l00346"></a>00346         }
+<a name="l00347"></a>00347         computed_timeout *= 1000*1000;
+<a name="l00348"></a>00348 
+<a name="l00349"></a>00349         <span class="keywordflow">return</span> computed_timeout;
+<a name="l00350"></a>00350 }
+<a name="l00351"></a>00351 
+<a name="l00352"></a>00352 
+<a name="l00353"></a>00353         <span class="keywordtype">void</span>
+<a name="l00354"></a><a class="code" href="litm_8h.html#4af596df43cd495373587efed2dbb9ce">00354</a> <a class="code" href="litm_8c.html#4af596df43cd495373587efed2dbb9ce">litm_wait_shutdown</a>(<span class="keywordtype">void</span>){
+<a name="l00355"></a>00355 
+<a name="l00356"></a>00356         <a class="code" href="switch_8c.html#21156cec60e58e66f5d409c0cfbcfb12">__switch_wait_shutdown</a>();
+<a name="l00357"></a>00357 
+<a name="l00358"></a>00358 }
 </pre></div></div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Thu May 14 13:00:43 2009 for LITM by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Fri May 15 10:57:30 2009 for LITM by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

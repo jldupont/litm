@@ -1,2 +1,4 @@
-<area shape="rect" href="$queue_8c.html#ad63e2d2e97a079465ca5651b5b7c36e" title="queue_put_nb" alt="" coords="276,5,377,32">
-<area shape="rect" href="$queue_8c.html#24e3c9aaef201f1f66bcd8591b1e4c15" title="queue_put_safe" alt="" coords="428,5,540,32">
+<area shape="rect" href="$queue_8c.html#6771a5883953007fe2dc632d7c56cc98" title="queue_put_head_wait" alt="" coords="275,5,421,32">
+<area shape="rect" href="$queue_8c.html#ad63e2d2e97a079465ca5651b5b7c36e" title="queue_put_nb" alt="" coords="297,56,399,83">
+<area shape="rect" href="$queue_8c.html#145cb346a7b7660c1fdf011298d6ff5d" title="queue_put_head_safe" alt="" coords="471,5,617,32">
+<area shape="rect" href="$queue_8c.html#24e3c9aaef201f1f66bcd8591b1e4c15" title="queue_put_safe" alt="" coords="488,56,600,83">
