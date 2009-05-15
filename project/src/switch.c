@@ -89,11 +89,19 @@ __switch_init_tables(void) {
 			_subscribers[b][c] = NULL;
 }
 
+/**
+ * Wait for shutdown
+ *
+ * Once a litm_send_shutdowm is used, this function
+ * should be called to neatly shutdown the process.
+ */
 	void
 __switch_wait_shutdown(void) {
 
 	pthread_join( _switchThread, NULL );
 }
+
+
 /**
  * The switch thread dequeues messages from the
  *  ``input queue`` and dispatches them to the
@@ -123,8 +131,6 @@ __switch_thread_function(void *params) {
 		if (LITM_SHUTDOWN_FLAG_TRUE==shutdown_flag) {
 			break;
 		}
-
-		//usleep(50*1000);
 
 		// we block here since if we have no messages
 		//  to process, we don't have anything else to do...
@@ -168,13 +174,6 @@ __switch_thread_function(void *params) {
 
 		}
 
-		// FROM THIS POINT, the envelope was pending
-		//  so we need to figured out where to send it next.
-		// NOTE: anything short of LITM_CODE_OK gets the
-		//       envelope finalized.  This behavior covers
-		//       the normal case where all recipients have
-		//       had the chance to glance over the message.
-
 		sender       = (e->routes).sender;
 		current      = (e->routes).current;
 		current_conn = (e->routes).current_conn;
@@ -202,7 +201,7 @@ __switch_thread_function(void *params) {
 				DEBUG_LOG(LOG_DEBUG, "__switch_thread_function: SHUTDOWN");
 				shutdown_flag = LITM_SHUTDOWN_FLAG_TRUE;
 			}
-			continue;
+			continue; // <=======================================
 
 
 		default:
@@ -216,13 +215,14 @@ __switch_thread_function(void *params) {
 		}
 
 
-		// WE ARE GOOD TO GO
-
-
 		//adjust envelope
 		(e->routes).current      = next_index;
 		(e->routes).current_conn = next;
 
+
+
+
+		// WE ARE GOOD TO GO
 		code = __switch_try_sending_or_requeue( next, e );
 		err_msg = litm_translate_code(code);
 
@@ -238,7 +238,7 @@ __switch_thread_function(void *params) {
 		case LITM_CODE_BUSY_OUTPUT_QUEUE:
 		case LITM_CODE_BUSY_CONNECTIONS:
 			busy++;
-			DEBUG_LOG(LOG_DEBUG, thisMsg, next, err_msg);
+			//DEBUG_LOG(LOG_DEBUG, thisMsg, next, err_msg);
 			break;
 
 			/*
@@ -304,11 +304,13 @@ __switch_handle_pending(litm_envelope *e) {
 
 	case LITM_CODE_OK:
 		(e->routes).pending = 0;
-		DEBUG_LOG(LOG_DEBUG, ">>> PENDING DELIVERED conn[%x][%i] envlp[%x]", conn, conn->id, e);
+		//DEBUG_LOG(LOG_DEBUG, ">>> PENDING DELIVERED conn[%x][%i] envlp[%x]", conn, conn->id, e);
 		break;
 
 	case LITM_CODE_BUSY_OUTPUT_QUEUE:
 	case LITM_CODE_BUSY_CONNECTIONS:
+		break;
+
 	case LITM_CODE_ERROR_BAD_CONNECTION:
 		DEBUG_LOG(LOG_DEBUG, thisMsg, conn, translated_code);
 		break;
@@ -340,7 +342,7 @@ switch_release(litm_connection *conn, litm_envelope *envlp) {
 	// if a message comes this way, it means a client
 	// has finished processing it... get rid of the
 	// "pending" state if at all present.
-	(envlp->routes).pending = 0;
+	(envlp->routes).pending = 0; //precaution
 	envlp->released_count ++;
 	conn->released++;
 
@@ -376,6 +378,11 @@ __switch_try_sending_or_requeue(litm_connection *conn, litm_envelope *envlp) {
 		return LITM_CODE_ERROR_INVALID_ENVELOPE;
 
 	litm_code result = __switch_try_sending_to_recipient(conn, envlp);
+
+	if (LITM_CODE_OK==result) {
+		(envlp->routes).pending = 0;
+		envlp->delivery_count++;
+	}
 
 	// requeue in switch
 	if (LITM_CODE_BUSY_OUTPUT_QUEUE==result) {
@@ -435,10 +442,6 @@ __switch_try_sending_to_recipient(	litm_connection *conn,
 		break;
 	}
 
-	//code = queue_put_nb( conn->input_queue, (void *) env);
-
-
-	//DEBUG_LOG(LOG_ERR, "__switch_try_sending_to_recipient: STOP  conn[%x]", conn );
 
 	switch(code) {
 	case 0: //error
@@ -446,12 +449,11 @@ __switch_try_sending_to_recipient(	litm_connection *conn,
 		break;
 	case 1: //success
 		//DEBUG_LOG(LOG_DEBUG, "__switch_try_sending_to_recipient: DELIVERED to conn[%x][%i] envlp[%x] sender[%x][%i]", conn, conn->id, env, (env->routes).sender, (env->routes).sender->id);
-		env->delivery_count++;
 		returnCode = LITM_CODE_OK;
 		break;
 	case -1: //busy
 		returnCode = LITM_CODE_BUSY_OUTPUT_QUEUE;
-		DEBUG_LOG(LOG_ERR, ">>> BUSY conn[%x][%i]", conn, conn->id );
+		//DEBUG_LOG(LOG_ERR, ">>> BUSY conn[%x][%i]", conn, conn->id );
 		break;
 	case 2:
 		// TODO this definitely needs fixing!
@@ -649,6 +651,10 @@ __switch_safe_send( litm_connection *sender,
 		break;
 	}
 
+	//just enough to let the chance to someother thread
+	usleep(1);
+	//sched_yield();
+
 	return code;
 }//
 
@@ -671,7 +677,6 @@ __switch_finalize(litm_envelope *envlp) {
 
 	if (NULL==cleaner) {
 		DEBUG_LOG(LOG_DEBUG, "__switch_finalize: envelope[%x] freeing", envlp );
-
 		free( envlp->msg );
 	} else {
 		(*cleaner)( (void *) envlp->msg );
