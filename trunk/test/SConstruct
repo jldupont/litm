@@ -26,3 +26,4 @@ Program('test4', Glob("src/test4.c"), LIBS=['litm_debug', 'pthread'] )
 Program('test5', Glob("src/test5.c"), LIBS=['litm_debug', 'pthread'] )
 
 Program('test6', Glob("src/test6.c"), LIBS=['litm_debug', 'pthread'] )
+#Program('test6', Glob("src/test6.c"), LIBS=['litm', 'pthread'] )
