@@ -207,15 +207,17 @@ queue_put_wait(queue *q, void *node) {
 			break;
 
 		} else {
-
+			//DEBUG_LOG(LOG_DEBUG,"queue_put_wait: BEFORE LOCK q[%x][%i]", q, q->id);
 			pthread_mutex_lock( q->cond_mutex );
 
+				//DEBUG_LOG(LOG_DEBUG,"queue_put_wait: BEFORE COND_WAIT q[%x][%i]", q, q->id);
 				int rc = pthread_cond_wait( q->cond, q->cond_mutex );
 				if (rc) {
 					DEBUG_LOG(LOG_ERR,"queue_put_wait: CONDITION WAIT ERROR");
 				}
 
 			pthread_mutex_unlock( q->cond_mutex );
+			//DEBUG_LOG(LOG_DEBUG,"queue_put_wait: AFTER LOCK q[%x][%i]", q, q->id);
 		}
 
 	}
@@ -335,10 +337,11 @@ int queue_wait(queue *q) {
 		return 1;
 	}
 
+	//DEBUG_LOG(LOG_DEBUG,"queue_wait: BEFORE LOCK on q[%x][%i]",q,q->id);
 	pthread_mutex_lock( q->cond_mutex );
 
 		// it seems we need to wait...
-		//DEBUG_LOG(LOG_DEBUG,"queue_get_wait: waiting on q[%x][%i]",q,q->id);
+		//DEBUG_LOG(LOG_DEBUG,"queue_wait: BEFORE COND_WAIT on q[%x][%i]",q,q->id);
 		int rc = pthread_cond_wait( q->cond, q->cond_mutex );
 
 		//int result2 = pthread_mutex_trylock( q->mutex );
@@ -349,6 +352,7 @@ int queue_wait(queue *q) {
 		}
 
 	pthread_mutex_unlock( q->cond_mutex );
+	//DEBUG_LOG(LOG_DEBUG,"queue_wait: AFTER LOCK on q[%x][%i]",q,q->id);
 
 	return rc;
 }//
@@ -523,6 +527,7 @@ queue_put_head_wait(queue *q, void *node) {
 
 		// quick try... hopefully we get lucky
 		if (EBUSY != pthread_mutex_trylock( q->mutex )) {
+
 			code = queue_put_head_safe( q, node );
 
 			pthread_mutex_unlock( q->mutex );
@@ -533,14 +538,17 @@ queue_put_head_wait(queue *q, void *node) {
 
 		} else {
 
+			DEBUG_LOG(LOG_DEBUG,"queue_put_head_wait: BEFORE LOCK q[%x][%i]", q, q->id);
 			pthread_mutex_lock( q->cond_mutex );
 
+				DEBUG_LOG(LOG_DEBUG,"queue_put_head_wait: BEFORE COND_WAIT q[%x][%i]", q, q->id);
 				int rc = pthread_cond_wait( q->cond, q->cond_mutex );
 				if (rc) {
 					DEBUG_LOG(LOG_ERR,"queue_put_wait: CONDITION WAIT ERROR");
 				}
 
 			pthread_mutex_unlock( q->cond_mutex );
+			DEBUG_LOG(LOG_DEBUG,"queue_put_head_wait: AFTER LOCK q[%x][%i]", q, q->id);
 		}
 
 	}

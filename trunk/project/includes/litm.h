@@ -116,6 +116,53 @@
  *
  *				\endcode
  *
+ *
+ * \section Connecting_Subscribing Connecting and Subscribing
+ *
+ * 		\msc
+ *			Client, LITM;
+ *
+ *			Client => LITM [label="litm_connect()"];
+ *			Client => LITM [label="litm_subscribe()"];
+ *
+ * 		\endmsc
+ *
+ *
+ * \section Sending_Receiving  Sending and Receiving process
+ *
+ *
+ * 		\msc
+ *			Sender, LITM, Receivers;
+ *
+ *			Sender    => LITM      [label="litm_send()"];
+ *			LITM      -> Receivers [label="litm_receive()"];
+ *			Receivers => LITM      [label="litm_release()"];
+ *			...;
+ *			LITM      -> Receivers [label="litm_receive()"];
+ *			Receivers => LITM      [label="litm_release()"];
+ *
+ * 		\endmsc
+ *
+ * \section Shutdown  Shutdown process
+ *
+ *
+ * 		\msc
+ *			Sender, LITM, Receivers;
+ *
+ *			Sender    => LITM      [label="litm_send_shutdown()"];
+ *			LITM      -> Receivers [label="litm_receive_wait()"];
+ *			Receivers => LITM      [label="litm_release()"];
+ *			...;
+ *			LITM      -> Receivers [label="litm_receive_wait()"];
+ *			Receivers => LITM      [label="litm_release()"];
+ *			---						[label="'main' thread must call litm_wait_shutdown()"];
+ *			Sender    => LITM		[label="litm_wait_shutdown()"];
+ *
+ * 		\endmsc
+
+ *
+ *
+ *
  * \section Release_Notes Release Notes
  *
  *		\subsection release_0_1 Release 0.1

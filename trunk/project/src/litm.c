@@ -195,7 +195,8 @@ litm_send_wait(	litm_connection *conn,
 		}
 
 		DEBUG_LOG(LOG_DEBUG, "litm_send_wait: NEED TO RETRY conn[%x][%3i] bus[%3i]", conn, conn->id, bus_id);
-		usleep( 10*1000 );
+		sched_yield();
+		//usleep( 10*1000 );
 
 		// at this point, we just back-off an retry
 		int result = random_sleep_period(	start,
@@ -273,6 +274,10 @@ litm_receive_wait(litm_connection *conn, litm_envelope **envlp) {
 			break;
 		}
 
+		//give the chance to another thread
+		usleep(1);
+		//sched_yield();
+
 		int rc= queue_wait( conn->input_queue );
 		if (rc) {
 			returnCode = LITM_CODE_ERROR_RECEIVE_WAIT;
@@ -343,6 +348,7 @@ __litm_compute_timeout(int timeout) {
 
 	return computed_timeout;
 }
+
 
 	void
 litm_wait_shutdown(void){
