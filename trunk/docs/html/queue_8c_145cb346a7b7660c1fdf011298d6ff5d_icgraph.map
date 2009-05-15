@@ -1,6 +1,6 @@
 <area shape="rect" href="$queue_8h.html#5a5ec0893ace49a628bf1902c2f3999d" title="queue_put_head" alt="" coords="451,56,565,83">
-<area shape="rect" href="$queue_8h.html#451122872903237ffff449a74b52608d" title="queue_put_head_nb" alt="" coords="208,107,344,133">
-<area shape="rect" href="$queue_8h.html#6771a5883953007fe2dc632d7c56cc98" title="queue_put_head_wait" alt="" coords="203,157,349,184">
+<area shape="rect" href="$queue_8h.html#451122872903237ffff449a74b52608d" title="queue_put_head_nb" alt="" coords="208,157,344,184">
+<area shape="rect" href="$queue_8h.html#6771a5883953007fe2dc632d7c56cc98" title="queue_put_head_wait" alt="" coords="203,107,349,133">
 <area shape="rect" href="$switch_8c.html#a915fa62ee3a445f9acac19e744005e3" title="__switch_try_sending_or_requeue" alt="" coords="668,56,884,83">
 <area shape="rect" href="$switch_8c.html#195303a03d0b0c2a3f44951a38b2b0f6" title="__switch_handle_pending" alt="" coords="935,5,1103,32">
 <area shape="rect" href="$switch_8c.html#99ec0a50e5e594cb656f9ea1f7d39554" title="__switch_thread_function" alt="" coords="1152,31,1320,57">
@@ -9,9 +9,9 @@
 <area shape="rect" href="$litm_8h.html#bc852d2eb14353e36adf21c33eab03a3" title="litm_connect" alt="" coords="1689,5,1785,32">
 <area shape="rect" href="$litm_8h.html#eff57ac5ec37914599624703229ba8ca" title="litm_connect_ex_wait" alt="" coords="1664,56,1811,83">
 <area shape="rect" href="$switch_8c.html#9b8ef3fb85a6655628b2e534bc7e4245" title="__switch_safe_send" alt="" coords="439,157,577,184">
-<area shape="rect" href="$switch_8c.html#1025953257d7d23c8473d945dbf0c9db" title="__switch_try_sending_to_recipient" alt="" coords="399,107,617,133">
 <area shape="rect" href="$switch_8h.html#7ff2d602f713f81e854c172e842afcad" title="switch_send" alt="" coords="729,157,823,184">
 <area shape="rect" href="$switch_8h.html#cc4861fecbb5d0b20174fc1513539554" title="switch_send_shutdown" alt="" coords="699,208,853,235">
 <area shape="rect" href="$litm_8h.html#bed13398c1bc31a6c81c3e50997e2f2c" title="litm_send" alt="" coords="980,107,1057,133">
 <area shape="rect" href="$litm_8h.html#f3f6e0026de45f6a16f234a28a0d003b" title="litm_send_wait" alt="" coords="965,157,1072,184">
 <area shape="rect" href="$litm_8h.html#9e932bb687ba4087d90eca7aa6583f0a" title="litm_send_shutdown" alt="" coords="949,208,1088,235">
+<area shape="rect" href="$switch_8c.html#1025953257d7d23c8473d945dbf0c9db" title="__switch_try_sending_to_recipient" alt="" coords="399,107,617,133">

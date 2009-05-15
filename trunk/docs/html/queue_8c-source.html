@@ -416,7 +416,7 @@
 <a name="l00394"></a>00394                 }
 <a name="l00395"></a>00395                 <span class="comment">//DEBUG_LOG(LOG_DEBUG,"QQQ: q[%x] id[%3i] num[%3i] in[%4i] out[%4i] COUNT[%4i]", q, q-&gt;id, q-&gt;num, q-&gt;total_in, q-&gt;total_out, count);</span>
 <a name="l00396"></a>00396                 <span class="keywordflow">if</span> ((in-out) != count) {
-<a name="l00397"></a>00397                         <a class="code" href="logger_8h.html#21a2c7330a04ac78200a986f66609369">DEBUG_LOG</a>(LOG_ERR, <span class="stringliteral">"QQQ: &gt;&gt;&gt; ERROR &lt;&lt;&lt;"</span>);
+<a name="l00397"></a>00397                         <a class="code" href="logger_8h.html#21a2c7330a04ac78200a986f66609369">DEBUG_LOG</a>(LOG_ERR, <span class="stringliteral">"__queue_get_safe: &gt;&gt;&gt; ERROR &lt;&lt;&lt;  q[%x][%i]"</span>, q, q-&gt;<a class="code" href="structqueue.html#001f6e1ba37b1c3cabd934457ff2eff9">id</a>);
 <a name="l00398"></a>00398                 }
 <a name="l00399"></a>00399                 <span class="comment">//}</span>
 <a name="l00400"></a>00400 
@@ -625,7 +625,7 @@
 <a name="l00603"></a>00603         <span class="keywordflow">return</span> code;
 <a name="l00604"></a>00604 }<span class="comment">//</span>
 </pre></div></div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Fri May 15 10:57:30 2009 for LITM by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Fri May 15 11:43:02 2009 for LITM by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

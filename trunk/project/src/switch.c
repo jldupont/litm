@@ -73,7 +73,7 @@ switch_init(void) {
 		_switch_queue = queue_create(-1);
 		__switch_init_tables();
 
-		DEBUG_LOG(LOG_INFO, "switch_init: queue[%x] ", _switch_queue);
+		//DEBUG_LOG(LOG_INFO, "switch_init: queue[%x] ", _switch_queue);
 
 		pthread_create(&_switchThread, NULL, &__switch_thread_function, NULL);
 		_switchThread_status = 1; //created
@@ -120,7 +120,7 @@ __switch_thread_function(void *params) {
 	int current;
 	static char *thisMsg = "__switch_thread_function: conn[%x] code[%s]";
 
-	DEBUG_LOG(LOG_INFO, "__switch_thread_function: STARTING");
+	DEBUG_LOG(LOG_INFO, "__switch_thread_function: STARTING with queue[%x]", _switch_queue);
 
 	// for stats
 	long delivered=0, dequeued=0, waited=0, pending=0, busy=0;
@@ -135,7 +135,16 @@ __switch_thread_function(void *params) {
 		// we block here since if we have no messages
 		//  to process, we don't have anything else to do...
 		e=(litm_envelope *) queue_get_nb( _switch_queue );
-
+		if (NULL==e) {
+			waited++;
+			// interleave threads for faster response time...
+			// and better support for quick shutdown procedure
+			usleep(1*1000);
+			continue;
+		} else {
+			dequeued++;
+		}
+		/*
 		if (NULL==e) {
 			waited++;
 			int result = queue_wait( _switch_queue );
@@ -143,10 +152,11 @@ __switch_thread_function(void *params) {
 				DEBUG_LOG(LOG_ERR, "__switch_thread_function: ERROR whilst queue_wait");
 				break;
 			}
-			continue;  // <===============================================
+			continue;
 		} else {
 			dequeued++;
 		}
+		*/
 
 
 
@@ -620,12 +630,17 @@ __switch_safe_send( litm_connection *sender,
 	switch(shutdown_flag) {
 
 	// more pressing....
+	// NOTE: don't use the '_wait' functions as it
+	//       might cause race conditions.
+	//		 It is better to throttle the senders
+	//		 then the receivers.
+
 	case LITM_SHUTDOWN_FLAG_TRUE:
-		result = queue_put_head_wait(_switch_queue, (void *) e);
+		result = queue_put_head_nb(_switch_queue, (void *) e);
 		break;
 
 	case LITM_SHUTDOWN_FLAG_FALSE:
-		result = queue_put_wait(_switch_queue, (void *) e);
+		result = queue_put_nb(_switch_queue, (void *) e);
 		break;
 	}
 
@@ -651,9 +666,15 @@ __switch_safe_send( litm_connection *sender,
 		break;
 	}
 
-	//just enough to let the chance to someother thread
-	usleep(1);
-	//sched_yield();
+	// NOTE:  we need to leave more CPU cycles to the
+	//        receivers since there is a probable multiplication
+	//        factor involved due to the nature of the
+	//        communication patterns supported (1-to-many)
+	//		  This requirement is supported through the
+	//		  backoff procedure highlighted at the beginning of
+	//		  this function.
+
+	//usleep(10*1000);
 
 	return code;
 }//
