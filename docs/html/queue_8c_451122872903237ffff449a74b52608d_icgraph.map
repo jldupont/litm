@@ -1,0 +1,6 @@
+<area shape="rect" href="$switch_8c.html#9b8ef3fb85a6655628b2e534bc7e4245" title="__switch_safe_send" alt="" coords="193,81,332,108">
+<area shape="rect" href="$switch_8h.html#7ff2d602f713f81e854c172e842afcad" title="switch_send" alt="" coords="413,56,507,83">
+<area shape="rect" href="$switch_8h.html#cc4861fecbb5d0b20174fc1513539554" title="switch_send_shutdown" alt="" coords="383,107,537,133">
+<area shape="rect" href="$litm_8h.html#bed13398c1bc31a6c81c3e50997e2f2c" title="litm_send" alt="" coords="619,5,696,32">
+<area shape="rect" href="$litm_8h.html#f3f6e0026de45f6a16f234a28a0d003b" title="litm_send_wait" alt="" coords="604,56,711,83">
+<area shape="rect" href="$litm_8h.html#9e932bb687ba4087d90eca7aa6583f0a" title="litm_send_shutdown" alt="" coords="588,107,727,133">

@@ -394,7 +394,7 @@ void *__queue_get_safe(queue *q) {
 		}
 		//DEBUG_LOG(LOG_DEBUG,"QQQ: q[%x] id[%3i] num[%3i] in[%4i] out[%4i] COUNT[%4i]", q, q->id, q->num, q->total_in, q->total_out, count);
 		if ((in-out) != count) {
-			DEBUG_LOG(LOG_ERR, "QQQ: >>> ERROR <<<");
+			DEBUG_LOG(LOG_ERR, "__queue_get_safe: >>> ERROR <<<  q[%x][%i]", q, q->id);
 		}
 		//}
 

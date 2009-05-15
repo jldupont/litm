@@ -98,7 +98,7 @@ void create_connections(void) {
 
 		code = litm_connect_ex_wait( &conns[i], 100+i, 0 );
 
-		printMessage(code, "* CREATED CONNECTION, code[%s] ...","id[%u] conn[%x]\n", i, conns[i] );
+		//printMessage(code, "* CREATED CONNECTION, code[%s] ...","id[%u] conn[%x]\n", i, conns[i] );
 	}
 
 }
@@ -180,13 +180,14 @@ void *leader_threadFunction(void *params) {
 
 
 	while(1) {
-		code = litm_send_shutdown( conn, 1, &msg, &void_cleaner );
 		printMessage(code, "* LEADER Sent, code[%s]...","msg[%x] thread_id[%u] conn[%x]\n", &msg.message, thread_id, conn );
+		code = litm_send_shutdown( conn, 1, &msg, &void_cleaner );
 		if (LITM_CODE_OK==code)
 			break;
 		sleep(1);
 	}
 
+	printMessage2("LEADER Thread [%u] INITIATING SHUTDOWN\n", thread_id);
 	litm_wait_shutdown();
 	printMessage2("LEADER Thread [%u] ENDING\n", thread_id);
 }
@@ -226,7 +227,7 @@ void *threadFunction(void *params) {
 	int my_received=0, my_released=0;
 
 	int j;
-	for (j=0;j<10000;j++) {
+	for (j=0;j<1000;j++) {
 		code = litm_send_wait( conn, 1, &_msg, &void_cleaner, 0 );
 		if (LITM_CODE_OK!=code)
 			printMessage(code, "* Sent, code[%s]...","msg[%x] thread_id[%3u] conn[%x]\n", &_msg, thread_id, conn );
