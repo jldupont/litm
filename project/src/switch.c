@@ -89,7 +89,11 @@ __switch_init_tables(void) {
 			_subscribers[b][c] = NULL;
 }
 
+	void
+__switch_wait_shutdown(void) {
 
+	pthread_join( _switchThread, NULL );
+}
 /**
  * The switch thread dequeues messages from the
  *  ``input queue`` and dispatches them to the
@@ -104,11 +108,14 @@ __switch_thread_function(void *params) {
 	litm_bus bus_id;
 
 	char *err_msg;
-	int pending, action, sd_flag=LITM_SHUTDOWN_FLAG_FALSE, shutdown_flag=LITM_SHUTDOWN_FLAG_FALSE;
+	int sd_flag=LITM_SHUTDOWN_FLAG_FALSE, shutdown_flag=LITM_SHUTDOWN_FLAG_FALSE;
 	int current;
 	static char *thisMsg = "__switch_thread_function: conn[%x] code[%s]";
 
 	DEBUG_LOG(LOG_INFO, "__switch_thread_function: STARTING");
+
+	// for stats
+	long delivered=0, dequeued=0, waited=0, pending=0, busy=0;
 
 	while(1) {
 
@@ -124,13 +131,15 @@ __switch_thread_function(void *params) {
 		e=(litm_envelope *) queue_get_nb( _switch_queue );
 
 		if (NULL==e) {
-
+			waited++;
 			int result = queue_wait( _switch_queue );
 			if (result) {
 				DEBUG_LOG(LOG_ERR, "__switch_thread_function: ERROR whilst queue_wait");
 				break;
 			}
 			continue;  // <===============================================
+		} else {
+			dequeued++;
 		}
 
 
@@ -153,7 +162,7 @@ __switch_thread_function(void *params) {
 		// message was processed and just sits pending
 
 		if (1==(e->routes).pending) {
-
+			pending++;
 			__switch_handle_pending(e);
 			continue; // <===================================================
 
@@ -219,6 +228,7 @@ __switch_thread_function(void *params) {
 
 		switch(code) {
 		case LITM_CODE_OK:
+			delivered++;
 			break;
 
 		case LITM_CODE_ERROR_END_OF_SUBSCRIBERS_LIST:
@@ -227,6 +237,7 @@ __switch_thread_function(void *params) {
 
 		case LITM_CODE_BUSY_OUTPUT_QUEUE:
 		case LITM_CODE_BUSY_CONNECTIONS:
+			busy++;
 			DEBUG_LOG(LOG_DEBUG, thisMsg, next, err_msg);
 			break;
 
@@ -258,7 +269,8 @@ __switch_thread_function(void *params) {
 
 	}//while
 
-	DEBUG_LOG(LOG_INFO, "__switch_thread_function: ENDING");
+	DEBUG_LOG(LOG_INFO, "__switch_thread_function: ENDING delivered[%li] dequeued[%li] waited[%li] pending[%li] busy[%li]",
+															delivered,  dequeued,    waited,    pending,    busy );
 
 	return NULL;
 }//END THREAD
@@ -370,7 +382,7 @@ __switch_try_sending_or_requeue(litm_connection *conn, litm_envelope *envlp) {
 
 		envlp->requeued++;
 		(envlp->routes).pending = 1;
-		queue_put( _switch_queue, envlp );
+		queue_put_head( _switch_queue, envlp );
 
 	}
 
@@ -380,7 +392,7 @@ __switch_try_sending_or_requeue(litm_connection *conn, litm_envelope *envlp) {
 
 		envlp->requeued++;
 		(envlp->routes).pending = 0;
-		queue_put( _switch_queue, envlp );
+		queue_put_head( _switch_queue, envlp );
 
 	}
 
@@ -411,27 +423,21 @@ __switch_try_sending_to_recipient(	litm_connection *conn,
 	litm_code returnCode = LITM_CODE_OK;
 	int code = 0;
 
-	//DEBUG_LOG(LOG_ERR, "__switch_try_sending_to_recipient: START conn[%x]",conn );
-	//_litm_connections_lock();
+	switch(env->shutdown_flag) {
 
-		//code = _litm_connection_validate_safe(conn);
-		//if (1==code) {
+	// more pressing....
+	case LITM_SHUTDOWN_FLAG_TRUE:
+		code = queue_put_head_wait(conn->input_queue, (void *) env);
+		break;
 
-			//_litm_connection_lock(conn);
-				//litm_connection_status status;
-				//status = _litm_connection_get_status( conn );
-				//if (LITM_CONNECTION_STATUS_ACTIVE!=status) {
-					//code = 2;
-				//} else {
-					code = queue_put_nb( conn->input_queue, (void *) env);
-				//}
-			//_litm_connection_unlock(conn);
+	case LITM_SHUTDOWN_FLAG_FALSE:
+		code = queue_put_nb(conn->input_queue, (void *) env);
+		break;
+	}
 
-		//} else {
-			//code = 2;
-		//}
+	//code = queue_put_nb( conn->input_queue, (void *) env);
 
-	//_litm_connections_unlock();
+
 	//DEBUG_LOG(LOG_ERR, "__switch_try_sending_to_recipient: STOP  conn[%x]", conn );
 
 	switch(code) {
@@ -607,13 +613,28 @@ __switch_safe_send( litm_connection *sender,
 	 *  Initial message submission: if something goes
 	 *  wrong, we need to get rid of envelope.
 	 */
-	int result = queue_put_nb(_switch_queue, (void *) e);
+	int result;
+
+	switch(shutdown_flag) {
+
+	// more pressing....
+	case LITM_SHUTDOWN_FLAG_TRUE:
+		result = queue_put_head_wait(_switch_queue, (void *) e);
+		break;
+
+	case LITM_SHUTDOWN_FLAG_FALSE:
+		result = queue_put_wait(_switch_queue, (void *) e);
+		break;
+	}
+
 	litm_code code;
 	switch(result) {
 
 	// BUSY
+	//  The client will have to re-submit
 	case -1:
 		code = LITM_CODE_BUSY;
+		__litm_pool_recycle( e );
 		break;
 
 	// OK

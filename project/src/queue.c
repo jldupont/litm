@@ -21,7 +21,12 @@
 #include "litm.h"
 #include "queue.h"
 
+// PRIVATE
+// =======
 void *__queue_get_safe(queue *q);
+int   queue_put_head_safe( queue *q, void *node );
+int queue_put_safe( queue *q, void *node );
+
 
 
 /**
@@ -113,109 +118,6 @@ void queue_destroy(queue *q) {
 
 }//
 
-/**
- * Queues a node at the HEAD (non-blocking)
- *
- * @return 1  => success
- * @return 0  => error
- * @return -1 => busy
- *
- */
-	int
-queue_put_head_nb(queue *q, void *node) {
-
-	if ((NULL==q) || (NULL==node)) {
-		DEBUG_LOG(LOG_DEBUG, "queue_put_head_nb: NULL queue/node ptr");
-		return 0;
-	}
-
-	if (EBUSY == pthread_mutex_trylock( q->mutex ))
-		return -1;
-
-		int returnCode = queue_put_head_safe( q, node );
-
-	pthread_mutex_unlock( q->mutex );
-
-	return returnCode;
-}//[/queue_put]
-
-/**
- * Puts a node at the HEAD of the queue
- *
- * This function is meant to support _high priority_ messages.
- *
- * @param q      queue reference
- * @param node   message reference
- *
- * @return 1 => success
- * @return 0 => error
- *
- */
-int   queue_put_head(queue *q, void *node) {
-
-	if ((NULL==q) || (NULL==node)) {
-		DEBUG_LOG(LOG_DEBUG, "queue_put_head: NULL queue/node ptr");
-		return 0;
-	}
-
-	int code;
-
-	pthread_mutex_lock( q->mutex );
-
-		code = queue_put_head_safe( q, node );
-
-	pthread_mutex_unlock( q->mutex );
-
-	//DEBUG_LOG(LOG_DEBUG,"queue_put: END");
-
-	return code;
-
-}//
-
-/**
- * Puts a node a the HEAD of the queue
- * without regards to thread-safety
- *
- */
-	int
-queue_put_head_safe( queue *q, void *msg ) {
-
-	int code = 1;
-	queue_node *tmp=NULL;
-
-	// if this malloc fails,
-	//  there are much bigger problems that loom
-	tmp = (queue_node *) malloc(sizeof(queue_node));
-	if (NULL!=tmp) {
-
-		tmp->node = msg;
-		tmp->next = NULL;
-
-		// there is a head... put at the front
-		if (NULL!=q->head) {
-			tmp->next = q->head;
-		}
-
-		// adjust head
-		q->head = tmp;
-
-		// adjust tail
-		if (NULL==q->tail)
-			q->tail=tmp;
-
-		// we were able to put an element:
-		//  signal the waiting thread(s)
-		//pthread_cond_signal( q->cond );
-
-		q->num++;
-
-	} else {
-
-		code = 0;
-	}
-
-	return code;
-}//
 
 
 /**
@@ -232,12 +134,9 @@ int queue_put(queue *q, void *node) {
 		return 0;
 	}
 
-	int code;
-
-	//DEBUG_LOG(LOG_DEBUG,"queue_put: q[%x] node[%x] BEGIN",q, node);
 	pthread_mutex_lock( q->mutex );
 
-		code = queue_put_safe( q, node );
+		int code = queue_put_safe( q, node );
 
 	pthread_mutex_unlock( q->mutex );
 	if (code)
@@ -268,25 +167,61 @@ int queue_put_nb(queue *q, void *node) {
 	if (EBUSY == pthread_mutex_trylock( q->mutex ))
 		return -1;
 
-		//DEBUG_LOG(LOG_DEBUG,"queue_put_nb: q[%x] node[%x] BEGIN",q, node);
 		int code = queue_put_safe( q, node );
 
 	pthread_mutex_unlock( q->mutex );
 	if (code)
 		pthread_cond_signal( q->cond );
 
-	//DEBUG_LOG(LOG_DEBUG,"queue_put_nb: q[%x] node[%x] END",q, node);
+	return code;
+}//
+
+
+/**
+ * Queue Put Wait
+ *
+ * @return 0  ERROR
+ * @return 1  SUCCESS
+ *
+ */
+	int
+queue_put_wait(queue *q, void *node) {
+
+	if ((NULL==q) || (NULL==node)) {
+		DEBUG_LOG(LOG_DEBUG, "queue_put_nb: NULL queue/node ptr");
+		return 0;
+	}
+
+	int code;
+
+	while(1) {
+
+		// quick try... hopefully we get lucky
+		if (EBUSY != pthread_mutex_trylock( q->mutex )) {
+			code = queue_put_safe( q, node );
+
+			pthread_mutex_unlock( q->mutex );
+			if (code)
+				pthread_cond_signal( q->cond );
+
+			break;
+
+		} else {
+
+			pthread_mutex_lock( q->cond_mutex );
+
+				int rc = pthread_cond_wait( q->cond, q->cond_mutex );
+				if (rc) {
+					DEBUG_LOG(LOG_ERR,"queue_put_wait: CONDITION WAIT ERROR");
+				}
+
+			pthread_mutex_unlock( q->cond_mutex );
+		}
+
+	}
 
 	return code;
-}//[/queue_put]
-
-
-void queue_signal(queue *q) {
-	int rc = pthread_cond_signal( q->cond );
-	if (rc)
-		DEBUG_LOG(LOG_DEBUG,"queue_signal: SIGNAL ERROR");
-}
-
+}//
 
 /**
  * Queue_put_safe
@@ -327,13 +262,6 @@ queue_put_safe( queue *q, void *node ) {
 		q->total_in++;
 		q->num++;
 		//DEBUG_LOG(LOG_DEBUG,"queue_put_safe: q[%x] id[%i] num[%i] in[%i] out[%i]", q, q->id, q->num, q->total_in, q->total_out);
-
-		// we were able to put an element:
-		//  signal the waiting thread(s)
-		//int rc=pthread_cond_signal( q->cond );
-		//if (rc) {
-		//	DEBUG_LOG(LOG_ERR,"queue_put_safe: ERROR during COND_SIGNAL");
-		//}
 
 	} else {
 
@@ -498,3 +426,171 @@ int queue_peek(queue *q) {
 
 	return result;
 } // queue_peek
+
+
+
+
+
+void queue_signal(queue *q) {
+	int rc = pthread_cond_signal( q->cond );
+	if (rc)
+		DEBUG_LOG(LOG_DEBUG,"queue_signal: SIGNAL ERROR");
+}
+
+
+
+
+/**
+ * Queues a node at the HEAD (non-blocking)
+ *
+ * @return 1  => success
+ * @return 0  => error
+ * @return -1 => busy
+ *
+ */
+	int
+queue_put_head_nb(queue *q, void *node) {
+
+	if ((NULL==q) || (NULL==node)) {
+		DEBUG_LOG(LOG_DEBUG, "queue_put_head_nb: NULL queue/node ptr");
+		return 0;
+	}
+
+	if (EBUSY == pthread_mutex_trylock( q->mutex ))
+		return -1;
+
+		int code = queue_put_head_safe( q, node );
+
+	pthread_mutex_unlock( q->mutex );
+	if (code)
+		pthread_cond_signal( q->cond );
+
+	return code;
+}//[/queue_put]
+
+/**
+ * Puts a node at the HEAD of the queue
+ *
+ * This function is meant to support _high priority_ messages.
+ *
+ * @param q      queue reference
+ * @param node   message reference
+ *
+ * @return 1 => success
+ * @return 0 => error
+ *
+ */
+int   queue_put_head(queue *q, void *node) {
+
+	if ((NULL==q) || (NULL==node)) {
+		DEBUG_LOG(LOG_DEBUG, "queue_put_head: NULL queue/node ptr");
+		return 0;
+	}
+
+	pthread_mutex_lock( q->mutex );
+
+		int code = queue_put_head_safe( q, node );
+
+	pthread_mutex_unlock( q->mutex );
+
+	if (code)
+		pthread_cond_signal( q->cond );
+
+	//DEBUG_LOG(LOG_DEBUG,"queue_put: END");
+
+	return code;
+
+}//
+
+/**
+ * Queue Put Head Wait
+ *
+ * @return 0 ERROR
+ * @return 1 SUCCESS
+ *
+ */
+	int
+queue_put_head_wait(queue *q, void *node) {
+
+	if ((NULL==q) || (NULL==node)) {
+		DEBUG_LOG(LOG_DEBUG, "queue_put_head_wait: NULL queue/node ptr");
+		return 0;
+	}
+
+	int code;
+
+	while(1) {
+
+		// quick try... hopefully we get lucky
+		if (EBUSY != pthread_mutex_trylock( q->mutex )) {
+			code = queue_put_head_safe( q, node );
+
+			pthread_mutex_unlock( q->mutex );
+			if (code)
+				pthread_cond_signal( q->cond );
+
+			break;
+
+		} else {
+
+			pthread_mutex_lock( q->cond_mutex );
+
+				int rc = pthread_cond_wait( q->cond, q->cond_mutex );
+				if (rc) {
+					DEBUG_LOG(LOG_ERR,"queue_put_wait: CONDITION WAIT ERROR");
+				}
+
+			pthread_mutex_unlock( q->cond_mutex );
+		}
+
+	}
+
+	return code;
+
+}//
+
+
+/**
+ * Puts a node a the HEAD of the queue
+ * without regards to thread-safety
+ *
+ * @return 1  SUCCESS
+ * @return 0  ERROR
+ *
+ */
+	int
+queue_put_head_safe( queue *q, void *msg ) {
+
+	int code = 1;
+	queue_node *tmp=NULL;
+
+	// if this malloc fails,
+	//  there are much bigger problems that loom
+	tmp = (queue_node *) malloc(sizeof(queue_node));
+	if (NULL!=tmp) {
+
+		tmp->node = msg;
+		tmp->next = NULL;
+
+		// there is a head... put at the front
+		if (NULL!=q->head) {
+			tmp->next = q->head;
+		}
+
+		// adjust head
+		q->head = tmp;
+
+		// adjust tail
+		if (NULL==q->tail)
+			q->tail=tmp;
+
+		q->total_in++;
+		q->num++;
+
+	} else {
+
+		code = 0;
+	}
+
+	return code;
+}//

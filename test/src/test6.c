@@ -187,8 +187,7 @@ void *leader_threadFunction(void *params) {
 		sleep(1);
 	}
 
-	sleep(2);
-
+	litm_wait_shutdown();
 	printMessage2("LEADER Thread [%u] ENDING\n", thread_id);
 }
 
@@ -208,7 +207,8 @@ void *threadFunction(void *params) {
 	//printMessage2("Thread [%u] started, conn[%x]\n", thread_id, conn);
 
 	code = litm_subscribe_wait(conn, 1, 0);
-	printMessage(code, "* Subscribed, code[%s]...","thread_id[%u]\n", thread_id );
+	if (LITM_CODE_OK!=code)
+		printMessage(code, "* Subscribed, code[%s]...","thread_id[%u]\n", thread_id );
 
 	if (LITM_CODE_OK==code) {
 		subscribed = 1;
@@ -227,8 +227,12 @@ void *threadFunction(void *params) {
 
 	int my_received=0, my_released=0;
 
-	code = litm_send_wait( conn, 1, &_msg, &void_cleaner, 0 );
-	printMessage(code, "* Sent, code[%s]...","msg[%x] thread_id[%3u] conn[%x]\n", &_msg, thread_id, conn );
+	int j;
+	for (j=0;j<1000;j++) {
+		code = litm_send_wait( conn, 1, &_msg, &void_cleaner, 0 );
+		if (LITM_CODE_OK!=code)
+			printMessage(code, "* Sent, code[%s]...","msg[%x] thread_id[%3u] conn[%x]\n", &_msg, thread_id, conn );
+	}
 
 	while (0==_exit_threads) {
 

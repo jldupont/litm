@@ -25,18 +25,19 @@
 
 	int   queue_put_nb(queue *q, void *msg);
 	int   queue_put(queue *q, void *msg);
+	int	  queue_put_wait(queue *q, void *node);
 
 	int   queue_put_head_nb(queue *q, void *node);
 	int   queue_put_head(queue *q, void *msg);
-	int   queue_put_head_safe( queue *q, void *node );
+	int   queue_put_head_wait(queue *q, void *node);
+
 
 	void *queue_get(queue *q);
 	void *queue_get_nb(queue *q);
-	int queue_wait(queue *q);
+	int   queue_wait(queue *q);
 
 	int   queue_peek(queue *q);
-	void queue_signal(queue *q);
+	void  queue_signal(queue *q);
 
-	int queue_put_safe( queue *q, void *node );
 
 #endif /* QUEUE_H_ */
