@@ -287,7 +287,7 @@ litm_receive_wait(litm_connection *conn, litm_envelope **envlp) {
 
 	}//while
 
-	//DEBUG_LOG(LOG_DEBUG,"litm_receive_wait, STOP conn[%x]",conn);
+	DEBUG_LOG(LOG_DEBUG,"litm_receive_wait, STOP conn[%x]",conn);
 	return returnCode;
 }//
 

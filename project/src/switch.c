@@ -357,7 +357,7 @@ switch_release(litm_connection *conn, litm_envelope *envlp) {
 	conn->released++;
 
 	//{
-	//DEBUG_LOG(LOG_DEBUG, "~~~ RELEASE conn[%x][%i] released[%i] envelope[%x] sender[%x][%i]", conn, conn->id, conn->released, envlp, (envlp->routes).sender, (envlp->routes).sender->id);
+	DEBUG_LOG(LOG_DEBUG, "~~~ RELEASE conn[%x][%i] released[%i] envelope[%x] sender[%x][%i]", conn, conn->id, conn->released, envlp, (envlp->routes).sender, (envlp->routes).sender->id);
 	//}
 
 	int result = queue_put(_switch_queue, (void *) envlp);
@@ -504,7 +504,7 @@ switch_add_subscriber(litm_connection *conn, litm_bus bus_id) {
 				if (NULL==_subscribers[bus_id][index]) {
 					_subscribers[bus_id][index] = conn;
 					result = LITM_CODE_OK;
-					//DEBUG_LOG(LOG_DEBUG,"switch_add_subscriber: conn[%x] index[%i]", conn, index);
+					DEBUG_LOG(LOG_DEBUG,"switch_add_subscriber: conn[%x] bus_id[%i] index[%i]", conn, bus_id, index);
 					break;
 				}
 			}
@@ -606,7 +606,7 @@ __switch_safe_send( litm_connection *sender,
 					void (*cleaner)(void *msg),
 					int shutdown_flag ) {
 
-	//DEBUG_LOG(LOG_DEBUG, "__SWITCH_SAFE_SEND: sender[%x][%i] bus[%i] sent[%i]", sender, sender->id, bus_id, sender->sent);
+	DEBUG_LOG(LOG_DEBUG, "__SWITCH_SAFE_SEND: sender[%x][%i] bus[%i] sent[%i]", sender, sender->id, bus_id, sender->sent);
 
 	litm_envelope *e=__litm_pool_get();
 	e->cleaner = cleaner;
