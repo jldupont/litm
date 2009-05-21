@@ -15,6 +15,7 @@
 #include <pthread.h>
 #include <errno.h>
 #include <sys/types.h>
+#include <unistd.h>
 
 #include "litm.h"
 #include "switch.h"
@@ -120,7 +121,7 @@ __switch_thread_function(void *params) {
 	int current;
 	static char *thisMsg = "__switch_thread_function: conn[%x] code[%s]";
 
-	DEBUG_LOG(LOG_INFO, "__switch_thread_function: STARTING with queue[%x]", _switch_queue);
+	DEBUG_LOG(LOG_INFO, "__switch_thread_function: STARTING with queue[%x], pid[%u]", _switch_queue, getpid());
 
 	// for stats
 	long delivered=0, dequeued=0, waited=0, pending=0, busy=0;
