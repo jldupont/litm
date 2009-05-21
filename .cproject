@@ -32,6 +32,7 @@
 <option id="gnu.c.compiler.mingw.exe.debug.option.debugging.level.49921726" name="Debug Level" superClass="gnu.c.compiler.mingw.exe.debug.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
 <option id="gnu.c.compiler.option.include.paths.1445150829" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
 <listOptionValue builtIn="false" value="&quot;${workspace_loc:/litm/trunk/project/includes}&quot;"/>
+<listOptionValue builtIn="false" value="&quot;h:\&quot;"/>
 <listOptionValue builtIn="false" value="/litm/trunk/project/includes"/>
 </option>
 <inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.277562993" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
@@ -47,18 +48,19 @@
 </folderInfo>
 <folderInfo id="cdt.managedbuild.config.gnu.mingw.exe.debug.1175970125.643886979" name="/" resourcePath="trunk/project/includes">
 <toolChain id="cdt.managedbuild.toolchain.gnu.mingw.exe.debug.1993361542" name="MinGW GCC" superClass="cdt.managedbuild.toolchain.gnu.mingw.exe.debug" unusedChildren="">
+<targetPlatform id="cdt.managedbuild.target.gnu.platform.mingw.exe.debug" name="Debug Platform" superClass="cdt.managedbuild.target.gnu.platform.mingw.exe.debug"/>
 <tool id="cdt.managedbuild.tool.gnu.assembler.mingw.exe.debug.1380191660" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.mingw.exe.debug.517164238">
 <inputType id="cdt.managedbuild.tool.gnu.assembler.input.2108529373" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 </tool>
 <tool id="cdt.managedbuild.tool.gnu.archiver.mingw.base.1146442613" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.mingw.base.1437172725"/>
 <tool id="cdt.managedbuild.tool.gnu.cpp.compiler.mingw.exe.debug.1578676442" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.mingw.exe.debug.1734923811">
-<option id="gnu.cpp.compiler.mingw.exe.debug.option.optimization.level.613185605" superClass="gnu.cpp.compiler.mingw.exe.debug.option.optimization.level" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
-<option id="gnu.cpp.compiler.mingw.exe.debug.option.debugging.level.553274769" superClass="gnu.cpp.compiler.mingw.exe.debug.option.debugging.level" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
+<option id="gnu.cpp.compiler.mingw.exe.debug.option.optimization.level.613185605" name="Optimization Level" superClass="gnu.cpp.compiler.mingw.exe.debug.option.optimization.level" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
+<option id="gnu.cpp.compiler.mingw.exe.debug.option.debugging.level.553274769" name="Debug Level" superClass="gnu.cpp.compiler.mingw.exe.debug.option.debugging.level" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
 </tool>
 <tool id="cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug.10880901" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug.249211143">
-<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.mingw.exe.debug.option.optimization.level.949343338" superClass="gnu.c.compiler.mingw.exe.debug.option.optimization.level" valueType="enumerated"/>
-<option id="gnu.c.compiler.mingw.exe.debug.option.debugging.level.1174005176" superClass="gnu.c.compiler.mingw.exe.debug.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
-<option id="gnu.c.compiler.option.include.paths.1030749641" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
+<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.mingw.exe.debug.option.optimization.level.949343338" name="Optimization Level" superClass="gnu.c.compiler.mingw.exe.debug.option.optimization.level" valueType="enumerated"/>
+<option id="gnu.c.compiler.mingw.exe.debug.option.debugging.level.1174005176" name="Debug Level" superClass="gnu.c.compiler.mingw.exe.debug.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
+<option id="gnu.c.compiler.option.include.paths.1030749641" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
 <listOptionValue builtIn="false" value="&quot;${workspace_loc:/litm/trunk/project/includes}&quot;"/>
 </option>
 <inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1814426338" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
@@ -533,18 +535,19 @@
 </folderInfo>
 <folderInfo id="cdt.managedbuild.config.gnu.mingw.exe.release.1832215963.303801344" name="/" resourcePath="trunk/project/includes">
 <toolChain id="cdt.managedbuild.toolchain.gnu.mingw.exe.release.1149906093" name="MinGW GCC" superClass="cdt.managedbuild.toolchain.gnu.mingw.exe.release" unusedChildren="">
+<targetPlatform id="cdt.managedbuild.target.gnu.platform.mingw.exe.release" name="Debug Platform" superClass="cdt.managedbuild.target.gnu.platform.mingw.exe.release"/>
 <tool id="cdt.managedbuild.tool.gnu.assembler.mingw.exe.release.872226341" name="GCC Assembler" superClass="cdt.managedbuild.tool.gnu.assembler.mingw.exe.release.853000786">
 <inputType id="cdt.managedbuild.tool.gnu.assembler.input.989641935" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 </tool>
 <tool id="cdt.managedbuild.tool.gnu.archiver.mingw.base.1215865110" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.mingw.base.1782869765"/>
 <tool id="cdt.managedbuild.tool.gnu.cpp.compiler.mingw.exe.release.303104896" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.mingw.exe.release.1043464973">
-<option id="gnu.cpp.compiler.mingw.exe.release.option.optimization.level.1071350638" superClass="gnu.cpp.compiler.mingw.exe.release.option.optimization.level" value="gnu.cpp.compiler.optimization.level.most" valueType="enumerated"/>
-<option id="gnu.cpp.compiler.mingw.exe.release.option.debugging.level.926161440" superClass="gnu.cpp.compiler.mingw.exe.release.option.debugging.level" value="gnu.cpp.compiler.debugging.level.none" valueType="enumerated"/>
+<option id="gnu.cpp.compiler.mingw.exe.release.option.optimization.level.1071350638" name="Optimization Level" superClass="gnu.cpp.compiler.mingw.exe.release.option.optimization.level" value="gnu.cpp.compiler.optimization.level.most" valueType="enumerated"/>
+<option id="gnu.cpp.compiler.mingw.exe.release.option.debugging.level.926161440" name="Debug Level" superClass="gnu.cpp.compiler.mingw.exe.release.option.debugging.level" value="gnu.cpp.compiler.debugging.level.none" valueType="enumerated"/>
 </tool>
 <tool id="cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.release.1879975441" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.release.681248733">
-<option defaultValue="gnu.c.optimization.level.most" id="gnu.c.compiler.mingw.exe.release.option.optimization.level.2076430329" superClass="gnu.c.compiler.mingw.exe.release.option.optimization.level" valueType="enumerated"/>
-<option id="gnu.c.compiler.mingw.exe.release.option.debugging.level.504346748" superClass="gnu.c.compiler.mingw.exe.release.option.debugging.level" value="gnu.c.debugging.level.none" valueType="enumerated"/>
-<option id="gnu.c.compiler.option.include.paths.1382700685" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
+<option defaultValue="gnu.c.optimization.level.most" id="gnu.c.compiler.mingw.exe.release.option.optimization.level.2076430329" name="Optimization Level" superClass="gnu.c.compiler.mingw.exe.release.option.optimization.level" valueType="enumerated"/>
+<option id="gnu.c.compiler.mingw.exe.release.option.debugging.level.504346748" name="Debug Level" superClass="gnu.c.compiler.mingw.exe.release.option.debugging.level" value="gnu.c.debugging.level.none" valueType="enumerated"/>
+<option id="gnu.c.compiler.option.include.paths.1382700685" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
 <listOptionValue builtIn="false" value="&quot;${workspace_loc:/litm/trunk/project/includes}&quot;"/>
 </option>
 <inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.1311082395" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
