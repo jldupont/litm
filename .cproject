@@ -35,6 +35,7 @@
 <listOptionValue builtIn="false" value="&quot;h:\&quot;"/>
 <listOptionValue builtIn="false" value="/litm/trunk/project/includes"/>
 </option>
+<option id="gnu.c.compiler.option.preprocessor.nostdinc.316385141" superClass="gnu.c.compiler.option.preprocessor.nostdinc" value="true" valueType="boolean"/>
 <inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.277562993" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 </tool>
 <tool id="cdt.managedbuild.tool.gnu.c.linker.mingw.exe.debug.876296960" name="MinGW C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.mingw.exe.debug">
