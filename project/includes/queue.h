@@ -21,6 +21,7 @@
 	// Prototypes
 	// ==========
 	queue *queue_create(int id);
+
 	void   queue_destroy(queue *queue);
 
 	int   queue_put_nb(queue *q, void *msg);

@@ -10,7 +10,7 @@
  *
  *           The library serves as a <b>Lightweight Inter-Thread Messaging</b> under Linux/Unix.
  *
- * \section Dependencies
+ * \section Dependencies Dependencies
  *
  *			<b>Mandatory</b>
  *
