@@ -186,6 +186,10 @@
  *								\li Removed litm_shutdown function
  *								\li Added coordination for all queue activity through pthread condition variable: no useless blocking
  *
+ *		\subsection release_0_5 Release 0.5
+ *
+ *								\li Fixed deb package control files
+ *
  * \todo Better connection close
  *
  */

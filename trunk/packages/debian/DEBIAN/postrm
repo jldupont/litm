@@ -6,6 +6,7 @@
 
 import os
 import sys
+import glob
 
 this_version = "$version"
 
@@ -18,14 +19,27 @@ try:
 	command = sys.argv[1]
 	print "LITM: postrm: command[%s]" % command
 	
-	dst = '/usr/lib/liblitm.so'
-	ddst = '/usr/lib/liblitm_debug.so'
+	#dst = '/usr/lib/liblitm.so'
+	#ddst = '/usr/lib/liblitm_debug.so'
 	
-	print "LITM: removing symlink [%s]" % dst
-	os.remove( dst );
+	#print "LITM: removing symlink [%s]" % dst
+	#os.remove( dst )
 
-	print "LITM: removing symlink [%s]" % ddst
-	os.remove( ddst );
+	#print "LITM: removing symlink [%s]" % ddst
+	#os.remove( ddst )
+	
+	print "LITM: removing header file"
+	os.remove( '/usr/include/litm.h' )
+	
+	print "LITM: removing library files & symlinks"
+	try:
+		files = glob.glob('/usr/lib/liblitm*')
+		
+		for file in files:
+			os.remove( file )
+			print "LITM: removed [%s]" % file
+	except:
+		pass
 	
 except:
 	pass
