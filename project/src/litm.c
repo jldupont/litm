@@ -224,6 +224,15 @@ litm_send_shutdown( 	litm_connection *conn,
 	return switch_send_shutdown(conn, bus_id, msg, cleaner);
 }//
 
+litm_code
+litm_send_timer( 		litm_connection *conn,
+						litm_bus bus_id,
+						void *msg,
+						void (*cleaner)(void *msg)
+									) {
+	return switch_send_timer(conn, bus_id, msg, cleaner);
+}//
+
 /**
  * Receive (non-blocking) function for clients
  *
@@ -275,8 +284,7 @@ litm_receive_wait(litm_connection *conn, litm_envelope **envlp) {
 		}
 
 		//give the chance to another thread
-		usleep(1);
-		//sched_yield();
+		sched_yield();
 
 		int rc= queue_wait( conn->input_queue );
 		if (rc) {
@@ -292,6 +300,52 @@ litm_receive_wait(litm_connection *conn, litm_envelope **envlp) {
 	DEBUG_LOG(LOG_DEBUG,"litm_receive_wait, STOP conn[%x]",conn);
 	return returnCode;
 }//
+
+/**
+ * Receive with wait and unblocked through the 'timer' message
+ */
+	litm_code
+litm_receive_wait_timer(litm_connection *conn, litm_envelope **envlp) {
+
+	if (NULL==conn) {
+		return LITM_CODE_ERROR_BAD_CONNECTION;
+	}
+	int returnCode = LITM_CODE_OK; //optimistic
+
+	// let's see first if we need to bother with the
+	// conditional waiting on the queue.
+	// This also takes care of the probability of
+	//  missing a signal for whatever reason
+	*envlp = queue_get_nb( conn->input_queue );
+	if (NULL!=*envlp) {
+		conn->received++;
+		return returnCode;  // <============================
+	}
+
+	//give the chance to another thread
+	sched_yield();
+
+	int rc= queue_wait( conn->input_queue );
+	if (rc) {
+
+		returnCode = LITM_CODE_ERROR_RECEIVE_WAIT;
+
+	} else {
+
+		*envlp = queue_get_nb( conn->input_queue );
+		if (NULL!=*envlp) {
+			conn->received++;
+			returnCode=LITM_CODE_OK;
+		} else {
+			returnCode=LITM_CODE_NO_MESSAGE;
+		}
+	}
+
+
+	DEBUG_LOG(LOG_DEBUG,"litm_receive_wait_timer, STOP conn[%x][%i]",conn, conn->id);
+	return returnCode;
+}//
+
 
 /**
  * Release a message to LITM

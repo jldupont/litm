@@ -178,4 +178,5 @@ __litm_pool_clean( litm_envelope *envlp ) {
 	envlp->delivery_count = 0;
 	envlp->released_count = 0;
 	envlp->shutdown_flag  = 0;
+	envlp->timer_flag     = 0;
 }//

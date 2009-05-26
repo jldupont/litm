@@ -340,6 +340,7 @@
 
 			int requeued;
 			int shutdown_flag;
+			int timer_flag;
 			int released_count;
 			int delivery_count;
 			void (*cleaner)(void *msg);
@@ -507,6 +508,20 @@
 										void (*cleaner)(void *msg)
 									);
 
+		/**
+		 * Sends a 'timer' message which, once finished
+		 * delivering to all receiver queues, signals the said
+		 * receivers.
+		 *
+		 * @see litm_send
+		 *
+		 */
+		litm_code litm_send_timer( 		litm_connection *conn,
+										litm_bus bus_id,
+										void *msg,
+										void (*cleaner)(void *msg)
+									);
+
 		void litm_wait_shutdown(void);
 
 
@@ -531,6 +546,16 @@
 		 *
 		 */
 		litm_code litm_receive_wait(litm_connection *conn, litm_envelope **envlp);
+
+		/**
+		 * Awaits a message from any ``bus``
+		 * until either a message is present or
+		 * a ``timer`` message unblocks the call.
+		 *
+		 * @param *conn connection reference
+		 * @param **envlp the pointer to received envelope
+		 */
+		litm_code litm_receive_wait_timer(litm_connection *conn, litm_envelope **envlp);
 
 
 		/**
