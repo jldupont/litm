@@ -31,32 +31,23 @@ if command == 'configure':
 	
 	code = 0
 	try:
-		print """LITM: removing previous symlinks"""
-		os.remove(dst)
-		os.remove(ddst)
-	except:
-		pass
-	
-	try:
+		try:    os.remove(dst)
+		except: pass
+		try:    os.remove(ddst)
+		except: pass
+
 		print """LITM: creating symlink src[%s] ==> dst[%s]""" % (src, dst)
 		os.symlink(src,  dst)
-	except Exception,e:
-		print "Exception [%s]" % e
-		code = 1
 		
-	try:
 		print """LITM: creating symlink src[%s] ==> dst[%s]""" % (dsrc, ddst)
-		os.symlink(dsrc, ddst)	
-	except Exception,e:
-		print "Exception [%s]" % e
-		code = 1
-		
-	try:
+		os.symlink(dsrc, ddst)
+			
 		print """LITM: chmod's"""
 		os.chmod(src, 0755)
 		os.chmod(dst, 0755)
 		os.chmod(dsrc, 0755)
 		os.chmod(ddst, 0755)
+		
 	except Exception,e:
 		print "Exception [%s]" % e
 		code = 1
