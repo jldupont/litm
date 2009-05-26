@@ -6,22 +6,28 @@
 import os
 import sys
 
+this_version = "$version"
+
 command = sys.argv[1]
 version = sys.argv[2]
 cwd     = os.getcwd()
 id      = "$Id$"
 
 print "LITM: cwd[%s] id[%s]" % (cwd, id)
-print "LITM: postinst: command[%s] version [%s]" % (command, version)
+print "LITM: postinst: command[%s] configured version [%s] this version[%s]" % (command, version, this_version)
 
 
 if command == 'configure':
 
+	#configured version
+	cv  = '/usr/lib/liblitm-%s.so' % version
+	cvd = '/usr/lib/liblitm_debug-%s.so' % version
+
 	dst = '/usr/lib/liblitm.so'
-	src = '/usr/lib/liblitm-%s.so' % version
+	src = '/usr/lib/liblitm-%s.so' % this_version
 	
 	ddst = '/usr/lib/liblitm_debug.so'
-	dsrc = '/usr/lib/liblitm_debug-%s.so' % version
+	dsrc = '/usr/lib/liblitm_debug-%s.so' % this_version
 	
 	code = 0
 	try:

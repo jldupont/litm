@@ -7,6 +7,8 @@
 import os
 import sys
 
+this_version = "$version"
+
 cwd     = os.getcwd()
 id      = "$Id$"
 
