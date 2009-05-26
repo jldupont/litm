@@ -46,7 +46,7 @@ if 'install' in COMMAND_LINE_TARGETS:
 	print "scons: INSTALLING LOCALLY"
 	shutil.copy('./project/includes/litm.h', '/usr/include')
 	shutil.copy('./release/liblitm.so', '/usr/lib/liblitm.so')
-	shutil.copy('./debug/liblitm.so', '/usr/lib/liblitm_debug.so')
+	shutil.copy('./debug/liblitm.so',   '/usr/lib/liblitm_debug.so')
 
 env_release.Command("install", "./release/liblitm.so", "cp $SOURCE /usr/lib")
 

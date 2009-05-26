@@ -55,7 +55,7 @@
 int __litm_connection_get_index(litm_connection *(table)[], litm_connection *conn);
 int __litm_connection_get_free_index(litm_connection *(table)[]);
 litm_connection *__litm_connection_get_ptr(int connection_index);
-
+void _litm_connections_init(void);
 
 // PRIVATE VARIABLES
 // -----------------
@@ -70,6 +70,8 @@ litm_connection *_connections[LITM_CONNECTION_MAX];
 pthread_mutex_t  _connections_pending_deletion_mutex = PTHREAD_MUTEX_INITIALIZER;
 litm_connection *_connections_pending_deletion[LITM_CONNECTION_MAX];
 
+
+int __connections_initialized = 0;
 
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -113,13 +115,18 @@ litm_connection_open_ex(litm_connection **conn, int id) {
 		return LITM_CODE_BUSY;
 	}
 
+	if (1!=__connections_initialized) {
+		_litm_connections_init();
+		__connections_initialized=1;
+	}
+
 	target_index = __litm_connection_get_free_index(_connections);
 	if (-1 == target_index) {
 		pthread_mutex_unlock( &_connections_mutex );
 		return LITM_CODE_ERROR_NO_MORE_CONNECTIONS;
 	}
 
-	*conn=malloc(sizeof(litm_connection));
+	*conn= (litm_connection *) malloc(sizeof(litm_connection));
 	if (NULL==*conn) {
 		pthread_mutex_unlock( &_connections_mutex );
 		return LITM_CODE_ERROR_MALLOC;
@@ -305,3 +312,28 @@ _litm_connection_get_status(litm_connection *conn) {
 	return conn->status;
 
 }
+
+	void
+_litm_connection_signal_all(void) {
+/*
+	litm_connection *conn;
+	queue *q;
+	int i;
+	for (i=1;i<=LITM_CONNECTION_MAX;i++) {
+		conn = _connections[i];
+		q = _connections[i]->input_queue;
+		if (NULL!=conn)
+			queue_signal( q );
+	}
+*/
+}//
+
+	void
+_litm_connections_init(void) {
+
+	int i;
+	for (i=1;i<=LITM_CONNECTION_MAX;i++) {
+		_connections[i]=NULL;
+	}
+
+}//
