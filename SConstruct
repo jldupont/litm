@@ -88,6 +88,14 @@ def replace_params(path_src, path_dest, params):
 	file.close()
 	
 	
+def adjust_control_files(params, c_path):
+	"""
+	Replace the $version parameter in the control files
+	"""
+	files = ['postinst', 'postrm', 'preinst', 'prerm']
+	for file in files:
+		path = "%s/%s" % (c_path, file)
+		replace_params(path,path,params)
 
 
 # BUILDING .deb PACKAGE
@@ -117,6 +125,12 @@ if 'deb' in COMMAND_LINE_TARGETS:
 		
 		print """scons: cloning ./packages/debian to /tmp/litm"""
 		safe_copytree('./packages/debian', '/tmp/litm', skip_dirs=['.svn',], dir_mode=0775, make_dirs=True)
+
+		print """scons: adjusting version in control files"""
+		c_path = '/tmp/litm/DEBIAN'
+		params = {'version':version}
+		adjust_control_files(params, c_path)
+		
 
 		#print """scons: cloning 'Packages.gz'"""
 		#shutil.copy("../dists/stable/main/binary-i386/Packages.gz", "/tmp/litm/Packages.gz")

@@ -7,6 +7,8 @@
 import os
 import sys
 
+this_version = "$version"
+
 cwd     = os.getcwd()
 id      = "$Id$"
 
@@ -16,7 +18,7 @@ try:
 	command = sys.argv[1]
 	version = sys.argv[2]
 	
-	print "LITM: preinst: command[%s] version[%s]" % (command, version)
+	print "LITM: preinst: command[%s] configured version[%s] version[%s]" % (command, version, this_version)
 except:
 	pass
 	
