@@ -29,11 +29,12 @@ try:
 	#os.remove( ddst )
 	
 	print "LITM: removing header file"
-	os.remove( '/usr/include/litm.h' )
+	try:    os.remove( '/usr/include/litm.h' )
+	except: pass
 	
 	print "LITM: removing library files & symlinks"
 	try:
-		files = glob.glob('/usr/lib/liblitm*')
+		files = glob.glob('/usr/lib/liblitm*.*')
 		
 		for file in files:
 			os.remove( file )
