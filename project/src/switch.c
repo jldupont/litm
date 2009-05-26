@@ -74,7 +74,7 @@ switch_init(void) {
 		_switch_queue = queue_create(-1);
 		__switch_init_tables();
 
-		//DEBUG_LOG(LOG_INFO, "switch_init: queue[%x] ", _switch_queue);
+		DEBUG_LOG(LOG_INFO, "switch_init: queue[%x] ", _switch_queue);
 
 		pthread_create(&_switchThread, NULL, &__switch_thread_function, NULL);
 		_switchThread_status = 1; //created
