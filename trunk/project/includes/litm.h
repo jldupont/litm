@@ -345,6 +345,10 @@
 		} litm_envelope;
 
 
+	#ifdef __cplusplus
+		extern "C" {
+	#endif
+
 		/**
 		 * Opens a ``connection`` to the ``switch``
 		 *  and returns a pointer to the connection reference
@@ -563,6 +567,11 @@
 		 *
 		 */
 		char *litm_translate_code(litm_code code);
+
+
+	#ifdef __cplusplus
+		}
+	#endif
 
 
 #endif /* LITM_H_ */

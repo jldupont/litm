@@ -62,6 +62,8 @@ litm_connect_ex(litm_connection **conn, int id) {
 
 	switch_init();
 
+	DEBUG_LOG(LOG_INFO, "connect_ex BEGIN, id[%i]", id);
+
 	litm_code code = litm_connection_open_ex(conn, id);
 	if (LITM_CODE_OK!=code) {
 		*conn = NULL;

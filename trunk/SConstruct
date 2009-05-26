@@ -1,5 +1,5 @@
 """
-scons build file
+LITM scons build file
 
 @author: Jean-Lou Dupont
 """
@@ -19,6 +19,7 @@ Help("""\
    'scons deb' to build the .deb package
    'scons release' to release the package to tags/debian repository
    'scons install' to install on local machine
+   'scons docs' for building the documentation
 """)
 
 
@@ -155,7 +156,9 @@ if 'release' in COMMAND_LINE_TARGETS:
 	print "scons: running dpkg-scanpackages  [%s]" % debian_path
 	os.system("./do_release")
 	
-
+	
+# DOCS
+# ====
 if 'docs' in COMMAND_LINE_TARGETS:
 	print "scons: generating docs"
 	os.system("doxygen doxygen.config")
