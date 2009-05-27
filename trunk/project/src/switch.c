@@ -74,6 +74,8 @@ switch_init(void) {
 	if (0== _switchThread_status) {
 
 
+		sched_setscheduler(0, SCHED_RR, NULL);
+
 		// init queue *before* launching thread!
 		_switch_queue = queue_create(-1);
 		__switch_init_tables();
@@ -138,23 +140,28 @@ __switch_thread_function(void *params) {
 			break;
 		}
 
+		sched_yield();
+
 		// we block here since if we have no messages
 		//  to process, we don't have anything else to do...
 		e=(litm_envelope *) queue_get_nb( _switch_queue );
 		if (NULL==e) {
+
 			waited++;
 			// interleave threads for faster response time...
 			// and better support for quick shutdown procedure.
 			// Using 'sched_yield' avoids touching the 'sleep'
 			// and 'usleep' functions which interact badly with
 			// setitimer/SIGVTALRM
-			sched_yield();
 
-			continue;
 		} else {
 			dequeued++;
 		}
 
+		if (NULL==e) {
+			queue_wait( _switch_queue );
+			continue;
+		}
 
 
 		//DEBUG_LOG(LOG_INFO, "__switch_thread_function: GOT ENVELOPE");
@@ -400,7 +407,7 @@ __switch_try_sending_or_requeue(litm_connection *conn, litm_envelope *envlp) {
 
 		envlp->requeued++;
 		(envlp->routes).pending = 1;
-		queue_put_head( _switch_queue, envlp );
+		queue_put( _switch_queue, envlp );
 
 	}
 
@@ -410,7 +417,7 @@ __switch_try_sending_or_requeue(litm_connection *conn, litm_envelope *envlp) {
 
 		envlp->requeued++;
 		(envlp->routes).pending = 0;
-		queue_put_head( _switch_queue, envlp );
+		queue_put( _switch_queue, envlp );
 
 	}
 
@@ -649,6 +656,12 @@ __switch_safe_send( litm_connection *sender,
 	e->timer_flag    = timer_flag;
 	e->requeued = 0;
 
+	#ifdef _DEBUG
+		e->sent_time = (struct timeval *) malloc( sizeof(struct timeval) );
+		gettimeofday( e->sent_time, NULL );
+	#endif
+
+
 	/*
 	 *  Initial message submission: if something goes
 	 *  wrong, we need to get rid of envelope.
@@ -664,11 +677,13 @@ __switch_safe_send( litm_connection *sender,
 	//		 then the receivers.
 
 	case LITM_SHUTDOWN_FLAG_TRUE:
-		result = queue_put_head_nb(_switch_queue, (void *) e);
+		//result = queue_put_head_nb(_switch_queue, (void *) e);
+		result = queue_put_head(_switch_queue, (void *) e);
 		break;
 
 	case LITM_SHUTDOWN_FLAG_FALSE:
-		result = queue_put_nb(_switch_queue, (void *) e);
+		//result = queue_put_nb(_switch_queue, (void *) e);
+		result = queue_put(_switch_queue, (void *) e);
 		break;
 	}
 

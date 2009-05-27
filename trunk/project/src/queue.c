@@ -137,10 +137,10 @@ int queue_put(queue *q, void *node) {
 	pthread_mutex_lock( q->mutex );
 
 		int code = queue_put_safe( q, node );
+		if (code)
+			pthread_cond_signal( q->cond );
 
 	pthread_mutex_unlock( q->mutex );
-	if (code)
-		pthread_cond_signal( q->cond );
 
 	//DEBUG_LOG(LOG_DEBUG,"queue_put: q[%x] node[%x] END",q,node);
 
@@ -168,10 +168,10 @@ int queue_put_nb(queue *q, void *node) {
 		return -1;
 
 		int code = queue_put_safe( q, node );
+		if (code)
+			pthread_cond_signal( q->cond );
 
 	pthread_mutex_unlock( q->mutex );
-	if (code)
-		pthread_cond_signal( q->cond );
 
 	return code;
 }//
@@ -199,10 +199,10 @@ queue_put_wait(queue *q, void *node) {
 		// quick try... hopefully we get lucky
 		if (EBUSY != pthread_mutex_trylock( q->mutex )) {
 			code = queue_put_safe( q, node );
-
-			pthread_mutex_unlock( q->mutex );
 			if (code)
 				pthread_cond_signal( q->cond );
+
+			pthread_mutex_unlock( q->mutex );
 
 			break;
 
@@ -357,6 +357,36 @@ int queue_wait(queue *q) {
 	return rc;
 }//
 
+int queue_wait_timer(queue *q, int usec_timer) {
+
+	if (NULL==q) {
+		DEBUG_LOG(LOG_DEBUG, "queue_get_wait: NULL queue ptr");
+		return 1;
+	}
+
+	struct timeval now;
+	struct timespec timeout;
+
+	//DEBUG_LOG(LOG_DEBUG,"queue_wait: BEFORE LOCK on q[%x][%i]",q,q->id);
+	pthread_mutex_lock( q->cond_mutex );
+
+		gettimeofday(&now, NULL);
+		timeout.tv_sec  = now.tv_sec;
+		timeout.tv_nsec = now.tv_usec * 1000 + usec_timer*1000;
+
+		// it seems we need to wait...
+		//DEBUG_LOG(LOG_DEBUG,"queue_wait: BEFORE COND_WAIT on q[%x][%i]",q,q->id);
+		int rc = pthread_cond_timedwait( q->cond, q->cond_mutex, &timeout );
+
+		//int result2 = pthread_mutex_trylock( q->mutex );
+		//DEBUG_LOG(LOG_DEBUG,"queue_get_wait: TRYLOCK q[%x][%i] result[%i] ",q,q->id,result2==EBUSY);
+
+	pthread_mutex_unlock( q->cond_mutex );
+	//DEBUG_LOG(LOG_DEBUG,"queue_wait: AFTER LOCK on q[%x][%i]",q,q->id);
+
+	return rc;
+}//
+
 void *__queue_get_safe(queue *q) {
 
 	queue_node *tmp = NULL;
@@ -464,10 +494,10 @@ queue_put_head_nb(queue *q, void *node) {
 		return -1;
 
 		int code = queue_put_head_safe( q, node );
+		if (code)
+			pthread_cond_signal( q->cond );
 
 	pthread_mutex_unlock( q->mutex );
-	if (code)
-		pthread_cond_signal( q->cond );
 
 	return code;
 }//[/queue_put]
@@ -494,11 +524,10 @@ int   queue_put_head(queue *q, void *node) {
 	pthread_mutex_lock( q->mutex );
 
 		int code = queue_put_head_safe( q, node );
+		if (code)
+			pthread_cond_signal( q->cond );
 
 	pthread_mutex_unlock( q->mutex );
-
-	if (code)
-		pthread_cond_signal( q->cond );
 
 	//DEBUG_LOG(LOG_DEBUG,"queue_put: END");
 
