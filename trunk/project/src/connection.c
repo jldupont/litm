@@ -315,7 +315,7 @@ _litm_connection_get_status(litm_connection *conn) {
 
 	void
 _litm_connection_signal_all(void) {
-/*
+
 	litm_connection *conn;
 	queue *q;
 	int i;
@@ -325,7 +325,7 @@ _litm_connection_signal_all(void) {
 		if (NULL!=conn)
 			queue_signal( q );
 	}
-*/
+
 }//
 
 	void

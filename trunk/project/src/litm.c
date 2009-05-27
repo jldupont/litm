@@ -73,40 +73,6 @@ litm_connect_ex(litm_connection **conn, int id) {
 	return LITM_CODE_OK;
 }
 
-	litm_code
-litm_connect_ex_wait(litm_connection **conn, int id, int timeout) {
-
-	litm_code code;
-	struct timeval *start, *current;
-	int computed_timeout = __litm_compute_timeout( timeout );
-
-	while(1) {
-
-		code = litm_connect_ex(conn, id);
-		if (LITM_CODE_OK==code)
-			break;
-
-		// an error we can't handle here?
-		if (LITM_CODE_BUSY!=code) {
-			break;
-		}
-
-		DEBUG_LOG(LOG_DEBUG, "litm_connect_ex_wait: NEED TO RETRY id[%i]", id);
-
-		// at this point, we just back-off an retry
-		int result = random_sleep_period(	start,
-											current,
-											LITM_DEFAULT_MAX_BACKOFF*1000*1000,
-											computed_timeout);
-		// expired period?
-		if (1==result) {
-			code = LITM_CODE_ERROR_CONNECTION_ERROR;
-			break;
-		}
-	}
-
-	return code;
-}
 
 	litm_code
 litm_disconnect(litm_connection *conn) {
@@ -123,42 +89,6 @@ litm_subscribe(litm_connection *conn, litm_bus bus_id) {
 
 
 	litm_code
-litm_subscribe_wait(litm_connection *conn, litm_bus bus_id, int timeout) {
-
-	litm_code code;
-	struct timeval *start, *current;
-	int computed_timeout = __litm_compute_timeout( timeout );
-
-	while(1) {
-
-		code = switch_add_subscriber( conn, bus_id );
-		if (LITM_CODE_OK==code)
-			break;
-
-		// an error we can't handle here?
-		if (LITM_CODE_BUSY!=code) {
-			break;
-		}
-
-		DEBUG_LOG(LOG_DEBUG, "litm_subscribe_wait: NEED TO RETRY conn[%x] bus[%i]", conn, bus_id);
-
-		// at this point, we just back-off an retry
-		int result = random_sleep_period(	start,
-											current,
-											LITM_DEFAULT_MAX_BACKOFF*1000*1000,
-											computed_timeout);
-		// expired period?
-		if (1==result) {
-			code = LITM_CODE_ERROR_SUBSCRIPTION_ERROR;
-			break;
-		}
-
-	}
-
-	return code;
-}//
-
-	litm_code
 litm_unsubscribe(litm_connection *conn, litm_bus bus_id) {
 
 	return switch_remove_subscriber( conn, bus_id );
@@ -168,70 +98,14 @@ litm_unsubscribe(litm_connection *conn, litm_bus bus_id) {
 litm_send(	litm_connection *conn,
 			litm_bus bus_id,
 			void *msg,
-			void (*cleaner)(void *msg) ) {
+			void (*cleaner)(void *msg),
+			int type) {
 
-	return switch_send(conn, bus_id, msg, cleaner);
+	return switch_send(conn, bus_id, msg, cleaner, type);
 }//
 
 
-	litm_code
-litm_send_wait(	litm_connection *conn,
-				litm_bus bus_id,
-				void *msg,
-				void (*cleaner)(void *msg),
-				int timeout ) {
 
-	litm_code code;
-	struct timeval *start, *current;
-	int computed_timeout = __litm_compute_timeout( timeout );
-
-	while(1) {
-
-		code = switch_send(conn, bus_id, msg, cleaner);
-		if (LITM_CODE_OK==code)
-			break;
-
-		// an error we can't handle here?
-		if (LITM_CODE_BUSY!=code) {
-			break;
-		}
-
-		DEBUG_LOG(LOG_DEBUG, "litm_send_wait: NEED TO RETRY conn[%x][%3i] bus[%3i]", conn, conn->id, bus_id);
-
-		// at this point, we just back-off an retry
-		int result = random_sleep_period(	start,
-											current,
-											LITM_DEFAULT_MAX_BACKOFF*1000*1000,
-											computed_timeout);
-		// expired period?
-		if (1==result) {
-			code = LITM_CODE_ERROR_SEND_ERROR;
-			break;
-		}
-
-	}
-
-	return code;
-}//
-
-
-	litm_code
-litm_send_shutdown( 	litm_connection *conn,
-						litm_bus bus_id,
-						void *msg,
-						void (*cleaner)(void *msg) ) {
-
-	return switch_send_shutdown(conn, bus_id, msg, cleaner);
-}//
-
-litm_code
-litm_send_timer( 		litm_connection *conn,
-						litm_bus bus_id,
-						void *msg,
-						void (*cleaner)(void *msg)
-									) {
-	return switch_send_timer(conn, bus_id, msg, cleaner);
-}//
 
 #ifdef _DEBUG
 	void _litm_log_timediff(litm_envelope *env) {
@@ -307,7 +181,7 @@ litm_receive_wait(litm_connection *conn, litm_envelope **envlp) {
 		}
 
 		//give the chance to another thread
-		sched_yield();
+		//sched_yield();
 
 		int rc= queue_wait( conn->input_queue );
 		if (rc) {
@@ -347,11 +221,14 @@ litm_receive_wait_timer(litm_connection *conn, litm_envelope **envlp, int usec_t
 	}
 
 	//give the chance to another thread
-	sched_yield();
+	//sched_yield();
 
-	int rc= queue_wait_timer( conn->input_queue );
-	if (rc) {
+	//DEBUG_LOG(LOG_DEBUG,"litm_receive_wait_timer, BEFORE WAIT conn[%x][%i]",conn, conn->id);
+	int rc= queue_wait_timer( conn->input_queue, usec_timer );
+	//DEBUG_LOG(LOG_DEBUG,"litm_receive_wait_timer, AFTER WAIT conn[%x][%i]",conn, conn->id);
+	if (0!=rc) {
 
+		DEBUG_LOG(LOG_DEBUG,"!!! litm_receive_wait_timer, ERROR COND WAIT conn[%x][%i] rc[%i]",conn, conn->id, rc);
 		returnCode = LITM_CODE_ERROR_RECEIVE_WAIT;
 
 	} else {
@@ -388,12 +265,13 @@ litm_release(litm_connection *conn, litm_envelope *envlp) {
 
 
 	void *
-litm_get_message(litm_envelope *envlp) {
+litm_get_message(litm_envelope *envlp, int *type) {
 
 	if (NULL==envlp) {
 		return NULL;
 	}
 
+	*type = envlp->type;
 	return envlp->msg;
 }//
 

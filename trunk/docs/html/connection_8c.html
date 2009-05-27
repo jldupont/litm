@@ -48,6 +48,8 @@ Include dependency graph for connection.c:</div>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="struct__litm__connection.html">litm_connection</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="connection_8c.html#aa9317e0b073355593301299c6e78b3b">__litm_connection_get_ptr</a> (int connection_index)</td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="connection_8c.html#1651397a367f03c5e51305186f211ffc">_litm_connections_init</a> (void)</td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="connection_8c.html#b88c123e1d85482158c20a43e1f302ab">litm_connection_get_id</a> (<a class="el" href="struct__litm__connection.html">litm_connection</a> *conn)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="connection_8c.html#1c62b68cf084828184eed29d17c6498c">litm_connection_open</a> (<a class="el" href="struct__litm__connection.html">litm_connection</a> **conn)</td></tr>
@@ -72,6 +74,8 @@ Include dependency graph for connection.c:</div>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="litm_8h.html#02e9069eb37674bf44c1f0888dc64896">litm_connection_status</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="connection_8c.html#86230c9edffe9b05ec0ff384b1706716">_litm_connection_get_status</a> (<a class="el" href="struct__litm__connection.html">litm_connection</a> *conn)</td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="connection_8c.html#e5df9d4238194cfd02e195a5210602db">_litm_connection_signal_all</a> (void)</td></tr>
+
 <tr><td colspan="2"><br><h2>Variables</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">pthread_mutex_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="connection_8c.html#49a325832a4b73d61fa0ed570f6b3c27">_connections_mutex</a> = PTHREAD_MUTEX_INITIALIZER</td></tr>
 
@@ -80,6 +84,8 @@ Include dependency graph for connection.c:</div>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">pthread_mutex_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="connection_8c.html#2f6f4f644fce3330b2eaaac26aa009ee">_connections_pending_deletion_mutex</a> = PTHREAD_MUTEX_INITIALIZER</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="struct__litm__connection.html">litm_connection</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="connection_8c.html#2adf9828eae2159dfad596c9bf231e2c">_connections_pending_deletion</a> [LITM_CONNECTION_MAX]</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="connection_8c.html#51e7279165fe9e81fd746eedf5705f62">__connections_initialized</a> = 0</td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
@@ -124,11 +130,11 @@ Connection deletion is performed in the following manner:<p>
 
 <p>
 Verifies if a `spot` is available in the connection map OR -1 if none. 
-<p>Definition at line <a class="el" href="connection_8c-source.html#l00218">218</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00225">225</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
 
-<p>References <a class="el" href="litm_8h-source.html#l00204">LITM_CONNECTION_MAX</a>.</p>
+<p>References <a class="el" href="litm_8h-source.html#l00222">LITM_CONNECTION_MAX</a>.</p>
 
-<p>Referenced by <a class="el" href="connection_8c-source.html#l00155">litm_connection_close()</a>, and <a class="el" href="connection_8c-source.html#l00105">litm_connection_open_ex()</a>.</p>
+<p>Referenced by <a class="el" href="connection_8c-source.html#l00162">litm_connection_close()</a>, and <a class="el" href="connection_8c-source.html#l00107">litm_connection_open_ex()</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -136,7 +142,7 @@ Here is the caller graph for this function:</div>
 <div class="dynsection">
 <p><center><img src="connection_8c_720256527350db29d5e743a32d908151_icgraph.png" border="0" usemap="#connection_8c_720256527350db29d5e743a32d908151_icgraph_map" alt=""></center>
 <map name="connection_8c_720256527350db29d5e743a32d908151_icgraph_map">
-<area shape="rect" href="connection_8h.html#8e4dadbbe89d174acfa60f3f44b66c00" title="litm_connection_close" alt="" coords="281,5,431,32"><area shape="rect" href="connection_8h.html#cdc49bd9a413a0db444340b5ffa35543" title="litm_connection_open_ex" alt="" coords="272,56,440,83"><area shape="rect" href="litm_8h.html#11d169394b16263d121989e5ac965606" title="litm_disconnect" alt="" coords="507,5,619,32"><area shape="rect" href="litm_8h.html#7866d99d291588a5279844f2883fd3fa" title="litm_connect_ex" alt="" coords="505,56,620,83"><area shape="rect" href="connection_8h.html#1c62b68cf084828184eed29d17c6498c" title="litm_connection_open" alt="" coords="489,107,636,133"><area shape="rect" href="litm_8h.html#bc852d2eb14353e36adf21c33eab03a3" title="litm_connect" alt="" coords="711,31,807,57"><area shape="rect" href="litm_8h.html#eff57ac5ec37914599624703229ba8ca" title="litm_connect_ex_wait" alt="" coords="685,81,832,108"></map>
+<area shape="rect" href="connection_8h.html#8e4dadbbe89d174acfa60f3f44b66c00" title="litm_connection_close" alt="" coords="281,5,431,32"><area shape="rect" href="connection_8h.html#cdc49bd9a413a0db444340b5ffa35543" title="litm_connection_open_ex" alt="" coords="272,56,440,83"><area shape="rect" href="litm_8h.html#11d169394b16263d121989e5ac965606" title="litm_disconnect" alt="" coords="507,5,619,32"><area shape="rect" href="litm_8h.html#7866d99d291588a5279844f2883fd3fa" title="litm_connect_ex" alt="" coords="505,56,620,83"><area shape="rect" href="connection_8h.html#1c62b68cf084828184eed29d17c6498c" title="litm_connection_open" alt="" coords="489,107,636,133"><area shape="rect" href="litm_8h.html#bc852d2eb14353e36adf21c33eab03a3" title="litm_connect" alt="" coords="685,56,781,83"></map>
 </div>
 
 </div>
@@ -168,9 +174,9 @@ Here is the caller graph for this function:</div>
 
 <p>
 
-<p>Definition at line <a class="el" href="connection_8c-source.html#l00196">196</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00203">203</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
 
-<p>References <a class="el" href="litm_8h-source.html#l00204">LITM_CONNECTION_MAX</a>.</p>
+<p>References <a class="el" href="litm_8h-source.html#l00222">LITM_CONNECTION_MAX</a>.</p>
 
 </div>
 </div><p>
@@ -192,9 +198,9 @@ Here is the caller graph for this function:</div>
 
 <p>
 
-<p>Definition at line <a class="el" href="connection_8c-source.html#l00187">187</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00194">194</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
 
-<p>References <a class="el" href="litm_8h-source.html#l00204">LITM_CONNECTION_MAX</a>.</p>
+<p>References <a class="el" href="litm_8h-source.html#l00222">LITM_CONNECTION_MAX</a>.</p>
 
 </div>
 </div><p>
@@ -216,9 +222,9 @@ Here is the caller graph for this function:</div>
 
 <p>
 
-<p>Definition at line <a class="el" href="connection_8c-source.html#l00303">303</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00310">310</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
 
-<p>References <a class="el" href="litm_8h-source.html#l00264">_litm_connection::status</a>.</p>
+<p>References <a class="el" href="litm_8h-source.html#l00297">_litm_connection::status</a>.</p>
 
 </div>
 </div><p>
@@ -240,9 +246,53 @@ Here is the caller graph for this function:</div>
 
 <p>
 
-<p>Definition at line <a class="el" href="connection_8c-source.html#l00290">290</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00297">297</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
 
-<p>References <a class="el" href="litm_8h-source.html#l00265">_litm_connection::input_queue</a>, and <a class="el" href="litm_8h-source.html#l00231">queue::mutex</a>.</p>
+<p>References <a class="el" href="litm_8h-source.html#l00298">_litm_connection::input_queue</a>, and <a class="el" href="litm_8h-source.html#l00264">queue::mutex</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="e5df9d4238194cfd02e195a5210602db"></a><!-- doxytag: member="connection.c::_litm_connection_signal_all" ref="e5df9d4238194cfd02e195a5210602db" args="(void)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void _litm_connection_signal_all           </td>
+          <td>(</td>
+          <td class="paramtype">void&nbsp;</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00317">317</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+
+<p>References <a class="el" href="litm_8h-source.html#l00298">_litm_connection::input_queue</a>, <a class="el" href="litm_8h-source.html#l00222">LITM_CONNECTION_MAX</a>, and <a class="el" href="queue_8c-source.html#l00477">queue_signal()</a>.</p>
+
+<p>Referenced by <a class="el" href="switch_8c-source.html#l00118">__switch_thread_function()</a>.</p>
+
+<p>
+<div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dynsection">
+<p><center><img src="connection_8c_e5df9d4238194cfd02e195a5210602db_cgraph.png" border="0" usemap="#connection_8c_e5df9d4238194cfd02e195a5210602db_cgraph_map" alt=""></center>
+<map name="connection_8c_e5df9d4238194cfd02e195a5210602db_cgraph_map">
+<area shape="rect" href="queue_8c.html#a1c32f105f2a17f2255cbe6dfaf66f78" title="queue_signal" alt="" coords="236,5,332,32"></map>
+</div>
+
+<p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dynsection">
+<p><center><img src="connection_8c_e5df9d4238194cfd02e195a5210602db_icgraph.png" border="0" usemap="#connection_8c_e5df9d4238194cfd02e195a5210602db_icgraph_map" alt=""></center>
+<map name="connection_8c_e5df9d4238194cfd02e195a5210602db_icgraph_map">
+<area shape="rect" href="switch_8c.html#99ec0a50e5e594cb656f9ea1f7d39554" title="__switch_thread_function" alt="" coords="235,5,403,32"><area shape="rect" href="switch_8h.html#cf83bfcffad6990c781b1a668ec8209e" title="switch_init" alt="" coords="451,5,533,32"><area shape="rect" href="litm_8h.html#7866d99d291588a5279844f2883fd3fa" title="litm_connect_ex" alt="" coords="583,5,697,32"><area shape="rect" href="litm_8h.html#bc852d2eb14353e36adf21c33eab03a3" title="litm_connect" alt="" coords="747,5,843,32"></map>
+</div>
 
 </div>
 </div><p>
@@ -264,9 +314,9 @@ Here is the caller graph for this function:</div>
 
 <p>
 
-<p>Definition at line <a class="el" href="connection_8c-source.html#l00297">297</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00304">304</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
 
-<p>References <a class="el" href="litm_8h-source.html#l00265">_litm_connection::input_queue</a>, and <a class="el" href="litm_8h-source.html#l00231">queue::mutex</a>.</p>
+<p>References <a class="el" href="litm_8h-source.html#l00298">_litm_connection::input_queue</a>, and <a class="el" href="litm_8h-source.html#l00264">queue::mutex</a>.</p>
 
 </div>
 </div><p>
@@ -289,9 +339,9 @@ Here is the caller graph for this function:</div>
 <p>
 <dl class="see" compact><dt><b>See also:</b></dt><dd><a class="el" href="connection_8h.html#200b813c910cd4a83c36aa907bd52dbe">_litm_connection_validate_safe</a> </dd></dl>
 
-<p>Definition at line <a class="el" href="connection_8c-source.html#l00256">256</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00263">263</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
 
-<p>References <a class="el" href="connection_8c-source.html#l00276">_litm_connection_validate_safe()</a>, <a class="el" href="connection_8c-source.html#l00239">_litm_connections_trylock()</a>, and <a class="el" href="connection_8c-source.html#l00246">_litm_connections_unlock()</a>.</p>
+<p>References <a class="el" href="connection_8c-source.html#l00283">_litm_connection_validate_safe()</a>, <a class="el" href="connection_8c-source.html#l00246">_litm_connections_trylock()</a>, and <a class="el" href="connection_8c-source.html#l00253">_litm_connections_unlock()</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -325,11 +375,11 @@ Connection validation<p>
 <dl class="return" compact><dt><b>Returns:</b></dt><dd>0 =&gt; not active <p>
 1 =&gt; active </dd></dl>
 
-<p>Definition at line <a class="el" href="connection_8c-source.html#l00276">276</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00283">283</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
 
-<p>References <a class="el" href="litm_8h-source.html#l00204">LITM_CONNECTION_MAX</a>.</p>
+<p>References <a class="el" href="litm_8h-source.html#l00222">LITM_CONNECTION_MAX</a>.</p>
 
-<p>Referenced by <a class="el" href="connection_8c-source.html#l00256">_litm_connection_validate()</a>.</p>
+<p>Referenced by <a class="el" href="connection_8c-source.html#l00263">_litm_connection_validate()</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -338,6 +388,41 @@ Here is the caller graph for this function:</div>
 <p><center><img src="connection_8c_200b813c910cd4a83c36aa907bd52dbe_icgraph.png" border="0" usemap="#connection_8c_200b813c910cd4a83c36aa907bd52dbe_icgraph_map" alt=""></center>
 <map name="connection_8c_200b813c910cd4a83c36aa907bd52dbe_icgraph_map">
 <area shape="rect" href="connection_8h.html#0f0edb76ffefb926f35e8edb5393f11b" title="_litm_connection_validate" alt="" coords="260,5,431,32"></map>
+</div>
+
+</div>
+</div><p>
+<a class="anchor" name="1651397a367f03c5e51305186f211ffc"></a><!-- doxytag: member="connection.c::_litm_connections_init" ref="1651397a367f03c5e51305186f211ffc" args="(void)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void _litm_connections_init           </td>
+          <td>(</td>
+          <td class="paramtype">void&nbsp;</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00332">332</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+
+<p>References <a class="el" href="litm_8h-source.html#l00222">LITM_CONNECTION_MAX</a>.</p>
+
+<p>Referenced by <a class="el" href="connection_8c-source.html#l00107">litm_connection_open_ex()</a>.</p>
+
+<p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dynsection">
+<p><center><img src="connection_8c_1651397a367f03c5e51305186f211ffc_icgraph.png" border="0" usemap="#connection_8c_1651397a367f03c5e51305186f211ffc_icgraph_map" alt=""></center>
+<map name="connection_8c_1651397a367f03c5e51305186f211ffc_icgraph_map">
+<area shape="rect" href="connection_8h.html#cdc49bd9a413a0db444340b5ffa35543" title="litm_connection_open_ex" alt="" coords="205,31,373,57"><area shape="rect" href="litm_8h.html#7866d99d291588a5279844f2883fd3fa" title="litm_connect_ex" alt="" coords="439,5,553,32"><area shape="rect" href="connection_8h.html#1c62b68cf084828184eed29d17c6498c" title="litm_connection_open" alt="" coords="423,56,569,83"><area shape="rect" href="litm_8h.html#bc852d2eb14353e36adf21c33eab03a3" title="litm_connect" alt="" coords="619,5,715,32"></map>
 </div>
 
 </div>
@@ -360,7 +445,7 @@ Here is the caller graph for this function:</div>
 
 <p>
 
-<p>Definition at line <a class="el" href="connection_8c-source.html#l00233">233</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00240">240</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
 
 </div>
 </div><p>
@@ -382,9 +467,9 @@ Here is the caller graph for this function:</div>
 
 <p>
 
-<p>Definition at line <a class="el" href="connection_8c-source.html#l00239">239</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00246">246</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
 
-<p>Referenced by <a class="el" href="connection_8c-source.html#l00256">_litm_connection_validate()</a>, <a class="el" href="switch_8c-source.html#l00482">switch_add_subscriber()</a>, and <a class="el" href="switch_8c-source.html#l00521">switch_remove_subscriber()</a>.</p>
+<p>Referenced by <a class="el" href="connection_8c-source.html#l00263">_litm_connection_validate()</a>, <a class="el" href="switch_8c-source.html#l00488">switch_add_subscriber()</a>, and <a class="el" href="switch_8c-source.html#l00531">switch_remove_subscriber()</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -392,7 +477,7 @@ Here is the caller graph for this function:</div>
 <div class="dynsection">
 <p><center><img src="connection_8c_6b2986abb5453019ea29678d1d75383f_icgraph.png" border="0" usemap="#connection_8c_6b2986abb5453019ea29678d1d75383f_icgraph_map" alt=""></center>
 <map name="connection_8c_6b2986abb5453019ea29678d1d75383f_icgraph_map">
-<area shape="rect" href="connection_8h.html#0f0edb76ffefb926f35e8edb5393f11b" title="_litm_connection_validate" alt="" coords="229,5,400,32"><area shape="rect" href="switch_8h.html#c5408c5b37244e5d0fe17f55f1c3f89e" title="switch_add_subscriber" alt="" coords="239,56,391,83"><area shape="rect" href="switch_8h.html#a12d12ec55e370e7b2d960a67ab19078" title="switch_remove_subscriber" alt="" coords="227,107,403,133"><area shape="rect" href="litm_8h.html#1c8191e4aca778b346954933c7bdf3ff" title="litm_subscribe" alt="" coords="467,5,571,32"><area shape="rect" href="litm_8h.html#6d62a2a46ae6be134168a00b386afe0d" title="litm_subscribe_wait" alt="" coords="451,56,587,83"><area shape="rect" href="litm_8h.html#50225024a2292b63a5eb95cca00f2545" title="litm_unsubscribe" alt="" coords="459,107,579,133"></map>
+<area shape="rect" href="connection_8h.html#0f0edb76ffefb926f35e8edb5393f11b" title="_litm_connection_validate" alt="" coords="229,5,400,32"><area shape="rect" href="switch_8h.html#c5408c5b37244e5d0fe17f55f1c3f89e" title="switch_add_subscriber" alt="" coords="239,56,391,83"><area shape="rect" href="switch_8h.html#a12d12ec55e370e7b2d960a67ab19078" title="switch_remove_subscriber" alt="" coords="227,107,403,133"><area shape="rect" href="litm_8h.html#1c8191e4aca778b346954933c7bdf3ff" title="litm_subscribe" alt="" coords="459,56,563,83"><area shape="rect" href="litm_8h.html#50225024a2292b63a5eb95cca00f2545" title="litm_unsubscribe" alt="" coords="451,107,571,133"></map>
 </div>
 
 </div>
@@ -415,9 +500,9 @@ Here is the caller graph for this function:</div>
 
 <p>
 
-<p>Definition at line <a class="el" href="connection_8c-source.html#l00246">246</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00253">253</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
 
-<p>Referenced by <a class="el" href="connection_8c-source.html#l00256">_litm_connection_validate()</a>, <a class="el" href="switch_8c-source.html#l00482">switch_add_subscriber()</a>, and <a class="el" href="switch_8c-source.html#l00521">switch_remove_subscriber()</a>.</p>
+<p>Referenced by <a class="el" href="connection_8c-source.html#l00263">_litm_connection_validate()</a>, <a class="el" href="switch_8c-source.html#l00488">switch_add_subscriber()</a>, and <a class="el" href="switch_8c-source.html#l00531">switch_remove_subscriber()</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -425,7 +510,7 @@ Here is the caller graph for this function:</div>
 <div class="dynsection">
 <p><center><img src="connection_8c_c75b4b0413d3523574bda13549715447_icgraph.png" border="0" usemap="#connection_8c_c75b4b0413d3523574bda13549715447_icgraph_map" alt=""></center>
 <map name="connection_8c_c75b4b0413d3523574bda13549715447_icgraph_map">
-<area shape="rect" href="connection_8h.html#0f0edb76ffefb926f35e8edb5393f11b" title="_litm_connection_validate" alt="" coords="229,5,400,32"><area shape="rect" href="switch_8h.html#c5408c5b37244e5d0fe17f55f1c3f89e" title="switch_add_subscriber" alt="" coords="239,56,391,83"><area shape="rect" href="switch_8h.html#a12d12ec55e370e7b2d960a67ab19078" title="switch_remove_subscriber" alt="" coords="227,107,403,133"><area shape="rect" href="litm_8h.html#1c8191e4aca778b346954933c7bdf3ff" title="litm_subscribe" alt="" coords="467,5,571,32"><area shape="rect" href="litm_8h.html#6d62a2a46ae6be134168a00b386afe0d" title="litm_subscribe_wait" alt="" coords="451,56,587,83"><area shape="rect" href="litm_8h.html#50225024a2292b63a5eb95cca00f2545" title="litm_unsubscribe" alt="" coords="459,107,579,133"></map>
+<area shape="rect" href="connection_8h.html#0f0edb76ffefb926f35e8edb5393f11b" title="_litm_connection_validate" alt="" coords="229,5,400,32"><area shape="rect" href="switch_8h.html#c5408c5b37244e5d0fe17f55f1c3f89e" title="switch_add_subscriber" alt="" coords="239,56,391,83"><area shape="rect" href="switch_8h.html#a12d12ec55e370e7b2d960a67ab19078" title="switch_remove_subscriber" alt="" coords="227,107,403,133"><area shape="rect" href="litm_8h.html#1c8191e4aca778b346954933c7bdf3ff" title="litm_subscribe" alt="" coords="459,56,563,83"><area shape="rect" href="litm_8h.html#50225024a2292b63a5eb95cca00f2545" title="litm_unsubscribe" alt="" coords="451,107,571,133"></map>
 </div>
 
 </div>
@@ -448,11 +533,11 @@ Here is the caller graph for this function:</div>
 
 <p>
 Closes an opened connection 
-<p>Definition at line <a class="el" href="connection_8c-source.html#l00155">155</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00162">162</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
 
-<p>References <a class="el" href="connection_8c-source.html#l00218">__litm_connection_get_free_index()</a>, <a class="el" href="logger_8h-source.html#l00019">DEBUG_LOG</a>, <a class="el" href="litm_8h-source.html#l00298">LITM_CODE_ERROR_BAD_CONNECTION</a>, <a class="el" href="litm_8h-source.html#l00299">LITM_CODE_ERROR_NO_MORE_CONNECTIONS</a>, <a class="el" href="litm_8h-source.html#l00293">LITM_CODE_OK</a>, <a class="el" href="litm_8h-source.html#l00251">LITM_CONNECTION_STATUS_PENDING_DELETION</a>, and <a class="el" href="litm_8h-source.html#l00264">_litm_connection::status</a>.</p>
+<p>References <a class="el" href="connection_8c-source.html#l00225">__litm_connection_get_free_index()</a>, <a class="el" href="logger_8h-source.html#l00019">DEBUG_LOG</a>, <a class="el" href="litm_8h-source.html#l00331">LITM_CODE_ERROR_BAD_CONNECTION</a>, <a class="el" href="litm_8h-source.html#l00332">LITM_CODE_ERROR_NO_MORE_CONNECTIONS</a>, <a class="el" href="litm_8h-source.html#l00326">LITM_CODE_OK</a>, <a class="el" href="litm_8h-source.html#l00284">LITM_CONNECTION_STATUS_PENDING_DELETION</a>, and <a class="el" href="litm_8h-source.html#l00297">_litm_connection::status</a>.</p>
 
-<p>Referenced by <a class="el" href="litm_8c-source.html#l00112">litm_disconnect()</a>.</p>
+<p>Referenced by <a class="el" href="litm_8c-source.html#l00078">litm_disconnect()</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -494,9 +579,9 @@ Here is the caller graph for this function:</div>
 Returns the connection id<p>
 <dl class="return" compact><dt><b>Returns:</b></dt><dd>-1 on error </dd></dl>
 
-<p>Definition at line <a class="el" href="connection_8c-source.html#l00083">83</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00085">85</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
 
-<p>References <a class="el" href="litm_8h-source.html#l00263">_litm_connection::id</a>.</p>
+<p>References <a class="el" href="litm_8h-source.html#l00296">_litm_connection::id</a>.</p>
 
 </div>
 </div><p>
@@ -518,9 +603,9 @@ Returns the connection id<p>
 
 <p>
 Opens a ``connection`` 
-<p>Definition at line <a class="el" href="connection_8c-source.html#l00097">97</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00099">99</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
 
-<p>References <a class="el" href="connection_8c-source.html#l00105">litm_connection_open_ex()</a>.</p>
+<p>References <a class="el" href="connection_8c-source.html#l00107">litm_connection_open_ex()</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -528,7 +613,7 @@ Here is the call graph for this function:</div>
 <div class="dynsection">
 <p><center><img src="connection_8c_1c62b68cf084828184eed29d17c6498c_cgraph.png" border="0" usemap="#connection_8c_1c62b68cf084828184eed29d17c6498c_cgraph_map" alt=""></center>
 <map name="connection_8c_1c62b68cf084828184eed29d17c6498c_cgraph_map">
-<area shape="rect" href="connection_8c.html#cdc49bd9a413a0db444340b5ffa35543" title="litm_connection_open_ex" alt="" coords="203,31,371,57"><area shape="rect" href="connection_8c.html#720256527350db29d5e743a32d908151" title="__litm_connection_get_free_index" alt="" coords="419,5,637,32"><area shape="rect" href="queue_8c.html#fb5475fae1028dd41cf622ef2dc84036" title="queue_create" alt="" coords="479,56,577,83"></map>
+<area shape="rect" href="connection_8c.html#cdc49bd9a413a0db444340b5ffa35543" title="litm_connection_open_ex" alt="" coords="203,56,371,83"><area shape="rect" href="connection_8c.html#720256527350db29d5e743a32d908151" title="__litm_connection_get_free_index" alt="" coords="419,5,637,32"><area shape="rect" href="connection_8c.html#1651397a367f03c5e51305186f211ffc" title="_litm_connections_init" alt="" coords="453,56,603,83"><area shape="rect" href="queue_8c.html#fb5475fae1028dd41cf622ef2dc84036" title="queue_create" alt="" coords="479,107,577,133"></map>
 </div>
 
 </div>
@@ -560,11 +645,11 @@ Here is the call graph for this function:</div>
 
 <p>
 
-<p>Definition at line <a class="el" href="connection_8c-source.html#l00105">105</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00107">107</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
 
-<p>References <a class="el" href="connection_8c-source.html#l00218">__litm_connection_get_free_index()</a>, <a class="el" href="litm_8h-source.html#l00295">LITM_CODE_BUSY</a>, <a class="el" href="litm_8h-source.html#l00296">LITM_CODE_ERROR_MALLOC</a>, <a class="el" href="litm_8h-source.html#l00299">LITM_CODE_ERROR_NO_MORE_CONNECTIONS</a>, <a class="el" href="litm_8h-source.html#l00293">LITM_CODE_OK</a>, <a class="el" href="litm_8h-source.html#l00250">LITM_CONNECTION_STATUS_ACTIVE</a>, <a class="el" href="queue_8c-source.html#l00035">queue_create()</a>, and <a class="el" href="litm_8h-source.html#l00260">_litm_connection::received</a>.</p>
+<p>References <a class="el" href="connection_8c-source.html#l00225">__litm_connection_get_free_index()</a>, <a class="el" href="connection_8c-source.html#l00332">_litm_connections_init()</a>, <a class="el" href="litm_8h-source.html#l00328">LITM_CODE_BUSY</a>, <a class="el" href="litm_8h-source.html#l00329">LITM_CODE_ERROR_MALLOC</a>, <a class="el" href="litm_8h-source.html#l00332">LITM_CODE_ERROR_NO_MORE_CONNECTIONS</a>, <a class="el" href="litm_8h-source.html#l00326">LITM_CODE_OK</a>, <a class="el" href="litm_8h-source.html#l00283">LITM_CONNECTION_STATUS_ACTIVE</a>, <a class="el" href="queue_8c-source.html#l00035">queue_create()</a>, and <a class="el" href="litm_8h-source.html#l00293">_litm_connection::received</a>.</p>
 
-<p>Referenced by <a class="el" href="litm_8c-source.html#l00061">litm_connect_ex()</a>, and <a class="el" href="connection_8c-source.html#l00097">litm_connection_open()</a>.</p>
+<p>Referenced by <a class="el" href="litm_8c-source.html#l00061">litm_connect_ex()</a>, and <a class="el" href="connection_8c-source.html#l00099">litm_connection_open()</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -572,7 +657,7 @@ Here is the call graph for this function:</div>
 <div class="dynsection">
 <p><center><img src="connection_8c_cdc49bd9a413a0db444340b5ffa35543_cgraph.png" border="0" usemap="#connection_8c_cdc49bd9a413a0db444340b5ffa35543_cgraph_map" alt=""></center>
 <map name="connection_8c_cdc49bd9a413a0db444340b5ffa35543_cgraph_map">
-<area shape="rect" href="connection_8c.html#720256527350db29d5e743a32d908151" title="__litm_connection_get_free_index" alt="" coords="221,5,440,32"><area shape="rect" href="queue_8c.html#fb5475fae1028dd41cf622ef2dc84036" title="queue_create" alt="" coords="281,56,380,83"></map>
+<area shape="rect" href="connection_8c.html#720256527350db29d5e743a32d908151" title="__litm_connection_get_free_index" alt="" coords="221,5,440,32"><area shape="rect" href="connection_8c.html#1651397a367f03c5e51305186f211ffc" title="_litm_connections_init" alt="" coords="256,56,405,83"><area shape="rect" href="queue_8c.html#fb5475fae1028dd41cf622ef2dc84036" title="queue_create" alt="" coords="281,107,380,133"></map>
 </div>
 
 <p>
@@ -581,12 +666,29 @@ Here is the caller graph for this function:</div>
 <div class="dynsection">
 <p><center><img src="connection_8c_cdc49bd9a413a0db444340b5ffa35543_icgraph.png" border="0" usemap="#connection_8c_cdc49bd9a413a0db444340b5ffa35543_icgraph_map" alt=""></center>
 <map name="connection_8c_cdc49bd9a413a0db444340b5ffa35543_icgraph_map">
-<area shape="rect" href="litm_8h.html#7866d99d291588a5279844f2883fd3fa" title="litm_connect_ex" alt="" coords="239,31,353,57"><area shape="rect" href="connection_8h.html#1c62b68cf084828184eed29d17c6498c" title="litm_connection_open" alt="" coords="223,81,369,108"><area shape="rect" href="litm_8h.html#bc852d2eb14353e36adf21c33eab03a3" title="litm_connect" alt="" coords="444,5,540,32"><area shape="rect" href="litm_8h.html#eff57ac5ec37914599624703229ba8ca" title="litm_connect_ex_wait" alt="" coords="419,56,565,83"></map>
+<area shape="rect" href="litm_8h.html#7866d99d291588a5279844f2883fd3fa" title="litm_connect_ex" alt="" coords="239,5,353,32"><area shape="rect" href="connection_8h.html#1c62b68cf084828184eed29d17c6498c" title="litm_connection_open" alt="" coords="223,56,369,83"><area shape="rect" href="litm_8h.html#bc852d2eb14353e36adf21c33eab03a3" title="litm_connect" alt="" coords="419,5,515,32"></map>
 </div>
 
 </div>
 </div><p>
 <hr><h2>Variable Documentation</h2>
+<a class="anchor" name="51e7279165fe9e81fd746eedf5705f62"></a><!-- doxytag: member="connection.c::__connections_initialized" ref="51e7279165fe9e81fd746eedf5705f62" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="connection_8c.html#51e7279165fe9e81fd746eedf5705f62">__connections_initialized</a> = 0          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+<p>Definition at line <a class="el" href="connection_8c-source.html#l00074">74</a> of file <a class="el" href="connection_8c-source.html">connection.c</a>.</p>
+
+</div>
+</div><p>
 <a class="anchor" name="d496dab32a583a505f1d168f1ded64e6"></a><!-- doxytag: member="connection.c::_connections" ref="d496dab32a583a505f1d168f1ded64e6" args="[LITM_CONNECTION_MAX]" -->
 <div class="memitem">
 <div class="memproto">
@@ -656,7 +758,7 @@ Here is the caller graph for this function:</div>
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Tue May 26 11:33:58 2009 for LITM by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Wed May 27 15:51:38 2009 for LITM by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

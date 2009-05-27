@@ -175,8 +175,8 @@ __litm_pool_clean( litm_envelope *envlp ) {
 	envlp->cleaner = NULL;
 	envlp->msg     = NULL;
 
+	envlp->type    = LITM_MESSAGE_TYPE_INVALID;
+
 	envlp->delivery_count = 0;
 	envlp->released_count = 0;
-	envlp->shutdown_flag  = 0;
-	envlp->timer_flag     = 0;
 }//

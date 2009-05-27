@@ -46,6 +46,8 @@
 Here is a list of all functions, variables, defines, enums, and typedefs with links to the files they belong to:
 <p>
 <h3><a class="anchor" name="index__">- _ -</a></h3><ul>
+<li>__connections_initialized
+: <a class="el" href="connection_8c.html#51e7279165fe9e81fd746eedf5705f62">connection.c</a>
 <li>__litm_compute_timeout()
 : <a class="el" href="litm_8c.html#2da7b55584eb9bfdd2202a3b4ecb4c0d">litm.c</a>
 <li>__litm_connection_get_free_index()
@@ -58,8 +60,8 @@ Here is a list of all functions, variables, defines, enums, and typedefs with li
 : <a class="el" href="pool_8c.html#ad0b7166470e29cb5024efeca7d035af">pool.c</a>
 , <a class="el" href="pool_8h.html#ad0b7166470e29cb5024efeca7d035af">pool.h</a>
 <li>__litm_pool_destroy()
-: <a class="el" href="pool_8h.html#2f844d6f6d2a471a5a93c3c49c28eef2">pool.h</a>
-, <a class="el" href="pool_8c.html#2f844d6f6d2a471a5a93c3c49c28eef2">pool.c</a>
+: <a class="el" href="pool_8c.html#2f844d6f6d2a471a5a93c3c49c28eef2">pool.c</a>
+, <a class="el" href="pool_8h.html#2f844d6f6d2a471a5a93c3c49c28eef2">pool.h</a>
 <li>__litm_pool_get()
 : <a class="el" href="pool_8c.html#5a3eeccda0cfcf633af7177fad20c783">pool.c</a>
 , <a class="el" href="pool_8h.html#5a3eeccda0cfcf633af7177fad20c783">pool.h</a>
@@ -81,7 +83,7 @@ Here is a list of all functions, variables, defines, enums, and typedefs with li
 <li>__switch_init_tables()
 : <a class="el" href="switch_8c.html#e4d3d02052899f64d09070f18f75c29a">switch.c</a>
 <li>__switch_safe_send()
-: <a class="el" href="switch_8c.html#9b8ef3fb85a6655628b2e534bc7e4245">switch.c</a>
+: <a class="el" href="switch_8c.html#2e20f13c81cddbb6b22dbf8ae111a96d">switch.c</a>
 <li>__switch_thread_function()
 : <a class="el" href="switch_8c.html#99ec0a50e5e594cb656f9ea1f7d39554">switch.c</a>
 <li>__switch_try_sending_or_requeue()
@@ -109,26 +111,33 @@ Here is a list of all functions, variables, defines, enums, and typedefs with li
 <li>_litm_connection_lock()
 : <a class="el" href="connection_8c.html#845538cd477e83b01381c22198ca318f">connection.c</a>
 , <a class="el" href="connection_8h.html#845538cd477e83b01381c22198ca318f">connection.h</a>
+<li>_litm_connection_signal_all()
+: <a class="el" href="connection_8c.html#e5df9d4238194cfd02e195a5210602db">connection.c</a>
+, <a class="el" href="connection_8h.html#e5df9d4238194cfd02e195a5210602db">connection.h</a>
 <li>_litm_connection_status_codes
 : <a class="el" href="litm_8h.html#162832423e3440c32bee96b14817a29c">litm.h</a>
 <li>_litm_connection_unlock()
 : <a class="el" href="connection_8c.html#1bbcee336581803f8ff367f55fca7363">connection.c</a>
 , <a class="el" href="connection_8h.html#1bbcee336581803f8ff367f55fca7363">connection.h</a>
 <li>_litm_connection_validate()
-: <a class="el" href="connection_8h.html#0f0edb76ffefb926f35e8edb5393f11b">connection.h</a>
-, <a class="el" href="connection_8c.html#0f0edb76ffefb926f35e8edb5393f11b">connection.c</a>
+: <a class="el" href="connection_8c.html#0f0edb76ffefb926f35e8edb5393f11b">connection.c</a>
+, <a class="el" href="connection_8h.html#0f0edb76ffefb926f35e8edb5393f11b">connection.h</a>
 <li>_litm_connection_validate_safe()
 : <a class="el" href="connection_8c.html#200b813c910cd4a83c36aa907bd52dbe">connection.c</a>
 , <a class="el" href="connection_8h.html#200b813c910cd4a83c36aa907bd52dbe">connection.h</a>
+<li>_litm_connections_init()
+: <a class="el" href="connection_8c.html#1651397a367f03c5e51305186f211ffc">connection.c</a>
 <li>_litm_connections_lock()
 : <a class="el" href="connection_8c.html#9e582b29253857b58f87ba89f8a6526f">connection.c</a>
 , <a class="el" href="connection_8h.html#9e582b29253857b58f87ba89f8a6526f">connection.h</a>
 <li>_litm_connections_trylock()
-: <a class="el" href="connection_8c.html#6b2986abb5453019ea29678d1d75383f">connection.c</a>
-, <a class="el" href="connection_8h.html#6b2986abb5453019ea29678d1d75383f">connection.h</a>
+: <a class="el" href="connection_8h.html#6b2986abb5453019ea29678d1d75383f">connection.h</a>
+, <a class="el" href="connection_8c.html#6b2986abb5453019ea29678d1d75383f">connection.c</a>
 <li>_litm_connections_unlock()
 : <a class="el" href="connection_8h.html#c75b4b0413d3523574bda13549715447">connection.h</a>
 , <a class="el" href="connection_8c.html#c75b4b0413d3523574bda13549715447">connection.c</a>
+<li>_litm_reserved_message_types
+: <a class="el" href="litm_8h.html#e35450f11d8478c442f0cd21a7d6553a">litm.h</a>
 <li>_LOGGER_IDENTITY
 : <a class="el" href="logger_8c.html#a4c3f800cd36a7cab78e6e26def1a1ea">logger.c</a>
 <li>_pool_mutex
@@ -155,10 +164,14 @@ Here is a list of all functions, variables, defines, enums, and typedefs with li
 : <a class="el" href="pool_8c.html#2e55d0fea0e1bfdcd9cad770a70e2afe">pool.c</a>
 </ul>
 <h3><a class="anchor" name="index_d">- d -</a></h3><ul>
+<li>DEBUG_FUNC
+: <a class="el" href="litm_8h.html#93f78e0017297fce05637dff827f796b">litm.h</a>
 <li>DEBUG_LOG
 : <a class="el" href="logger_8h.html#21a2c7330a04ac78200a986f66609369">logger.h</a>
 <li>DEBUG_LOG_PTR
 : <a class="el" href="logger_8h.html#5e74f7a89e89b195bba421ac1ed9a496">logger.h</a>
+<li>DEBUG_PARAM
+: <a class="el" href="litm_8h.html#d5fdc4d7c1138c3617c1e02af1c904dd">litm.h</a>
 <li>doLog()
 : <a class="el" href="logger_8c.html#7380c33fa7a012bfb1b5dc892228d0e4">logger.c</a>
 , <a class="el" href="logger_8h.html#7380c33fa7a012bfb1b5dc892228d0e4">logger.h</a>
@@ -226,9 +239,6 @@ Here is a list of all functions, variables, defines, enums, and typedefs with li
 <li>litm_connect_ex()
 : <a class="el" href="litm_8h.html#7866d99d291588a5279844f2883fd3fa">litm.h</a>
 , <a class="el" href="litm_8c.html#7866d99d291588a5279844f2883fd3fa">litm.c</a>
-<li>litm_connect_ex_wait()
-: <a class="el" href="litm_8c.html#eff57ac5ec37914599624703229ba8ca">litm.c</a>
-, <a class="el" href="litm_8h.html#eff57ac5ec37914599624703229ba8ca">litm.h</a>
 <li>litm_connection
 : <a class="el" href="litm_8h.html#a9130196c5496c3a93c55f4a6299c188">litm.h</a>
 <li>litm_connection_close()
@@ -263,28 +273,33 @@ Here is a list of all functions, variables, defines, enums, and typedefs with li
 <li>litm_envelope
 : <a class="el" href="litm_8h.html#f3d9975cd376543b46aed86f8784bea1">litm.h</a>
 <li>litm_get_message()
-: <a class="el" href="litm_8c.html#aeb4655eae7753e131a710ff5a64b9f7">litm.c</a>
-, <a class="el" href="litm_8h.html#aeb4655eae7753e131a710ff5a64b9f7">litm.h</a>
+: <a class="el" href="litm_8c.html#c80dd642b792576ba09cf24c2a81bfd1">litm.c</a>
+, <a class="el" href="litm_8h.html#c80dd642b792576ba09cf24c2a81bfd1">litm.h</a>
+<li>LITM_MESSAGE_TYPE_INVALID
+: <a class="el" href="litm_8h.html#e35450f11d8478c442f0cd21a7d6553a74b25b6d2a6b2fa673065068fef134f8">litm.h</a>
+<li>LITM_MESSAGE_TYPE_SHUTDOWN
+: <a class="el" href="litm_8h.html#e35450f11d8478c442f0cd21a7d6553afbffc6eff7100e9550b46ec687b807d8">litm.h</a>
+<li>LITM_MESSAGE_TYPE_TIMER
+: <a class="el" href="litm_8h.html#e35450f11d8478c442f0cd21a7d6553a8fa72e4f7868e47c4bad784f20f6e48e">litm.h</a>
+<li>LITM_MESSAGE_TYPE_USER_START
+: <a class="el" href="litm_8h.html#e35450f11d8478c442f0cd21a7d6553ab6ba6690bd71d6dc75cc377bbf8715d9">litm.h</a>
 <li>LITM_POOL_SIZE
 : <a class="el" href="pool_8h.html#82f68d9a84b4cd46e13dc7adf193a7eb">pool.h</a>
 <li>litm_receive_nb()
-: <a class="el" href="litm_8h.html#2b6bffa08706c97ea5d9f6d670f8b359">litm.h</a>
-, <a class="el" href="litm_8c.html#2b6bffa08706c97ea5d9f6d670f8b359">litm.c</a>
+: <a class="el" href="litm_8c.html#2b6bffa08706c97ea5d9f6d670f8b359">litm.c</a>
+, <a class="el" href="litm_8h.html#2b6bffa08706c97ea5d9f6d670f8b359">litm.h</a>
 <li>litm_receive_wait()
 : <a class="el" href="litm_8c.html#c3d5ff42f38bf4820ab8e842276062a9">litm.c</a>
 , <a class="el" href="litm_8h.html#c3d5ff42f38bf4820ab8e842276062a9">litm.h</a>
+<li>litm_receive_wait_timer()
+: <a class="el" href="litm_8h.html#f7227c2bbe2de385bc1c74773931b030">litm.h</a>
+, <a class="el" href="litm_8c.html#f7227c2bbe2de385bc1c74773931b030">litm.c</a>
 <li>litm_release()
-: <a class="el" href="litm_8c.html#21def412c9b064fc929e0822f28d2a2a">litm.c</a>
-, <a class="el" href="litm_8h.html#21def412c9b064fc929e0822f28d2a2a">litm.h</a>
+: <a class="el" href="litm_8h.html#21def412c9b064fc929e0822f28d2a2a">litm.h</a>
+, <a class="el" href="litm_8c.html#21def412c9b064fc929e0822f28d2a2a">litm.c</a>
 <li>litm_send()
-: <a class="el" href="litm_8h.html#bed13398c1bc31a6c81c3e50997e2f2c">litm.h</a>
-, <a class="el" href="litm_8c.html#bed13398c1bc31a6c81c3e50997e2f2c">litm.c</a>
-<li>litm_send_shutdown()
-: <a class="el" href="litm_8h.html#9e932bb687ba4087d90eca7aa6583f0a">litm.h</a>
-, <a class="el" href="litm_8c.html#9e932bb687ba4087d90eca7aa6583f0a">litm.c</a>
-<li>litm_send_wait()
-: <a class="el" href="litm_8h.html#f3f6e0026de45f6a16f234a28a0d003b">litm.h</a>
-, <a class="el" href="litm_8c.html#f3f6e0026de45f6a16f234a28a0d003b">litm.c</a>
+: <a class="el" href="litm_8h.html#ec1432d7f0252d45801739101e04e050">litm.h</a>
+, <a class="el" href="litm_8c.html#ec1432d7f0252d45801739101e04e050">litm.c</a>
 <li>LITM_SHUTDOWN_FLAG_FALSE
 : <a class="el" href="switch_8c.html#c3ba55abd7cb01bec78ad24348561d4e">switch.c</a>
 <li>LITM_SHUTDOWN_FLAG_TRUE
@@ -292,12 +307,13 @@ Here is a list of all functions, variables, defines, enums, and typedefs with li
 <li>litm_subscribe()
 : <a class="el" href="litm_8c.html#1c8191e4aca778b346954933c7bdf3ff">litm.c</a>
 , <a class="el" href="litm_8h.html#1c8191e4aca778b346954933c7bdf3ff">litm.h</a>
-<li>litm_subscribe_wait()
-: <a class="el" href="litm_8c.html#6d62a2a46ae6be134168a00b386afe0d">litm.c</a>
-, <a class="el" href="litm_8h.html#6d62a2a46ae6be134168a00b386afe0d">litm.h</a>
+<li>LITM_TIMER_FLAG_FALSE
+: <a class="el" href="switch_8c.html#44742f0e9b0dd9743391067c50c50722">switch.c</a>
+<li>LITM_TIMER_FLAG_TRUE
+: <a class="el" href="switch_8c.html#deb2807877fd038911907da52b5cc734">switch.c</a>
 <li>litm_translate_code()
-: <a class="el" href="litm_8c.html#76f700b9bb8531fd8baf8931e67c4604">litm.c</a>
-, <a class="el" href="litm_8h.html#76f700b9bb8531fd8baf8931e67c4604">litm.h</a>
+: <a class="el" href="litm_8h.html#76f700b9bb8531fd8baf8931e67c4604">litm.h</a>
+, <a class="el" href="litm_8c.html#76f700b9bb8531fd8baf8931e67c4604">litm.c</a>
 <li>litm_unsubscribe()
 : <a class="el" href="litm_8c.html#50225024a2292b63a5eb95cca00f2545">litm.c</a>
 , <a class="el" href="litm_8h.html#50225024a2292b63a5eb95cca00f2545">litm.h</a>
@@ -343,14 +359,16 @@ Here is a list of all functions, variables, defines, enums, and typedefs with li
 <li>queue_put_safe()
 : <a class="el" href="queue_8c.html#24e3c9aaef201f1f66bcd8591b1e4c15">queue.c</a>
 <li>queue_put_wait()
-: <a class="el" href="queue_8h.html#d4050b8bbc9ffa6f43c5471de7072280">queue.h</a>
-, <a class="el" href="queue_8c.html#d4050b8bbc9ffa6f43c5471de7072280">queue.c</a>
+: <a class="el" href="queue_8c.html#d4050b8bbc9ffa6f43c5471de7072280">queue.c</a>
+, <a class="el" href="queue_8h.html#d4050b8bbc9ffa6f43c5471de7072280">queue.h</a>
 <li>queue_signal()
-: <a class="el" href="queue_8c.html#a1c32f105f2a17f2255cbe6dfaf66f78">queue.c</a>
-, <a class="el" href="queue_8h.html#a1c32f105f2a17f2255cbe6dfaf66f78">queue.h</a>
+: <a class="el" href="queue_8h.html#a1c32f105f2a17f2255cbe6dfaf66f78">queue.h</a>
+, <a class="el" href="queue_8c.html#a1c32f105f2a17f2255cbe6dfaf66f78">queue.c</a>
 <li>queue_wait()
 : <a class="el" href="queue_8c.html#506b0fed202c45ae1d42b1b9d5cd6b30">queue.c</a>
 , <a class="el" href="queue_8h.html#506b0fed202c45ae1d42b1b9d5cd6b30">queue.h</a>
+<li>queue_wait_timer()
+: <a class="el" href="queue_8c.html#def7e9126618e14605963f381a1d655e">queue.c</a>
 </ul>
 <h3><a class="anchor" name="index_r">- r -</a></h3><ul>
 <li>random_sleep()
@@ -374,16 +392,13 @@ Here is a list of all functions, variables, defines, enums, and typedefs with li
 : <a class="el" href="switch_8h.html#a12d12ec55e370e7b2d960a67ab19078">switch.h</a>
 , <a class="el" href="switch_8c.html#a12d12ec55e370e7b2d960a67ab19078">switch.c</a>
 <li>switch_send()
-: <a class="el" href="switch_8c.html#7ff2d602f713f81e854c172e842afcad">switch.c</a>
-, <a class="el" href="switch_8h.html#7ff2d602f713f81e854c172e842afcad">switch.h</a>
-<li>switch_send_shutdown()
-: <a class="el" href="switch_8c.html#cc4861fecbb5d0b20174fc1513539554">switch.c</a>
-, <a class="el" href="switch_8h.html#cc4861fecbb5d0b20174fc1513539554">switch.h</a>
+: <a class="el" href="switch_8c.html#53fa28981b2f79292ea1d0c2d5c50aec">switch.c</a>
+, <a class="el" href="switch_8h.html#53fa28981b2f79292ea1d0c2d5c50aec">switch.h</a>
 <li>switch_thread_function()
 : <a class="el" href="switch_8h.html#e3d353fd292b45761954aa21d793017d">switch.h</a>
 </ul>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Tue May 26 11:33:58 2009 for LITM by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Wed May 27 15:51:39 2009 for LITM by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>
