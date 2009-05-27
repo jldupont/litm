@@ -373,6 +373,10 @@ int queue_wait_timer(queue *q, int usec_timer) {
 		gettimeofday(&now, NULL);
 		timeout.tv_sec  = now.tv_sec;
 		timeout.tv_nsec = now.tv_usec * 1000 + usec_timer*1000;
+		if (timeout.tv_nsec > 1000000000) {
+			timeout.tv_nsec -= 1000000000;
+			timeout.tv_sec ++;
+		}
 
 		// it seems we need to wait...
 		//DEBUG_LOG(LOG_DEBUG,"queue_wait: BEFORE COND_WAIT on q[%x][%i]",q,q->id);

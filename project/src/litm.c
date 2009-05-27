@@ -236,11 +236,22 @@ litm_send_timer( 		litm_connection *conn,
 #ifdef _DEBUG
 	void _litm_log_timediff(litm_envelope *env) {
 
-		struct timeval *current;
-		current = (struct timeval *) malloc( sizeof(struct timeval) );
-		int result=gettimeofday( current, NULL );
-		suseconds_t diff_usecs = current->tv_usec - (env->sent_time)->tv_usec;
-		doLog(LOG_INFO,">>> enlvp[%x] rx diff[%li] result[%i]", env, diff_usecs, result);
+		struct timeval *sent, current, lapsed;
+
+		sent=env->sent_time;
+
+		gettimeofday( &current, NULL );
+
+		if (sent->tv_usec > current.tv_usec) {
+			current.tv_usec += 1000000;
+			current.tv_sec--;
+		}
+		lapsed.tv_usec = current.tv_usec - sent->tv_usec;
+		lapsed.tv_sec  = current.tv_sec  - sent->tv_sec;
+
+		double elapsed = lapsed.tv_sec + (1.0/(double)lapsed.tv_usec);
+
+		doLog(LOG_INFO,">>> enlvp[%x] elapsed[%e]", env, elapsed);
 	}//
 #endif
 
