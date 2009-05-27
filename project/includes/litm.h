@@ -31,7 +31,7 @@
  *			\code
  *
  *				litm_connection *conn;
- *				litm_code code = litm_connection_open( &conn );
+ *				litm_code code = litm_connect( &conn );
  *				switch(code) {
  *				 case LITM_CODE_OK:
  *				 		// can start using the connection
@@ -68,7 +68,9 @@
  *				void *thread_function(void *params) {
  *
  *					void *message; // whatever structure
- *					litm_code code = litm_send(conn, bus_id, message, NULL);
+ *					int  type=WHATEVER_MESSAGE_TYPE_CODE;
+ *
+ *					litm_code code = litm_send(conn, bus_id, message, NULL, type);
  *					 ... check return code ...
  *
  *					...
@@ -89,7 +91,7 @@
  *				void *thread_function(void *params) {
  *
  *					void *message; // whatever structure
- *					litm_code code = litm_send_shutdown(conn, bus_id, message, NULL);
+ *					litm_code code = litm_send(conn, bus_id, message, NULL, LITM_MESSAGE_TYPE_SHUTDOWN);
  *					 ... check return code ...
  *
  *					...
@@ -107,7 +109,8 @@
  *					 ... check return code ...
  *
  *					void *msg;
- *					msg = litm_get_message( envelope );
+ *					int  type;
+ *					msg = litm_get_message( envelope, &type );
  *
  *					 ... process message WITHOUT MODIFYING IT ...
  *
@@ -190,6 +193,11 @@
  *
  *								\li Fixed deb package control files
  *
+ *		\subsection release_1_0 Release 1.0
+ *
+ *								\li Notable speed increase (no more corner case blocking)
+ *								\li Simplified API (connect, send and subscribe are only available in 'blocking' form)
+ *
  * \todo Better connection close
  *
  */
@@ -216,6 +224,22 @@
 #	define LITM_DEFAULT_MAX_TIMEOUT 5
 #	define LITM_DEFAULT_MAX_BACKOFF 1
 
+
+		/**
+		 * Message types, reserved & user defined
+		 */
+		enum _litm_reserved_message_types {
+
+			LITM_MESSAGE_TYPE_INVALID = 0,
+			LITM_MESSAGE_TYPE_SHUTDOWN,
+			LITM_MESSAGE_TYPE_TIMER,
+
+			// Start index of user message types
+			// =================================
+			LITM_MESSAGE_TYPE_USER_START = 100
+
+		};
+
 		/**
 		 * Queue node - entry in a queue
 		 *
@@ -237,7 +261,6 @@
 		 */
 		typedef struct {
 			pthread_cond_t  *cond;
-			pthread_mutex_t *cond_mutex;
 			pthread_mutex_t *mutex;
 			struct _queue_node *head, *tail;
 			int num;
@@ -349,9 +372,8 @@
 		typedef struct _litm_envelope {
 
 			DEBUG_PARAM(struct timeval *sent_time);
+			int type;
 			int requeued;
-			int shutdown_flag;
-			int timer_flag;
 			int released_count;
 			int delivery_count;
 			void (*cleaner)(void *msg);
@@ -385,19 +407,12 @@
 		 */
 		litm_code litm_connect_ex(litm_connection **conn, int id);
 
+
 		/**
-		 * Opens a ``connection`` to the ``switch``
-		 *  and returns a pointer to the connection reference.
-		 *  Waits for a maximum of ``timeout``.
-		 *
-		 * @see litm_connect
-		 *
-		 * @param **conn pointer to connection reference
-		 * @param id connection identifier
-		 * @param timeout timeout in seconds, 0 for the default
+		 * Wait for shutdown function
 		 *
 		 */
-		litm_code litm_connect_ex_wait(litm_connection **conn, int id, int timeout);
+		void litm_wait_shutdown(void);
 
 
 		/**
@@ -442,11 +457,6 @@
 
 
 		/**
-		 * @see litm_subscribe
-		 */
-		litm_code litm_subscribe_wait(litm_connection *conn, litm_bus bus_id, int timeout);
-
-		/**
 		 * Unsubscribe from a ``bus``
 		 *
 		 * @see litm_disconnect
@@ -466,6 +476,7 @@
 		 * @param bus_id the ``bus`` to send the message onto
 		 * @param *msg the pointer to the message
 		 * @param *cleaner the pointer to the cleaner function
+		 * @param type message type
 		 *
 		 * If omitted, the default ``cleaner`` function will be
 		 * <b>free()</b>.
@@ -481,59 +492,10 @@
 		litm_code litm_send(	litm_connection *conn,
 								litm_bus bus_id,
 								void *msg,
-								void (*cleaner)(void *msg)
+								void (*cleaner)(void *msg),
+								int type
 								);
 
-		/**
-		 * @see litm_send_wait
-		 */
-		litm_code litm_send_wait(	litm_connection *conn,
-									litm_bus bus_id,
-									void *msg,
-									void (*cleaner)(void *msg),
-									int timeout
-								);
-
-		/**
-		 * Send message on a _bus_ and shutdown
-		 *
-		 * Sends the message around to the subscribers and
-		 *  once the message has been released by the last
-		 *  subscriber, performs a shutdown of the switch thread.
-		 *
-		 * Each client subscriber is responsible for recognizing
-		 *  the message (since litm does not interpret client
-		 *  messages) and terminate its access to litm & terminates
-		 *  its threads.
-		 *
-		 * @see litm_send
-		 *
-		 * @param *conn connection reference
-		 * @param bus_id the ``bus`` to send the message onto
-		 * @param *msg the pointer to the message
-		 * @param *cleaner the pointer to the cleaner function
-		 */
-		litm_code litm_send_shutdown( 	litm_connection *conn,
-										litm_bus bus_id,
-										void *msg,
-										void (*cleaner)(void *msg)
-									);
-
-		/**
-		 * Sends a 'timer' message which, once finished
-		 * delivering to all receiver queues, signals the said
-		 * receivers.
-		 *
-		 * @see litm_send
-		 *
-		 */
-		litm_code litm_send_timer( 		litm_connection *conn,
-										litm_bus bus_id,
-										void *msg,
-										void (*cleaner)(void *msg)
-									);
-
-		void litm_wait_shutdown(void);
 
 
 		/**
@@ -565,6 +527,7 @@
 		 *
 		 * @param *conn connection reference
 		 * @param **envlp the pointer to received envelope
+		 * @param usec_timer maximum timeout in microseconds
 		 */
 		litm_code litm_receive_wait_timer(litm_connection *conn, litm_envelope **envlp, int usec_timer);
 
@@ -586,9 +549,11 @@
 
 
 		/**
-		 * Returns a copy of the pointer to the message.
+		 * Returns a copy of the pointer to the message
+		 * and the message type
 		 *
 		 * @param *envlp the envelope from which to extract the pointer to the message
+		 * @param *type pointer to receive message type
 		 *
 		 * This function should be used instead
 		 *  of relying on the ``litm_envelope``
@@ -597,7 +562,7 @@
 		 *  <b>** DO NOT** modify the message!</b>
 		 *
 		 */
-		void *litm_get_message(litm_envelope *envlp);
+		void *litm_get_message(litm_envelope *envlp, int *type);
 
 
 		/**

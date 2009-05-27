@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-<title>LITM: Welcome to the documentation for the library LITM -- 0.5</title>
+<title>LITM: Welcome to the documentation for the library LITM -- 1.0</title>
 <link href="tabs.css" rel="stylesheet" type="text/css">
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -16,7 +16,7 @@
   </div>
 </div>
 <div class="contents">
-<h1>Welcome to the documentation for the library LITM -- 0.5</h1>
+<h1>Welcome to the documentation for the library LITM -- 1.0</h1>
 <p>
 The library serves as a <b>Lightweight Inter-Thread Messaging</b> under Linux/Unix.<h2><a class="anchor" name="Dependencies">
 Dependencies</a></h2>
@@ -35,7 +35,7 @@ Example Usage:</a></h2>
 <h3><a class="anchor" name="Example_Opening">
 Opening a connection</a></h3>
 <div class="fragment"><pre class="fragment">                                <a class="code" href="struct__litm__connection.html">litm_connection</a> *conn;
-                                <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a> code = <a class="code" href="connection_8c.html#1c62b68cf084828184eed29d17c6498c">litm_connection_open</a>( &amp;conn );
+                                <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a> code = <a class="code" href="litm_8c.html#bc852d2eb14353e36adf21c33eab03a3">litm_connect</a>( &amp;conn );
                                 <span class="keywordflow">switch</span>(code) {
                                  <span class="keywordflow">case</span> <a class="code" href="litm_8h.html#9b8b4b198f82bf2ad2eea38062d622930b651a4f84388b526d32980e3b43c4a2">LITM_CODE_OK</a>:
                                                 <span class="comment">// can start using the connection</span>
@@ -62,7 +62,9 @@ Sending a message on a _bus_</a></h3>
                                 <span class="keywordtype">void</span> *thread_function(<span class="keywordtype">void</span> *params) {
 
                                         <span class="keywordtype">void</span> *message; <span class="comment">// whatever structure</span>
-                                        <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a> code = <a class="code" href="litm_8c.html#bed13398c1bc31a6c81c3e50997e2f2c">litm_send</a>(conn, bus_id, message, NULL);
+                                        <span class="keywordtype">int</span>  type=WHATEVER_MESSAGE_TYPE_CODE;
+
+                                        <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a> code = <a class="code" href="litm_8c.html#ec1432d7f0252d45801739101e04e050">litm_send</a>(conn, bus_id, message, NULL, type);
                                          ... check <span class="keywordflow">return</span> code ...
 
                                         ...
@@ -75,7 +77,7 @@ The following will send a message around the _bus_ and once all active subscribe
                                 <span class="keywordtype">void</span> *thread_function(<span class="keywordtype">void</span> *params) {
 
                                         <span class="keywordtype">void</span> *message; <span class="comment">// whatever structure</span>
-                                        <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a> code = <a class="code" href="litm_8c.html#9e932bb687ba4087d90eca7aa6583f0a">litm_send_shutdown</a>(conn, bus_id, message, NULL);
+                                        <a class="code" href="litm_8h.html#a1c70492a41df506aa1156ea7d36c4de">litm_code</a> code = <a class="code" href="litm_8c.html#ec1432d7f0252d45801739101e04e050">litm_send</a>(conn, bus_id, message, NULL, <a class="code" href="litm_8h.html#e35450f11d8478c442f0cd21a7d6553afbffc6eff7100e9550b46ec687b807d8">LITM_MESSAGE_TYPE_SHUTDOWN</a>);
                                          ... check <span class="keywordflow">return</span> code ...
 
                                         ...
@@ -90,7 +92,8 @@ Receiving a message</a></h3>
                                          ... check <span class="keywordflow">return</span> code ...
 
                                         <span class="keywordtype">void</span> *msg;
-                                        msg = <a class="code" href="litm_8c.html#aeb4655eae7753e131a710ff5a64b9f7">litm_get_message</a>( envelope );
+                                        <span class="keywordtype">int</span>  type;
+                                        msg = <a class="code" href="litm_8c.html#c80dd642b792576ba09cf24c2a81bfd1">litm_get_message</a>( envelope, &amp;type );
 
                                          ... process message WITHOUT MODIFYING IT ...
 
@@ -146,9 +149,15 @@ Release 0.5</a></h3>
 <ul>
 <li>Fixed deb package control files</li>
 </ul>
+<h3><a class="anchor" name="release_1_0">
+Release 1.0</a></h3>
+<ul>
+<li>Notable speed increase (no more corner case blocking) </li>
+<li>Simplified API (connect, send and subscribe are only available in 'blocking' form)</li>
+</ul>
 <dl compact><dt><b><a class="el" href="todo.html#_todo000001">Todo:</a></b></dt><dd>Better connection close</dd></dl>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Tue May 26 11:33:57 2009 for LITM by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Wed May 27 15:51:37 2009 for LITM by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

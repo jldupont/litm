@@ -34,11 +34,6 @@ int queue_put_safe( queue *q, void *node );
  */
 queue *queue_create(int id) {
 
-	pthread_mutex_t *cond_mutex = malloc( sizeof(pthread_mutex_t) );
-	if (NULL==cond_mutex) {
-		return NULL;
-	}
-
 	pthread_cond_t *cond = malloc( sizeof (pthread_cond_t) );
 	if (NULL == cond) {
 		return NULL;
@@ -59,11 +54,9 @@ queue *queue_create(int id) {
 		q->total_out = 0;
 
 		pthread_mutex_init( mutex, NULL );
-		pthread_mutex_init( cond_mutex, NULL );
 		pthread_cond_init( cond, NULL );
 
 		q->mutex      = mutex;
-		q->cond_mutex = cond_mutex;
 		q->cond       = cond;
 
 	} else {
@@ -76,8 +69,6 @@ queue *queue_create(int id) {
 		if (NULL!=mutex)
 			pthread_mutex_destroy(mutex);
 
-		if (NULL!=cond_mutex)
-			pthread_mutex_destroy(cond_mutex);
 	}
 
 	return q;
@@ -104,7 +95,6 @@ void queue_destroy(queue *q) {
 		return;
 	}
 	pthread_mutex_t *mutex = q->mutex;
-	pthread_mutex_t *cond_mutex = q->cond_mutex;
 	pthread_cond_t  *cond  = q->cond;
 
 	pthread_mutex_lock( mutex );
@@ -113,7 +103,6 @@ void queue_destroy(queue *q) {
 	pthread_mutex_unlock( mutex );
 
 	pthread_mutex_destroy(mutex);
-	pthread_mutex_destroy(cond_mutex);
 	pthread_cond_destroy(cond);
 
 }//
@@ -208,15 +197,19 @@ queue_put_wait(queue *q, void *node) {
 
 		} else {
 			//DEBUG_LOG(LOG_DEBUG,"queue_put_wait: BEFORE LOCK q[%x][%i]", q, q->id);
-			pthread_mutex_lock( q->cond_mutex );
+			pthread_mutex_lock( q->mutex );
 
 				//DEBUG_LOG(LOG_DEBUG,"queue_put_wait: BEFORE COND_WAIT q[%x][%i]", q, q->id);
-				int rc = pthread_cond_wait( q->cond, q->cond_mutex );
-				if (rc) {
+				int rc = pthread_cond_wait( q->cond, q->mutex );
+				if (ETIMEDOUT==rc) {
+					code = 1;//not an error to have timed-out really
+					break;
+				} else {
+					code = 0;
 					DEBUG_LOG(LOG_ERR,"queue_put_wait: CONDITION WAIT ERROR");
 				}
 
-			pthread_mutex_unlock( q->cond_mutex );
+			pthread_mutex_unlock( q->mutex );
 			//DEBUG_LOG(LOG_DEBUG,"queue_put_wait: AFTER LOCK q[%x][%i]", q, q->id);
 		}
 
@@ -338,25 +331,34 @@ int queue_wait(queue *q) {
 	}
 
 	//DEBUG_LOG(LOG_DEBUG,"queue_wait: BEFORE LOCK on q[%x][%i]",q,q->id);
-	pthread_mutex_lock( q->cond_mutex );
+	pthread_mutex_lock( q->mutex );
 
 		// it seems we need to wait...
 		//DEBUG_LOG(LOG_DEBUG,"queue_wait: BEFORE COND_WAIT on q[%x][%i]",q,q->id);
-		int rc = pthread_cond_wait( q->cond, q->cond_mutex );
+		int rc = pthread_cond_wait( q->cond, q->mutex );
 
 		//int result2 = pthread_mutex_trylock( q->mutex );
 		//DEBUG_LOG(LOG_DEBUG,"queue_get_wait: TRYLOCK q[%x][%i] result[%i] ",q,q->id,result2==EBUSY);
 
-		if (rc) {
-			DEBUG_LOG(LOG_ERR,"queue_get_wait: CONDITION WAIT ERROR");
+		if ((ETIMEDOUT==rc) || (0==rc)){
+			rc=0;
+		} else {
+			DEBUG_LOG(LOG_ERR,"queue_get_wait: CONDITION WAIT ERROR, code[%i]", rc);
+			rc=1;
 		}
 
-	pthread_mutex_unlock( q->cond_mutex );
+	pthread_mutex_unlock( q->mutex );
 	//DEBUG_LOG(LOG_DEBUG,"queue_wait: AFTER LOCK on q[%x][%i]",q,q->id);
 
 	return rc;
 }//
 
+/**
+ * Wait but with timeout
+ *
+ * @return 0 SUCCESS
+ * @return 1 FAILURE
+ */
 int queue_wait_timer(queue *q, int usec_timer) {
 
 	if (NULL==q) {
@@ -368,7 +370,7 @@ int queue_wait_timer(queue *q, int usec_timer) {
 	struct timespec timeout;
 
 	//DEBUG_LOG(LOG_DEBUG,"queue_wait: BEFORE LOCK on q[%x][%i]",q,q->id);
-	pthread_mutex_lock( q->cond_mutex );
+	pthread_mutex_lock( q->mutex );
 
 		gettimeofday(&now, NULL);
 		timeout.tv_sec  = now.tv_sec;
@@ -380,12 +382,15 @@ int queue_wait_timer(queue *q, int usec_timer) {
 
 		// it seems we need to wait...
 		//DEBUG_LOG(LOG_DEBUG,"queue_wait: BEFORE COND_WAIT on q[%x][%i]",q,q->id);
-		int rc = pthread_cond_timedwait( q->cond, q->cond_mutex, &timeout );
+		int rc = pthread_cond_timedwait( q->cond, q->mutex, &timeout );
+		if ((ETIMEDOUT==rc) || (0==rc)){
+			rc=0;
+		} else {
+			DEBUG_LOG(LOG_DEBUG,"queue_wait_timer: COND ERROR q[%x][%i] result[%i] ",q,q->id,rc);
+			rc=1;
+		}
 
-		//int result2 = pthread_mutex_trylock( q->mutex );
-		//DEBUG_LOG(LOG_DEBUG,"queue_get_wait: TRYLOCK q[%x][%i] result[%i] ",q,q->id,result2==EBUSY);
-
-	pthread_mutex_unlock( q->cond_mutex );
+	pthread_mutex_unlock( q->mutex );
 	//DEBUG_LOG(LOG_DEBUG,"queue_wait: AFTER LOCK on q[%x][%i]",q,q->id);
 
 	return rc;
@@ -470,9 +475,14 @@ int queue_peek(queue *q) {
 
 
 void queue_signal(queue *q) {
-	int rc = pthread_cond_signal( q->cond );
-	if (rc)
-		DEBUG_LOG(LOG_DEBUG,"queue_signal: SIGNAL ERROR");
+
+	pthread_mutex_lock( q->mutex );
+
+		int rc = pthread_cond_signal( q->cond );
+		if (rc)
+			DEBUG_LOG(LOG_DEBUG,"queue_signal: SIGNAL ERROR");
+
+	pthread_mutex_unlock( q->mutex );
 }
 
 
@@ -562,26 +572,29 @@ queue_put_head_wait(queue *q, void *node) {
 		if (EBUSY != pthread_mutex_trylock( q->mutex )) {
 
 			code = queue_put_head_safe( q, node );
-
-			pthread_mutex_unlock( q->mutex );
 			if (code)
 				pthread_cond_signal( q->cond );
+
+			pthread_mutex_unlock( q->mutex );
 
 			break;
 
 		} else {
 
-			DEBUG_LOG(LOG_DEBUG,"queue_put_head_wait: BEFORE LOCK q[%x][%i]", q, q->id);
-			pthread_mutex_lock( q->cond_mutex );
+			//DEBUG_LOG(LOG_DEBUG,"queue_put_head_wait: BEFORE LOCK q[%x][%i]", q, q->id);
+			pthread_mutex_lock( q->mutex );
 
-				DEBUG_LOG(LOG_DEBUG,"queue_put_head_wait: BEFORE COND_WAIT q[%x][%i]", q, q->id);
-				int rc = pthread_cond_wait( q->cond, q->cond_mutex );
-				if (rc) {
-					DEBUG_LOG(LOG_ERR,"queue_put_wait: CONDITION WAIT ERROR");
+				//DEBUG_LOG(LOG_DEBUG,"queue_put_head_wait: BEFORE COND_WAIT q[%x][%i]", q, q->id);
+				int rc = pthread_cond_wait( q->cond, q->mutex );
+				if (ETIMEDOUT==rc) {
+					rc=1;
+				} else {
+					DEBUG_LOG(LOG_ERR,"queue_put_wait: CONDITION WAIT ERROR, code[%i]",rc);
+					rc=0;
 				}
 
-			pthread_mutex_unlock( q->cond_mutex );
-			DEBUG_LOG(LOG_DEBUG,"queue_put_head_wait: AFTER LOCK q[%x][%i]", q, q->id);
+			pthread_mutex_unlock( q->mutex );
+			//DEBUG_LOG(LOG_DEBUG,"queue_put_head_wait: AFTER LOCK q[%x][%i]", q, q->id);
 		}
 
 	}

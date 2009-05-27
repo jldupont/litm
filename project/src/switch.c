@@ -59,7 +59,7 @@ litm_code __switch_finalize(litm_envelope *envlp);
 litm_code __switch_try_sending_or_requeue(litm_connection *conn, litm_envelope *envlp);
 void __switch_init_tables(void);
 void __switch_handle_pending(litm_envelope *e);
-litm_code __switch_safe_send( litm_connection *conn, litm_bus bus_id, void *msg, void (*cleaner)(void *msg), int shutdown_flag, int timer_flag );
+litm_code __switch_safe_send( litm_connection *conn, litm_bus bus_id, void *msg, void (*cleaner)(void *msg), int type );
 
 litm_connection *__switch_index_to_connection( int bus_id, int index );
 
@@ -123,8 +123,8 @@ __switch_thread_function(void *params) {
 	litm_bus bus_id;
 
 	char *err_msg;
-	int sd_flag=LITM_SHUTDOWN_FLAG_FALSE, shutdown_flag=LITM_SHUTDOWN_FLAG_FALSE;
-	int tm_flag = LITM_TIMER_FLAG_FALSE;
+	int type;
+	int shutdown_flag = 0;
 	int current;
 	static char *thisMsg = "__switch_thread_function: conn[%x] code[%s]";
 
@@ -140,7 +140,7 @@ __switch_thread_function(void *params) {
 			break;
 		}
 
-		sched_yield();
+		//sched_yield();
 
 		// we block here since if we have no messages
 		//  to process, we don't have anything else to do...
@@ -192,8 +192,7 @@ __switch_thread_function(void *params) {
 		current      = (e->routes).current;
 		current_conn = (e->routes).current_conn;
 		bus_id       = (e->routes).bus_id;
-		sd_flag      =  e->shutdown_flag;
-		tm_flag      =  e->timer_flag;
+		type         = e->type;
 
 		//int id = litm_connection_get_id( sender );
 		//DEBUG_LOG(LOG_INFO, "__switch_thread_function: bus[%u] sender[%x] current[%x] envelope[%x] sd[%i] conn_id[%i]", bus_id, sender, current, e, sd_flag, id);
@@ -212,11 +211,11 @@ __switch_thread_function(void *params) {
 		case LITM_CODE_ERROR_END_OF_SUBSCRIBERS_LIST:
 			__switch_finalize(e);
 			// last subscriber... and shutdown?
-			if (LITM_SHUTDOWN_FLAG_TRUE==sd_flag) {
+			if (LITM_MESSAGE_TYPE_SHUTDOWN==type) {
 				DEBUG_LOG(LOG_DEBUG, "__switch_thread_function: SHUTDOWN");
-				shutdown_flag = LITM_SHUTDOWN_FLAG_TRUE;
+				shutdown_flag = 1;
 			}
-			if (LITM_TIMER_FLAG_TRUE==tm_flag) {
+			if (LITM_MESSAGE_TYPE_TIMER==type) {
 				_litm_connection_signal_all();
 			}
 			continue; // <=======================================
@@ -226,7 +225,7 @@ __switch_thread_function(void *params) {
 			err_msg = litm_translate_code(code);
 			int sender_id  = sender->id;
 
-			DEBUG_LOG(LOG_DEBUG, "__switch_thread_function: code[%s] sender[%x][%i] current[%x][%i] sd[%i] finalize", err_msg, sender, sender_id, current_conn, current, sd_flag);
+			DEBUG_LOG(LOG_DEBUG, "__switch_thread_function: code[%s] sender[%x][%i] current[%x][%i] finalize", err_msg, sender, sender_id, current_conn, current);
 			__switch_finalize(e);
 
 			continue; // <=======================================
@@ -287,8 +286,8 @@ __switch_thread_function(void *params) {
 
 	}//while
 
-	DEBUG_LOG(LOG_INFO, "__switch_thread_function: ENDING delivered[%li] dequeued[%li] waited[%li] pending[%li] busy[%li]",
-															delivered,  dequeued,    waited,    pending,    busy );
+	DEBUG_LOG(LOG_INFO, "__switch_thread_function: ENDING delivered[%li] dequeued[%li] waited[%li] pending[%li] busy[%li] q->num[%i]",
+															delivered,  dequeued,    waited,    pending,    busy, _switch_queue->num );
 
 	return NULL;
 }//END THREAD
@@ -448,14 +447,14 @@ __switch_try_sending_to_recipient(	litm_connection *conn,
 	litm_code returnCode = LITM_CODE_OK;
 	int code = 0;
 
-	switch(env->shutdown_flag) {
+	switch(env->type==LITM_MESSAGE_TYPE_SHUTDOWN) {
 
 	// more pressing....
-	case LITM_SHUTDOWN_FLAG_TRUE:
+	case 1:
 		code = queue_put_head_wait(conn->input_queue, (void *) env);
 		break;
 
-	case LITM_SHUTDOWN_FLAG_FALSE:
+	case 0:
 		code = queue_put_nb(conn->input_queue, (void *) env);
 		break;
 	}
@@ -571,42 +570,6 @@ switch_remove_subscriber(litm_connection *conn, litm_bus bus_id) {
 
 
 /**
- * @see switch_send
- *
- */
-	litm_code
-switch_send_shutdown(litm_connection *conn, litm_bus bus_id, void *msg, void (*cleaner)(void *msg)) {
-
-	if (NULL==conn) {
-		return LITM_CODE_ERROR_BAD_CONNECTION;
-	}
-
-	if (( LITM_BUSSES_MAX < bus_id ) || (0>=bus_id)) {
-		return LITM_CODE_ERROR_INVALID_BUS;
-	}
-
-	return __switch_safe_send( conn, bus_id, msg, cleaner, LITM_SHUTDOWN_FLAG_TRUE, LITM_TIMER_FLAG_FALSE);
-}//
-
-/**
- * @see switch_send
- *
- */
-	litm_code
-switch_send_timer(litm_connection *conn, litm_bus bus_id, void *msg, void (*cleaner)(void *msg)) {
-
-	if (NULL==conn) {
-		return LITM_CODE_ERROR_BAD_CONNECTION;
-	}
-
-	if (( LITM_BUSSES_MAX < bus_id ) || (0>=bus_id)) {
-		return LITM_CODE_ERROR_INVALID_BUS;
-	}
-
-	return __switch_safe_send( conn, bus_id, msg, cleaner, LITM_SHUTDOWN_FLAG_FALSE, LITM_TIMER_FLAG_TRUE);
-}//
-
-/**
  * This function just queues up the message in the
  *  switch's input_queue without actually sending it
  *  to recipients.
@@ -618,7 +581,7 @@ switch_send_timer(litm_connection *conn, litm_bus bus_id, void *msg, void (*clea
  */
 	litm_code
 switch_send(litm_connection *conn, litm_bus bus_id, void *msg,
-			void (*cleaner)(void *msg)) {
+			void (*cleaner)(void *msg), int type) {
 
 	if (NULL==conn) {
 		return LITM_CODE_ERROR_BAD_CONNECTION;
@@ -628,7 +591,7 @@ switch_send(litm_connection *conn, litm_bus bus_id, void *msg,
 		return LITM_CODE_ERROR_INVALID_BUS;
 	}
 
-	return __switch_safe_send( conn, bus_id, msg, cleaner, LITM_SHUTDOWN_FLAG_FALSE, LITM_TIMER_FLAG_FALSE );
+	return __switch_safe_send( conn, bus_id, msg, cleaner, type );
 }//
 
 
@@ -637,10 +600,8 @@ __switch_safe_send( litm_connection *sender,
 					litm_bus bus_id,
 					void *msg,
 					void (*cleaner)(void *msg),
-					int shutdown_flag,
-					int timer_flag ) {
+					int type ) {
 
-	DEBUG_LOG(LOG_DEBUG, "__SWITCH_SAFE_SEND: sender[%x][%i] bus[%i] sent[%i]", sender, sender->id, bus_id, sender->sent);
 
 	litm_envelope *e=__litm_pool_get();
 	e->cleaner = cleaner;
@@ -649,12 +610,14 @@ __switch_safe_send( litm_connection *sender,
 	(e->routes).sender = sender;
 	(e->routes).current = -1;  // First time sent
 	(e->routes).current_conn = NULL;  // First time sent
+
+	e->type = type;
 	e->msg = msg;
 	e->delivery_count = 0;
 	e->released_count = 0;
-	e->shutdown_flag = shutdown_flag;
-	e->timer_flag    = timer_flag;
 	e->requeued = 0;
+
+	DEBUG_LOG(LOG_DEBUG, "__SWITCH_SAFE_SEND: sender[%x][%i] bus[%i] sent[%i] env[%x]", sender, sender->id, bus_id, sender->sent, e);
 
 	#ifdef _DEBUG
 		e->sent_time = (struct timeval *) malloc( sizeof(struct timeval) );
@@ -668,7 +631,7 @@ __switch_safe_send( litm_connection *sender,
 	 */
 	int result;
 
-	switch(shutdown_flag) {
+	switch(LITM_MESSAGE_TYPE_SHUTDOWN==type) {
 
 	// more pressing....
 	// NOTE: don't use the '_wait' functions as it
@@ -676,12 +639,12 @@ __switch_safe_send( litm_connection *sender,
 	//		 It is better to throttle the senders
 	//		 then the receivers.
 
-	case LITM_SHUTDOWN_FLAG_TRUE:
+	case 1:
 		//result = queue_put_head_nb(_switch_queue, (void *) e);
 		result = queue_put_head(_switch_queue, (void *) e);
 		break;
 
-	case LITM_SHUTDOWN_FLAG_FALSE:
+	case 0:
 		//result = queue_put_nb(_switch_queue, (void *) e);
 		result = queue_put(_switch_queue, (void *) e);
 		break;
