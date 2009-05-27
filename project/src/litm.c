@@ -233,6 +233,17 @@ litm_send_timer( 		litm_connection *conn,
 	return switch_send_timer(conn, bus_id, msg, cleaner);
 }//
 
+#ifdef _DEBUG
+	void _litm_log_timediff(litm_envelope *env) {
+
+		struct timeval *current;
+		current = (struct timeval *) malloc( sizeof(struct timeval) );
+		int result=gettimeofday( current, NULL );
+		suseconds_t diff_usecs = current->tv_usec - (env->sent_time)->tv_usec;
+		doLog(LOG_INFO,">>> enlvp[%x] rx diff[%li] result[%i]", env, diff_usecs, result);
+	}//
+#endif
+
 /**
  * Receive (non-blocking) function for clients
  *
@@ -254,6 +265,7 @@ litm_receive_nb(litm_connection *conn, litm_envelope **envlp) {
 		returnCode=LITM_CODE_NO_MESSAGE;
 	} else {
 		conn->received++;
+		DEBUG_FUNC(_litm_log_timediff(*envlp));
 	}
 
 	return returnCode;
@@ -278,7 +290,7 @@ litm_receive_wait(litm_connection *conn, litm_envelope **envlp) {
 		//  missing a signal for whatever reason
 		*envlp = queue_get_nb( conn->input_queue );
 		if (NULL!=*envlp) {
-
+			DEBUG_FUNC(_litm_log_timediff(*envlp));
 			conn->received++;
 			break;
 		}
@@ -305,7 +317,7 @@ litm_receive_wait(litm_connection *conn, litm_envelope **envlp) {
  * Receive with wait and unblocked through the 'timer' message
  */
 	litm_code
-litm_receive_wait_timer(litm_connection *conn, litm_envelope **envlp) {
+litm_receive_wait_timer(litm_connection *conn, litm_envelope **envlp, int usec_timer) {
 
 	if (NULL==conn) {
 		return LITM_CODE_ERROR_BAD_CONNECTION;
@@ -318,6 +330,7 @@ litm_receive_wait_timer(litm_connection *conn, litm_envelope **envlp) {
 	//  missing a signal for whatever reason
 	*envlp = queue_get_nb( conn->input_queue );
 	if (NULL!=*envlp) {
+		DEBUG_FUNC(_litm_log_timediff(*envlp));
 		conn->received++;
 		return returnCode;  // <============================
 	}
@@ -325,7 +338,7 @@ litm_receive_wait_timer(litm_connection *conn, litm_envelope **envlp) {
 	//give the chance to another thread
 	sched_yield();
 
-	int rc= queue_wait( conn->input_queue );
+	int rc= queue_wait_timer( conn->input_queue );
 	if (rc) {
 
 		returnCode = LITM_CODE_ERROR_RECEIVE_WAIT;
@@ -334,6 +347,7 @@ litm_receive_wait_timer(litm_connection *conn, litm_envelope **envlp) {
 
 		*envlp = queue_get_nb( conn->input_queue );
 		if (NULL!=*envlp) {
+			DEBUG_FUNC(_litm_log_timediff(*envlp));
 			conn->received++;
 			returnCode=LITM_CODE_OK;
 		} else {
@@ -342,7 +356,7 @@ litm_receive_wait_timer(litm_connection *conn, litm_envelope **envlp) {
 	}
 
 
-	DEBUG_LOG(LOG_DEBUG,"litm_receive_wait_timer, STOP conn[%x][%i]",conn, conn->id);
+	//DEBUG_LOG(LOG_DEBUG,"litm_receive_wait_timer, STOP conn[%x][%i]",conn, conn->id);
 	return returnCode;
 }//
 

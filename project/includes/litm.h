@@ -197,6 +197,16 @@
 #ifndef LITM_H_
 #define LITM_H_
 
+
+#ifdef _DEBUG
+	#include <sys/time.h>
+	#define DEBUG_PARAM(PARAM) PARAM
+	#define DEBUG_FUNC(FUNC)   FUNC
+#else
+	#define DEBUG_PARAM(PARAM)
+	#define DEBUG_FUNC(FUNC)
+#endif
+
 #	include <sys/types.h>
 #	include <pthread.h>
 
@@ -338,6 +348,7 @@
 		 */
 		typedef struct _litm_envelope {
 
+			DEBUG_PARAM(struct timeval *sent_time);
 			int requeued;
 			int shutdown_flag;
 			int timer_flag;
@@ -550,12 +561,12 @@
 		/**
 		 * Awaits a message from any ``bus``
 		 * until either a message is present or
-		 * a ``timer`` message unblocks the call.
+		 * a ``timer`` expires the call.
 		 *
 		 * @param *conn connection reference
 		 * @param **envlp the pointer to received envelope
 		 */
-		litm_code litm_receive_wait_timer(litm_connection *conn, litm_envelope **envlp);
+		litm_code litm_receive_wait_timer(litm_connection *conn, litm_envelope **envlp, int usec_timer);
 
 
 		/**
