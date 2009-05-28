@@ -73,9 +73,6 @@ switch_init(void) {
 
 	if (0== _switchThread_status) {
 
-
-		sched_setscheduler(0, SCHED_RR, NULL);
-
 		// init queue *before* launching thread!
 		_switch_queue = queue_create(-1);
 		__switch_init_tables();
@@ -140,29 +137,16 @@ __switch_thread_function(void *params) {
 			break;
 		}
 
-		//sched_yield();
-
-		// we block here since if we have no messages
-		//  to process, we don't have anything else to do...
 		e=(litm_envelope *) queue_get_nb( _switch_queue );
 		if (NULL==e) {
-
 			waited++;
-			// interleave threads for faster response time...
-			// and better support for quick shutdown procedure.
-			// Using 'sched_yield' avoids touching the 'sleep'
-			// and 'usleep' functions which interact badly with
-			// setitimer/SIGVTALRM
+			// much better performance using the pthread cond wait
+			queue_wait( _switch_queue );
+			continue;
 
 		} else {
 			dequeued++;
 		}
-
-		if (NULL==e) {
-			queue_wait( _switch_queue );
-			continue;
-		}
-
 
 		//DEBUG_LOG(LOG_INFO, "__switch_thread_function: GOT ENVELOPE");
 
@@ -216,6 +200,7 @@ __switch_thread_function(void *params) {
 				shutdown_flag = 1;
 			}
 			if (LITM_MESSAGE_TYPE_TIMER==type) {
+				DEBUG_LOG(LOG_DEBUG, "TTT __switch_thread_function: TIMER");
 				_litm_connection_signal_all();
 			}
 			continue; // <=======================================
@@ -445,7 +430,7 @@ __switch_try_sending_to_recipient(	litm_connection *conn,
 
 
 	litm_code returnCode = LITM_CODE_OK;
-	int code = 0;
+	int code;
 
 	switch(env->type==LITM_MESSAGE_TYPE_SHUTDOWN) {
 

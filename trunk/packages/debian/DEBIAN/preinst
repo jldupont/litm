@@ -2,6 +2,18 @@
 
 """
 	@author: Jean-Lou Dupont
+	
+
+	from: http://www.debian.org/doc/debian-policy/ch-maintainerscripts.html
+	Cases:
+	
+		new-preinst install
+	
+		new-preinst install old-version
+		
+		new-preinst upgrade old-version
+		
+		old-preinst abort-upgrade new-version
 """
 
 import os
@@ -9,18 +21,12 @@ import sys
 
 this_version = "$version"
 
-cwd     = os.getcwd()
-id      = "$Id$"
+try:    command = sys.argv[1]
+except: command=''
 
-print "LITM: cwd[%s] id[%s]" % (cwd, id)
-
-try:
-	command = sys.argv[1]
-	version = sys.argv[2]
+try:    version = sys.argv[2]
+except: version = ''
 	
-	print "LITM: preinst: command[%s] configured version[%s] version[%s]" % (command, version, this_version)
-except:
-	pass
-	
+print "LITM: preinst: command[%s] configured version[%s] version[%s]" % (command, version, this_version)
 
 sys.exit(0)

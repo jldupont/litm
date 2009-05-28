@@ -140,7 +140,7 @@ This source implements the *switch* function whereby *envelopes* are presented, 
 
 <p>Definition at line <a class="el" href="switch_8c-source.html#l00028">28</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
 
-<p>Referenced by <a class="el" href="switch_8c-source.html#l00118">__switch_thread_function()</a>.</p>
+<p>Referenced by <a class="el" href="switch_8c-source.html#l00115">__switch_thread_function()</a>.</p>
 
 </div>
 </div><p>
@@ -197,11 +197,11 @@ This source implements the *switch* function whereby *envelopes* are presented, 
 
 <p>
 Finalizes a message contained in an envelope &amp; recycles the envelope 
-<p>Definition at line <a class="el" href="switch_8c-source.html#l00695">695</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
+<p>Definition at line <a class="el" href="switch_8c-source.html#l00680">680</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
 
-<p>References <a class="el" href="pool_8c-source.html#l00047">__litm_pool_recycle()</a>, <a class="el" href="struct__litm__envelope.html#9e1e2e92283fc88e458ab22c80ed5a10">_litm_envelope::cleaner</a>, <a class="el" href="logger_8h-source.html#l00019">DEBUG_LOG</a>, <a class="el" href="litm_8h-source.html#l00339">LITM_CODE_ERROR_INVALID_ENVELOPE</a>, <a class="el" href="litm_8h-source.html#l00326">LITM_CODE_OK</a>, and <a class="el" href="litm_8h-source.html#l00381">_litm_envelope::msg</a>.</p>
+<p>References <a class="el" href="pool_8c-source.html#l00047">__litm_pool_recycle()</a>, <a class="el" href="struct__litm__envelope.html#9e1e2e92283fc88e458ab22c80ed5a10">_litm_envelope::cleaner</a>, <a class="el" href="logger_8h-source.html#l00019">DEBUG_LOG</a>, <a class="el" href="litm_8h-source.html#l00343">LITM_CODE_ERROR_INVALID_ENVELOPE</a>, <a class="el" href="litm_8h-source.html#l00330">LITM_CODE_OK</a>, and <a class="el" href="litm_8h-source.html#l00385">_litm_envelope::msg</a>.</p>
 
-<p>Referenced by <a class="el" href="switch_8c-source.html#l00299">__switch_handle_pending()</a>, <a class="el" href="switch_8c-source.html#l00118">__switch_thread_function()</a>, and <a class="el" href="switch_8c-source.html#l00350">switch_release()</a>.</p>
+<p>Referenced by <a class="el" href="switch_8c-source.html#l00284">__switch_handle_pending()</a>, <a class="el" href="switch_8c-source.html#l00115">__switch_thread_function()</a>, and <a class="el" href="switch_8c-source.html#l00335">switch_release()</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -257,11 +257,11 @@ Here is the caller graph for this function:</div>
 <p>
 Find ``match``<p>
 THIS FUNCTION IS NOT *CONNECTION SAFE* and thus must be called whilst holding the _connections lock. 
-<p>Definition at line <a class="el" href="switch_8c-source.html#l00793">793</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
+<p>Definition at line <a class="el" href="switch_8c-source.html#l00778">778</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
 
-<p>References <a class="el" href="litm_8h-source.html#l00222">LITM_CONNECTION_MAX</a>.</p>
+<p>References <a class="el" href="litm_8h-source.html#l00226">LITM_CONNECTION_MAX</a>.</p>
 
-<p>Referenced by <a class="el" href="switch_8c-source.html#l00741">__switch_get_next_subscriber()</a>.</p>
+<p>Referenced by <a class="el" href="switch_8c-source.html#l00726">__switch_get_next_subscriber()</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -323,11 +323,11 @@ Furthermore, we are implementing ``split horizon`` forwarding ie. don't send the
 If end of list is reached, return NULL.<p>
 CASES: ======<p>
 1- empty subscription list 2- single subscriber a) the sender b) other subscriber 3- more than 1 subscriber 
-<p>Definition at line <a class="el" href="switch_8c-source.html#l00741">741</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
+<p>Definition at line <a class="el" href="switch_8c-source.html#l00726">726</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
 
-<p>References <a class="el" href="switch_8c-source.html#l00793">__switch_find_match()</a>, <a class="el" href="litm_8h-source.html#l00344">LITM_CODE_ERROR_END_OF_SUBSCRIBERS_LIST</a>, and <a class="el" href="litm_8h-source.html#l00326">LITM_CODE_OK</a>.</p>
+<p>References <a class="el" href="switch_8c-source.html#l00778">__switch_find_match()</a>, <a class="el" href="litm_8h-source.html#l00348">LITM_CODE_ERROR_END_OF_SUBSCRIBERS_LIST</a>, and <a class="el" href="litm_8h-source.html#l00330">LITM_CODE_OK</a>.</p>
 
-<p>Referenced by <a class="el" href="switch_8c-source.html#l00118">__switch_thread_function()</a>.</p>
+<p>Referenced by <a class="el" href="switch_8c-source.html#l00115">__switch_thread_function()</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -367,11 +367,11 @@ Here is the caller graph for this function:</div>
 
 <p>
 Handle ``pending`` requests to sent 
-<p>Definition at line <a class="el" href="switch_8c-source.html#l00299">299</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
+<p>Definition at line <a class="el" href="switch_8c-source.html#l00284">284</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
 
-<p>References <a class="el" href="switch_8c-source.html#l00695">__switch_finalize()</a>, <a class="el" href="switch_8c-source.html#l00392">__switch_try_sending_or_requeue()</a>, <a class="el" href="logger_8h-source.html#l00019">DEBUG_LOG</a>, <a class="el" href="litm_8h-source.html#l00342">LITM_CODE_BUSY_CONNECTIONS</a>, <a class="el" href="litm_8h-source.html#l00338">LITM_CODE_BUSY_OUTPUT_QUEUE</a>, <a class="el" href="litm_8h-source.html#l00331">LITM_CODE_ERROR_BAD_CONNECTION</a>, <a class="el" href="litm_8h-source.html#l00326">LITM_CODE_OK</a>, <a class="el" href="litm_8c-source.html#l00279">litm_translate_code()</a>, and <a class="el" href="litm_8h-source.html#l00380">_litm_envelope::routes</a>.</p>
+<p>References <a class="el" href="switch_8c-source.html#l00680">__switch_finalize()</a>, <a class="el" href="switch_8c-source.html#l00377">__switch_try_sending_or_requeue()</a>, <a class="el" href="logger_8h-source.html#l00019">DEBUG_LOG</a>, <a class="el" href="litm_8h-source.html#l00346">LITM_CODE_BUSY_CONNECTIONS</a>, <a class="el" href="litm_8h-source.html#l00342">LITM_CODE_BUSY_OUTPUT_QUEUE</a>, <a class="el" href="litm_8h-source.html#l00335">LITM_CODE_ERROR_BAD_CONNECTION</a>, <a class="el" href="litm_8h-source.html#l00330">LITM_CODE_OK</a>, <a class="el" href="litm_8c-source.html#l00277">litm_translate_code()</a>, and <a class="el" href="litm_8h-source.html#l00384">_litm_envelope::routes</a>.</p>
 
-<p>Referenced by <a class="el" href="switch_8c-source.html#l00118">__switch_thread_function()</a>.</p>
+<p>Referenced by <a class="el" href="switch_8c-source.html#l00115">__switch_thread_function()</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -420,7 +420,7 @@ Here is the caller graph for this function:</div>
 
 <p>
 
-<p>Definition at line <a class="el" href="switch_8c-source.html#l00815">815</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
+<p>Definition at line <a class="el" href="switch_8c-source.html#l00800">800</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
 
 </div>
 </div><p>
@@ -442,9 +442,9 @@ Here is the caller graph for this function:</div>
 
 <p>
 
-<p>Definition at line <a class="el" href="switch_8c-source.html#l00091">91</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
+<p>Definition at line <a class="el" href="switch_8c-source.html#l00088">88</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
 
-<p>References <a class="el" href="litm_8h-source.html#l00223">LITM_BUSSES_MAX</a>, and <a class="el" href="litm_8h-source.html#l00222">LITM_CONNECTION_MAX</a>.</p>
+<p>References <a class="el" href="litm_8h-source.html#l00227">LITM_BUSSES_MAX</a>, and <a class="el" href="litm_8h-source.html#l00226">LITM_CONNECTION_MAX</a>.</p>
 
 <p>Referenced by <a class="el" href="switch_8c-source.html#l00072">switch_init()</a>.</p>
 
@@ -504,11 +504,11 @@ Here is the caller graph for this function:</div>
 
 <p>
 
-<p>Definition at line <a class="el" href="switch_8c-source.html#l00599">599</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
+<p>Definition at line <a class="el" href="switch_8c-source.html#l00584">584</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
 
-<p>References <a class="el" href="pool_8c-source.html#l00081">__litm_pool_get()</a>, <a class="el" href="pool_8c-source.html#l00047">__litm_pool_recycle()</a>, <a class="el" href="struct__litm__envelope.html#9e1e2e92283fc88e458ab22c80ed5a10">_litm_envelope::cleaner</a>, <a class="el" href="logger_8h-source.html#l00019">DEBUG_LOG</a>, <a class="el" href="litm_8h-source.html#l00378">_litm_envelope::delivery_count</a>, <a class="el" href="litm_8h-source.html#l00296">_litm_connection::id</a>, <a class="el" href="litm_8h-source.html#l00328">LITM_CODE_BUSY</a>, <a class="el" href="litm_8h-source.html#l00329">LITM_CODE_ERROR_MALLOC</a>, <a class="el" href="litm_8h-source.html#l00326">LITM_CODE_OK</a>, <a class="el" href="litm_8h-source.html#l00234">LITM_MESSAGE_TYPE_SHUTDOWN</a>, <a class="el" href="litm_8h-source.html#l00381">_litm_envelope::msg</a>, <a class="el" href="queue_8c-source.html#l00119">queue_put()</a>, <a class="el" href="queue_8c-source.html#l00531">queue_put_head()</a>, <a class="el" href="litm_8h-source.html#l00377">_litm_envelope::released_count</a>, <a class="el" href="litm_8h-source.html#l00376">_litm_envelope::requeued</a>, <a class="el" href="litm_8h-source.html#l00380">_litm_envelope::routes</a>, <a class="el" href="litm_8h-source.html#l00295">_litm_connection::sent</a>, and <a class="el" href="litm_8h-source.html#l00375">_litm_envelope::type</a>.</p>
+<p>References <a class="el" href="pool_8c-source.html#l00081">__litm_pool_get()</a>, <a class="el" href="pool_8c-source.html#l00047">__litm_pool_recycle()</a>, <a class="el" href="struct__litm__envelope.html#9e1e2e92283fc88e458ab22c80ed5a10">_litm_envelope::cleaner</a>, <a class="el" href="logger_8h-source.html#l00019">DEBUG_LOG</a>, <a class="el" href="litm_8h-source.html#l00382">_litm_envelope::delivery_count</a>, <a class="el" href="litm_8h-source.html#l00300">_litm_connection::id</a>, <a class="el" href="litm_8h-source.html#l00332">LITM_CODE_BUSY</a>, <a class="el" href="litm_8h-source.html#l00333">LITM_CODE_ERROR_MALLOC</a>, <a class="el" href="litm_8h-source.html#l00330">LITM_CODE_OK</a>, <a class="el" href="litm_8h-source.html#l00238">LITM_MESSAGE_TYPE_SHUTDOWN</a>, <a class="el" href="litm_8h-source.html#l00385">_litm_envelope::msg</a>, <a class="el" href="queue_8c-source.html#l00119">queue_put()</a>, <a class="el" href="queue_8c-source.html#l00531">queue_put_head()</a>, <a class="el" href="litm_8h-source.html#l00381">_litm_envelope::released_count</a>, <a class="el" href="litm_8h-source.html#l00380">_litm_envelope::requeued</a>, <a class="el" href="litm_8h-source.html#l00384">_litm_envelope::routes</a>, <a class="el" href="litm_8h-source.html#l00299">_litm_connection::sent</a>, and <a class="el" href="litm_8h-source.html#l00379">_litm_envelope::type</a>.</p>
 
-<p>Referenced by <a class="el" href="switch_8c-source.html#l00583">switch_send()</a>.</p>
+<p>Referenced by <a class="el" href="switch_8c-source.html#l00568">switch_send()</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -548,9 +548,9 @@ Here is the caller graph for this function:</div>
 
 <p>
 The switch thread dequeues messages from the ``input queue`` and dispatches them to the next connection <a class="el" href="structqueue.html">queue</a>. 
-<p>Definition at line <a class="el" href="switch_8c-source.html#l00118">118</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
+<p>Definition at line <a class="el" href="switch_8c-source.html#l00115">115</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
 
-<p>References <a class="el" href="switch_8c-source.html#l00695">__switch_finalize()</a>, <a class="el" href="switch_8c-source.html#l00741">__switch_get_next_subscriber()</a>, <a class="el" href="switch_8c-source.html#l00299">__switch_handle_pending()</a>, <a class="el" href="switch_8c-source.html#l00392">__switch_try_sending_or_requeue()</a>, <a class="el" href="connection_8c-source.html#l00317">_litm_connection_signal_all()</a>, <a class="el" href="logger_8h-source.html#l00019">DEBUG_LOG</a>, <a class="el" href="litm_8h-source.html#l00296">_litm_connection::id</a>, <a class="el" href="litm_8h-source.html#l00342">LITM_CODE_BUSY_CONNECTIONS</a>, <a class="el" href="litm_8h-source.html#l00338">LITM_CODE_BUSY_OUTPUT_QUEUE</a>, <a class="el" href="litm_8h-source.html#l00343">LITM_CODE_ERROR_CONNECTION_NOT_ACTIVE</a>, <a class="el" href="litm_8h-source.html#l00344">LITM_CODE_ERROR_END_OF_SUBSCRIBERS_LIST</a>, <a class="el" href="litm_8h-source.html#l00326">LITM_CODE_OK</a>, <a class="el" href="litm_8h-source.html#l00234">LITM_MESSAGE_TYPE_SHUTDOWN</a>, <a class="el" href="litm_8h-source.html#l00235">LITM_MESSAGE_TYPE_TIMER</a>, <a class="el" href="switch_8c-source.html#l00028">LITM_SHUTDOWN_FLAG_TRUE</a>, <a class="el" href="litm_8c-source.html#l00279">litm_translate_code()</a>, <a class="el" href="litm_8h-source.html#l00266">queue::num</a>, <a class="el" href="queue_8c-source.html#l00299">queue_get_nb()</a>, <a class="el" href="queue_8c-source.html#l00119">queue_put()</a>, <a class="el" href="queue_8c-source.html#l00326">queue_wait()</a>, <a class="el" href="litm_8h-source.html#l00380">_litm_envelope::routes</a>, and <a class="el" href="litm_8h-source.html#l00375">_litm_envelope::type</a>.</p>
+<p>References <a class="el" href="switch_8c-source.html#l00680">__switch_finalize()</a>, <a class="el" href="switch_8c-source.html#l00726">__switch_get_next_subscriber()</a>, <a class="el" href="switch_8c-source.html#l00284">__switch_handle_pending()</a>, <a class="el" href="switch_8c-source.html#l00377">__switch_try_sending_or_requeue()</a>, <a class="el" href="connection_8c-source.html#l00317">_litm_connection_signal_all()</a>, <a class="el" href="logger_8h-source.html#l00019">DEBUG_LOG</a>, <a class="el" href="litm_8h-source.html#l00300">_litm_connection::id</a>, <a class="el" href="litm_8h-source.html#l00346">LITM_CODE_BUSY_CONNECTIONS</a>, <a class="el" href="litm_8h-source.html#l00342">LITM_CODE_BUSY_OUTPUT_QUEUE</a>, <a class="el" href="litm_8h-source.html#l00347">LITM_CODE_ERROR_CONNECTION_NOT_ACTIVE</a>, <a class="el" href="litm_8h-source.html#l00348">LITM_CODE_ERROR_END_OF_SUBSCRIBERS_LIST</a>, <a class="el" href="litm_8h-source.html#l00330">LITM_CODE_OK</a>, <a class="el" href="litm_8h-source.html#l00238">LITM_MESSAGE_TYPE_SHUTDOWN</a>, <a class="el" href="litm_8h-source.html#l00239">LITM_MESSAGE_TYPE_TIMER</a>, <a class="el" href="switch_8c-source.html#l00028">LITM_SHUTDOWN_FLAG_TRUE</a>, <a class="el" href="litm_8c-source.html#l00277">litm_translate_code()</a>, <a class="el" href="litm_8h-source.html#l00270">queue::num</a>, <a class="el" href="queue_8c-source.html#l00299">queue_get_nb()</a>, <a class="el" href="queue_8c-source.html#l00119">queue_put()</a>, <a class="el" href="queue_8c-source.html#l00326">queue_wait()</a>, <a class="el" href="litm_8h-source.html#l00384">_litm_envelope::routes</a>, and <a class="el" href="litm_8h-source.html#l00379">_litm_envelope::type</a>.</p>
 
 <p>Referenced by <a class="el" href="switch_8c-source.html#l00072">switch_init()</a>.</p>
 
@@ -602,11 +602,11 @@ Here is the caller graph for this function:</div>
 <p>
 Tries sending the envelope along BUT requeue if this is not possible at this juncture.<p>
 The call to __switch_try_sending_to_recipient is connection safe. 
-<p>Definition at line <a class="el" href="switch_8c-source.html#l00392">392</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
+<p>Definition at line <a class="el" href="switch_8c-source.html#l00377">377</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
 
-<p>References <a class="el" href="switch_8c-source.html#l00433">__switch_try_sending_to_recipient()</a>, <a class="el" href="litm_8h-source.html#l00378">_litm_envelope::delivery_count</a>, <a class="el" href="litm_8h-source.html#l00338">LITM_CODE_BUSY_OUTPUT_QUEUE</a>, <a class="el" href="litm_8h-source.html#l00343">LITM_CODE_ERROR_CONNECTION_NOT_ACTIVE</a>, <a class="el" href="litm_8h-source.html#l00339">LITM_CODE_ERROR_INVALID_ENVELOPE</a>, <a class="el" href="litm_8h-source.html#l00326">LITM_CODE_OK</a>, <a class="el" href="queue_8c-source.html#l00119">queue_put()</a>, <a class="el" href="litm_8h-source.html#l00376">_litm_envelope::requeued</a>, and <a class="el" href="litm_8h-source.html#l00380">_litm_envelope::routes</a>.</p>
+<p>References <a class="el" href="switch_8c-source.html#l00418">__switch_try_sending_to_recipient()</a>, <a class="el" href="litm_8h-source.html#l00382">_litm_envelope::delivery_count</a>, <a class="el" href="litm_8h-source.html#l00342">LITM_CODE_BUSY_OUTPUT_QUEUE</a>, <a class="el" href="litm_8h-source.html#l00347">LITM_CODE_ERROR_CONNECTION_NOT_ACTIVE</a>, <a class="el" href="litm_8h-source.html#l00343">LITM_CODE_ERROR_INVALID_ENVELOPE</a>, <a class="el" href="litm_8h-source.html#l00330">LITM_CODE_OK</a>, <a class="el" href="queue_8c-source.html#l00119">queue_put()</a>, <a class="el" href="litm_8h-source.html#l00380">_litm_envelope::requeued</a>, and <a class="el" href="litm_8h-source.html#l00384">_litm_envelope::routes</a>.</p>
 
-<p>Referenced by <a class="el" href="switch_8c-source.html#l00299">__switch_handle_pending()</a>, and <a class="el" href="switch_8c-source.html#l00118">__switch_thread_function()</a>.</p>
+<p>Referenced by <a class="el" href="switch_8c-source.html#l00284">__switch_handle_pending()</a>, and <a class="el" href="switch_8c-source.html#l00115">__switch_thread_function()</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -656,11 +656,11 @@ Here is the caller graph for this function:</div>
 <p>
 Try sending the message to the recipient.<p>
 This function does not block waiting for the recipient. This function should only be called by ''__switch_try_sending_or_requeue''. 
-<p>Definition at line <a class="el" href="switch_8c-source.html#l00433">433</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
+<p>Definition at line <a class="el" href="switch_8c-source.html#l00418">418</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
 
-<p>References <a class="el" href="logger_8h-source.html#l00019">DEBUG_LOG</a>, <a class="el" href="litm_8h-source.html#l00298">_litm_connection::input_queue</a>, <a class="el" href="litm_8h-source.html#l00338">LITM_CODE_BUSY_OUTPUT_QUEUE</a>, <a class="el" href="litm_8h-source.html#l00331">LITM_CODE_ERROR_BAD_CONNECTION</a>, <a class="el" href="litm_8h-source.html#l00343">LITM_CODE_ERROR_CONNECTION_NOT_ACTIVE</a>, <a class="el" href="litm_8h-source.html#l00339">LITM_CODE_ERROR_INVALID_ENVELOPE</a>, <a class="el" href="litm_8h-source.html#l00337">LITM_CODE_ERROR_OUTPUT_QUEUING</a>, <a class="el" href="litm_8h-source.html#l00326">LITM_CODE_OK</a>, <a class="el" href="litm_8h-source.html#l00234">LITM_MESSAGE_TYPE_SHUTDOWN</a>, <a class="el" href="queue_8c-source.html#l00560">queue_put_head_wait()</a>, <a class="el" href="queue_8c-source.html#l00149">queue_put_nb()</a>, <a class="el" href="litm_8h-source.html#l00380">_litm_envelope::routes</a>, and <a class="el" href="litm_8h-source.html#l00375">_litm_envelope::type</a>.</p>
+<p>References <a class="el" href="logger_8h-source.html#l00019">DEBUG_LOG</a>, <a class="el" href="litm_8h-source.html#l00302">_litm_connection::input_queue</a>, <a class="el" href="litm_8h-source.html#l00342">LITM_CODE_BUSY_OUTPUT_QUEUE</a>, <a class="el" href="litm_8h-source.html#l00335">LITM_CODE_ERROR_BAD_CONNECTION</a>, <a class="el" href="litm_8h-source.html#l00347">LITM_CODE_ERROR_CONNECTION_NOT_ACTIVE</a>, <a class="el" href="litm_8h-source.html#l00343">LITM_CODE_ERROR_INVALID_ENVELOPE</a>, <a class="el" href="litm_8h-source.html#l00341">LITM_CODE_ERROR_OUTPUT_QUEUING</a>, <a class="el" href="litm_8h-source.html#l00330">LITM_CODE_OK</a>, <a class="el" href="litm_8h-source.html#l00238">LITM_MESSAGE_TYPE_SHUTDOWN</a>, <a class="el" href="queue_8c-source.html#l00560">queue_put_head_wait()</a>, <a class="el" href="queue_8c-source.html#l00149">queue_put_nb()</a>, <a class="el" href="litm_8h-source.html#l00384">_litm_envelope::routes</a>, and <a class="el" href="litm_8h-source.html#l00379">_litm_envelope::type</a>.</p>
 
-<p>Referenced by <a class="el" href="switch_8c-source.html#l00392">__switch_try_sending_or_requeue()</a>.</p>
+<p>Referenced by <a class="el" href="switch_8c-source.html#l00377">__switch_try_sending_or_requeue()</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -701,11 +701,11 @@ Here is the caller graph for this function:</div>
 <p>
 Wait for shutdown<p>
 Once a litm_send_shutdowm is used, this function should be called to neatly shutdown the process. 
-<p>Definition at line <a class="el" href="switch_8c-source.html#l00106">106</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
+<p>Definition at line <a class="el" href="switch_8c-source.html#l00103">103</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
 
 <p>References <a class="el" href="switch_8c-source.html#l00038">_switchThread</a>.</p>
 
-<p>Referenced by <a class="el" href="litm_8c-source.html#l00311">litm_wait_shutdown()</a>.</p>
+<p>Referenced by <a class="el" href="litm_8c-source.html#l00287">litm_wait_shutdown()</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -745,11 +745,11 @@ Here is the caller graph for this function:</div>
 
 <p>
 
-<p>Definition at line <a class="el" href="switch_8c-source.html#l00488">488</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
+<p>Definition at line <a class="el" href="switch_8c-source.html#l00473">473</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
 
-<p>References <a class="el" href="connection_8c-source.html#l00246">_litm_connections_trylock()</a>, <a class="el" href="connection_8c-source.html#l00253">_litm_connections_unlock()</a>, <a class="el" href="switch_8c-source.html#l00043">_subscribers_mutex</a>, <a class="el" href="logger_8h-source.html#l00019">DEBUG_LOG</a>, <a class="el" href="litm_8h-source.html#l00223">LITM_BUSSES_MAX</a>, <a class="el" href="litm_8h-source.html#l00328">LITM_CODE_BUSY</a>, <a class="el" href="litm_8h-source.html#l00331">LITM_CODE_ERROR_BAD_CONNECTION</a>, <a class="el" href="litm_8h-source.html#l00341">LITM_CODE_ERROR_BUS_FULL</a>, <a class="el" href="litm_8h-source.html#l00333">LITM_CODE_ERROR_INVALID_BUS</a>, <a class="el" href="litm_8h-source.html#l00326">LITM_CODE_OK</a>, and <a class="el" href="litm_8h-source.html#l00222">LITM_CONNECTION_MAX</a>.</p>
+<p>References <a class="el" href="connection_8c-source.html#l00246">_litm_connections_trylock()</a>, <a class="el" href="connection_8c-source.html#l00253">_litm_connections_unlock()</a>, <a class="el" href="switch_8c-source.html#l00043">_subscribers_mutex</a>, <a class="el" href="logger_8h-source.html#l00019">DEBUG_LOG</a>, <a class="el" href="litm_8h-source.html#l00227">LITM_BUSSES_MAX</a>, <a class="el" href="litm_8h-source.html#l00332">LITM_CODE_BUSY</a>, <a class="el" href="litm_8h-source.html#l00335">LITM_CODE_ERROR_BAD_CONNECTION</a>, <a class="el" href="litm_8h-source.html#l00345">LITM_CODE_ERROR_BUS_FULL</a>, <a class="el" href="litm_8h-source.html#l00337">LITM_CODE_ERROR_INVALID_BUS</a>, <a class="el" href="litm_8h-source.html#l00330">LITM_CODE_OK</a>, and <a class="el" href="litm_8h-source.html#l00226">LITM_CONNECTION_MAX</a>.</p>
 
-<p>Referenced by <a class="el" href="litm_8c-source.html#l00085">litm_subscribe()</a>.</p>
+<p>Referenced by <a class="el" href="litm_8c-source.html#l00082">litm_subscribe()</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -791,9 +791,9 @@ Here is the caller graph for this function:</div>
 
 <p>Definition at line <a class="el" href="switch_8c-source.html#l00072">72</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
 
-<p>References <a class="el" href="switch_8c-source.html#l00091">__switch_init_tables()</a>, <a class="el" href="switch_8c-source.html#l00118">__switch_thread_function()</a>, <a class="el" href="switch_8c-source.html#l00038">_switchThread</a>, <a class="el" href="switch_8c-source.html#l00039">_switchThread_status</a>, <a class="el" href="logger_8h-source.html#l00019">DEBUG_LOG</a>, and <a class="el" href="queue_8c-source.html#l00035">queue_create()</a>.</p>
+<p>References <a class="el" href="switch_8c-source.html#l00088">__switch_init_tables()</a>, <a class="el" href="switch_8c-source.html#l00115">__switch_thread_function()</a>, <a class="el" href="switch_8c-source.html#l00038">_switchThread</a>, <a class="el" href="switch_8c-source.html#l00039">_switchThread_status</a>, <a class="el" href="logger_8h-source.html#l00019">DEBUG_LOG</a>, and <a class="el" href="queue_8c-source.html#l00035">queue_create()</a>.</p>
 
-<p>Referenced by <a class="el" href="litm_8c-source.html#l00061">litm_connect_ex()</a>.</p>
+<p>Referenced by <a class="el" href="litm_8c-source.html#l00058">litm_connect_ex()</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -842,11 +842,11 @@ Here is the caller graph for this function:</div>
 
 <p>
 A client has finished processing a message: send it through through the ``input_queue`` and if all intended recipients have processed it already, it will be finalized. 
-<p>Definition at line <a class="el" href="switch_8c-source.html#l00350">350</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
+<p>Definition at line <a class="el" href="switch_8c-source.html#l00335">335</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
 
-<p>References <a class="el" href="switch_8c-source.html#l00695">__switch_finalize()</a>, <a class="el" href="logger_8h-source.html#l00019">DEBUG_LOG</a>, <a class="el" href="litm_8h-source.html#l00296">_litm_connection::id</a>, <a class="el" href="litm_8h-source.html#l00331">LITM_CODE_ERROR_BAD_CONNECTION</a>, <a class="el" href="litm_8h-source.html#l00339">LITM_CODE_ERROR_INVALID_ENVELOPE</a>, <a class="el" href="litm_8h-source.html#l00329">LITM_CODE_ERROR_MALLOC</a>, <a class="el" href="litm_8h-source.html#l00326">LITM_CODE_OK</a>, <a class="el" href="queue_8c-source.html#l00119">queue_put()</a>, <a class="el" href="queue_8c-source.html#l00477">queue_signal()</a>, <a class="el" href="litm_8h-source.html#l00294">_litm_connection::released</a>, <a class="el" href="litm_8h-source.html#l00377">_litm_envelope::released_count</a>, and <a class="el" href="litm_8h-source.html#l00380">_litm_envelope::routes</a>.</p>
+<p>References <a class="el" href="switch_8c-source.html#l00680">__switch_finalize()</a>, <a class="el" href="logger_8h-source.html#l00019">DEBUG_LOG</a>, <a class="el" href="litm_8h-source.html#l00300">_litm_connection::id</a>, <a class="el" href="litm_8h-source.html#l00335">LITM_CODE_ERROR_BAD_CONNECTION</a>, <a class="el" href="litm_8h-source.html#l00343">LITM_CODE_ERROR_INVALID_ENVELOPE</a>, <a class="el" href="litm_8h-source.html#l00333">LITM_CODE_ERROR_MALLOC</a>, <a class="el" href="litm_8h-source.html#l00330">LITM_CODE_OK</a>, <a class="el" href="queue_8c-source.html#l00119">queue_put()</a>, <a class="el" href="queue_8c-source.html#l00477">queue_signal()</a>, <a class="el" href="litm_8h-source.html#l00298">_litm_connection::released</a>, <a class="el" href="litm_8h-source.html#l00381">_litm_envelope::released_count</a>, and <a class="el" href="litm_8h-source.html#l00384">_litm_envelope::routes</a>.</p>
 
-<p>Referenced by <a class="el" href="litm_8c-source.html#l00261">litm_release()</a>.</p>
+<p>Referenced by <a class="el" href="litm_8c-source.html#l00258">litm_release()</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -895,11 +895,11 @@ Here is the caller graph for this function:</div>
 
 <p>
 
-<p>Definition at line <a class="el" href="switch_8c-source.html#l00531">531</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
+<p>Definition at line <a class="el" href="switch_8c-source.html#l00516">516</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
 
-<p>References <a class="el" href="connection_8c-source.html#l00246">_litm_connections_trylock()</a>, <a class="el" href="connection_8c-source.html#l00253">_litm_connections_unlock()</a>, <a class="el" href="switch_8c-source.html#l00043">_subscribers_mutex</a>, <a class="el" href="litm_8h-source.html#l00223">LITM_BUSSES_MAX</a>, <a class="el" href="litm_8h-source.html#l00328">LITM_CODE_BUSY</a>, <a class="el" href="litm_8h-source.html#l00331">LITM_CODE_ERROR_BAD_CONNECTION</a>, <a class="el" href="litm_8h-source.html#l00333">LITM_CODE_ERROR_INVALID_BUS</a>, <a class="el" href="litm_8h-source.html#l00340">LITM_CODE_ERROR_SUBSCRIPTION_NOT_FOUND</a>, <a class="el" href="litm_8h-source.html#l00326">LITM_CODE_OK</a>, and <a class="el" href="litm_8h-source.html#l00222">LITM_CONNECTION_MAX</a>.</p>
+<p>References <a class="el" href="connection_8c-source.html#l00246">_litm_connections_trylock()</a>, <a class="el" href="connection_8c-source.html#l00253">_litm_connections_unlock()</a>, <a class="el" href="switch_8c-source.html#l00043">_subscribers_mutex</a>, <a class="el" href="litm_8h-source.html#l00227">LITM_BUSSES_MAX</a>, <a class="el" href="litm_8h-source.html#l00332">LITM_CODE_BUSY</a>, <a class="el" href="litm_8h-source.html#l00335">LITM_CODE_ERROR_BAD_CONNECTION</a>, <a class="el" href="litm_8h-source.html#l00337">LITM_CODE_ERROR_INVALID_BUS</a>, <a class="el" href="litm_8h-source.html#l00344">LITM_CODE_ERROR_SUBSCRIPTION_NOT_FOUND</a>, <a class="el" href="litm_8h-source.html#l00330">LITM_CODE_OK</a>, and <a class="el" href="litm_8h-source.html#l00226">LITM_CONNECTION_MAX</a>.</p>
 
-<p>Referenced by <a class="el" href="litm_8c-source.html#l00092">litm_unsubscribe()</a>.</p>
+<p>Referenced by <a class="el" href="litm_8c-source.html#l00089">litm_unsubscribe()</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -967,11 +967,11 @@ Here is the caller graph for this function:</div>
 <p>
 This function just queues up the message in the switch's input_queue without actually sending it to recipients.<p>
 This function blocks whilst accessing the switch's ``input_queue`` but no deadlock scenario is possible since the switch's thread does not block whilst dequeuing. 
-<p>Definition at line <a class="el" href="switch_8c-source.html#l00583">583</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
+<p>Definition at line <a class="el" href="switch_8c-source.html#l00568">568</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
 
-<p>References <a class="el" href="switch_8c-source.html#l00599">__switch_safe_send()</a>, <a class="el" href="litm_8h-source.html#l00223">LITM_BUSSES_MAX</a>, <a class="el" href="litm_8h-source.html#l00331">LITM_CODE_ERROR_BAD_CONNECTION</a>, and <a class="el" href="litm_8h-source.html#l00333">LITM_CODE_ERROR_INVALID_BUS</a>.</p>
+<p>References <a class="el" href="switch_8c-source.html#l00584">__switch_safe_send()</a>, <a class="el" href="litm_8h-source.html#l00227">LITM_BUSSES_MAX</a>, <a class="el" href="litm_8h-source.html#l00335">LITM_CODE_ERROR_BAD_CONNECTION</a>, and <a class="el" href="litm_8h-source.html#l00337">LITM_CODE_ERROR_INVALID_BUS</a>.</p>
 
-<p>Referenced by <a class="el" href="litm_8c-source.html#l00098">litm_send()</a>.</p>
+<p>Referenced by <a class="el" href="litm_8c-source.html#l00095">litm_send()</a>.</p>
 
 <p>
 <div class="dynheader">
@@ -1026,7 +1026,7 @@ Here is the caller graph for this function:</div>
 
 <p>Definition at line <a class="el" href="switch_8c-source.html#l00043">43</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
 
-<p>Referenced by <a class="el" href="switch_8c-source.html#l00488">switch_add_subscriber()</a>, and <a class="el" href="switch_8c-source.html#l00531">switch_remove_subscriber()</a>.</p>
+<p>Referenced by <a class="el" href="switch_8c-source.html#l00473">switch_add_subscriber()</a>, and <a class="el" href="switch_8c-source.html#l00516">switch_remove_subscriber()</a>.</p>
 
 </div>
 </div><p>
@@ -1062,7 +1062,7 @@ Here is the caller graph for this function:</div>
 
 <p>Definition at line <a class="el" href="switch_8c-source.html#l00038">38</a> of file <a class="el" href="switch_8c-source.html">switch.c</a>.</p>
 
-<p>Referenced by <a class="el" href="switch_8c-source.html#l00106">__switch_wait_shutdown()</a>, and <a class="el" href="switch_8c-source.html#l00072">switch_init()</a>.</p>
+<p>Referenced by <a class="el" href="switch_8c-source.html#l00103">__switch_wait_shutdown()</a>, and <a class="el" href="switch_8c-source.html#l00072">switch_init()</a>.</p>
 
 </div>
 </div><p>
@@ -1086,7 +1086,7 @@ Here is the caller graph for this function:</div>
 </div>
 </div><p>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Wed May 27 15:51:39 2009 for LITM by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu May 28 12:27:29 2009 for LITM by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

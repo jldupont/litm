@@ -162,7 +162,6 @@
  *			Sender    => LITM		[label="litm_wait_shutdown()"];
  *
  * 		\endmsc
-
  *
  *
  *
@@ -197,6 +196,11 @@
  *
  *								\li Notable speed increase (no more corner case blocking)
  *								\li Simplified API (connect, send and subscribe are only available in 'blocking' form)
+ *
+ *		\subsection release_1_1 Release 1.1
+ *
+ *								\li Corrected some shortcomings of the DEBIAN control files
+ *								\li Fixed response to LITM_MESSAGE_TYPE_TIMER causing queue conditions to generate segfault
  *
  * \todo Better connection close
  *
