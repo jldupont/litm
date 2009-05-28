@@ -2,6 +2,34 @@
 
 """
 	@author: Jean-Lou Dupont
+	
+	from: http://www.debian.org/doc/debian-policy/ch-maintainerscripts.html
+	Cases:
+	
+		postrm remove
+
+		postrm purge
+		
+		old-postrm upgrade new-version
+		
+		new-postrm failed-upgrade old-version
+		
+		new-postrm abort-install
+		
+		new-postrm abort-install old-version
+		
+		new-postrm abort-upgrade old-version	
+		
+		disappearer's-postrm disappear overwriter overwriter-version
+		
+
+	Policy 10.6
+		Packages must not remove any device files in the postrm or any other script. This is left to the system administrator.
+		
+	Policy 10.8
+		Log files should be removed when the package is purged (but not when it is only removed). 	
+		
+	
 """
 
 import os
@@ -22,26 +50,36 @@ try:
 	
 	dst = '/usr/lib/liblitm.so'
 	ddst = '/usr/lib/liblitm_debug.so'
-	
-	print "LITM: removing symlink [%s]" % dst
-	os.remove( dst )
 
-	print "LITM: removing symlink [%s]" % ddst
-	os.remove( ddst )
+	# handle 'PURGE' command
+	# =======================
+	if command == 'purge':
 	
-	print "LITM: removing header file"
-	try:    os.remove( '/usr/include/litm.h' )
-	except: pass
+		try:
+			files = glob.glob('/usr/lib/liblitm*')
+			
+			for file in files:
+				os.remove( file )
+				print "LITM: removed [%s]" % file
+		except:
+			pass
+
 	
-	print "LITM: removing symlinks"
-	try:
-		files = glob.glob('/usr/lib/liblitm.*')
-		
-		for file in files:
-			os.remove( file )
-			print "LITM: removed [%s]" % file
-	except:
-		pass
+	if (command == 'remove') or (command == 'purge'):
+			
+		print "LITM: removing header file"
+		try:    os.remove( '/usr/include/litm.h' )
+		except: pass
+	
+		print "LITM: removing symlinks"
+		try:
+			files = glob.glob('/usr/lib/liblitm.*')
+			
+			for file in files:
+				os.remove( file )
+				print "LITM: removed [%s]" % file
+		except:
+			pass
 	
 except:
 	pass

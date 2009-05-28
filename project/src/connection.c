@@ -321,9 +321,10 @@ _litm_connection_signal_all(void) {
 	int i;
 	for (i=1;i<=LITM_CONNECTION_MAX;i++) {
 		conn = _connections[i];
+		if (NULL!=conn) {
 		q = _connections[i]->input_queue;
-		if (NULL!=conn)
 			queue_signal( q );
+		}
 	}
 
 }//

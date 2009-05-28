@@ -17,7 +17,6 @@
 #include "queue.h"
 #include "pool.h"
 #include "logger.h"
-#include "utils.h"
 
 char *LITM_CODE_MESSAGES[] = {
 		"LITM_CODE_OK",
@@ -47,8 +46,6 @@ char *LITM_CODE_MESSAGES[] = {
 };
 
 // PRIVATE
-int __litm_compute_timeout(int timeout);
-// =====================================
 
 
 	litm_code
@@ -275,6 +272,7 @@ litm_get_message(litm_envelope *envlp, int *type) {
 	return envlp->msg;
 }//
 
+
 	char *
 litm_translate_code(litm_code code) {
 
@@ -283,28 +281,6 @@ litm_translate_code(litm_code code) {
 
 	return LITM_CODE_MESSAGES[code];
 }//
-
-/**
- * Translates a seconds based timeout to a
- * useconds timeout value whilst adjusting for
- * the default timeout value.
- *
- */
-	int
-__litm_compute_timeout(int timeout) {
-
-	int computed_timeout;
-
-	// adjust to default
-	if (0!=timeout) {
-		computed_timeout = timeout;
-	} else {
-		computed_timeout = LITM_DEFAULT_MAX_TIMEOUT;
-	}
-	computed_timeout *= 1000*1000;
-
-	return computed_timeout;
-}
 
 
 	void

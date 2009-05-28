@@ -1,5 +1,5 @@
 Package: litm
-Version: 1.0
+Version: 1.1
 Priority: optional
 Architecture: i386
 Depends: python (>= 2.5)

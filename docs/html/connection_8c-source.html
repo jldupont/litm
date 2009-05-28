@@ -343,24 +343,25 @@
 <a name="l00321"></a>00321         <span class="keywordtype">int</span> i;
 <a name="l00322"></a>00322         <span class="keywordflow">for</span> (i=1;i&lt;=<a class="code" href="litm_8h.html#1b077a43eb60b36c3a0d6d4d71cf1fac">LITM_CONNECTION_MAX</a>;i++) {
 <a name="l00323"></a>00323                 conn = _connections[i];
-<a name="l00324"></a>00324                 q = _connections[i]-&gt;<a class="code" href="struct__litm__connection.html#92412056140d8e635b20b0681fa32c9a">input_queue</a>;
-<a name="l00325"></a>00325                 <span class="keywordflow">if</span> (NULL!=conn)
+<a name="l00324"></a>00324                 <span class="keywordflow">if</span> (NULL!=conn) {
+<a name="l00325"></a>00325                 q = _connections[i]-&gt;<a class="code" href="struct__litm__connection.html#92412056140d8e635b20b0681fa32c9a">input_queue</a>;
 <a name="l00326"></a>00326                         <a class="code" href="queue_8c.html#a1c32f105f2a17f2255cbe6dfaf66f78">queue_signal</a>( q );
-<a name="l00327"></a>00327         }
-<a name="l00328"></a>00328 
-<a name="l00329"></a>00329 }<span class="comment">//</span>
-<a name="l00330"></a>00330 
-<a name="l00331"></a>00331         <span class="keywordtype">void</span>
-<a name="l00332"></a><a class="code" href="connection_8c.html#1651397a367f03c5e51305186f211ffc">00332</a> <a class="code" href="connection_8c.html#1651397a367f03c5e51305186f211ffc">_litm_connections_init</a>(<span class="keywordtype">void</span>) {
-<a name="l00333"></a>00333 
-<a name="l00334"></a>00334         <span class="keywordtype">int</span> i;
-<a name="l00335"></a>00335         <span class="keywordflow">for</span> (i=1;i&lt;=<a class="code" href="litm_8h.html#1b077a43eb60b36c3a0d6d4d71cf1fac">LITM_CONNECTION_MAX</a>;i++) {
-<a name="l00336"></a>00336                 _connections[i]=NULL;
-<a name="l00337"></a>00337         }
-<a name="l00338"></a>00338 
-<a name="l00339"></a>00339 }<span class="comment">//</span>
+<a name="l00327"></a>00327                 }
+<a name="l00328"></a>00328         }
+<a name="l00329"></a>00329 
+<a name="l00330"></a>00330 }<span class="comment">//</span>
+<a name="l00331"></a>00331 
+<a name="l00332"></a>00332         <span class="keywordtype">void</span>
+<a name="l00333"></a><a class="code" href="connection_8c.html#1651397a367f03c5e51305186f211ffc">00333</a> <a class="code" href="connection_8c.html#1651397a367f03c5e51305186f211ffc">_litm_connections_init</a>(<span class="keywordtype">void</span>) {
+<a name="l00334"></a>00334 
+<a name="l00335"></a>00335         <span class="keywordtype">int</span> i;
+<a name="l00336"></a>00336         <span class="keywordflow">for</span> (i=1;i&lt;=<a class="code" href="litm_8h.html#1b077a43eb60b36c3a0d6d4d71cf1fac">LITM_CONNECTION_MAX</a>;i++) {
+<a name="l00337"></a>00337                 _connections[i]=NULL;
+<a name="l00338"></a>00338         }
+<a name="l00339"></a>00339 
+<a name="l00340"></a>00340 }<span class="comment">//</span>
 </pre></div></div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Wed May 27 15:51:37 2009 for LITM by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Thu May 28 12:27:26 2009 for LITM by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.8 </small></address>
 </body>

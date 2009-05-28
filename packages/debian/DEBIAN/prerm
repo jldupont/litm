@@ -2,6 +2,19 @@
 
 """
 	@author: Jean-Lou Dupont
+	
+	from: http://www.debian.org/doc/debian-policy/ch-maintainerscripts.html
+	Cases:
+	
+		prerm remove
+	
+		old-prerm upgrade new-version
+		
+		new-prerm failed-upgrade old-version
+		
+		conflictor's-prerm remove in-favour package new-version
+		
+		deconfigured's-prerm deconfigure in-favour package-being-installed version [removing conflicting-package version]
 """
 
 import os
@@ -9,15 +22,15 @@ import sys
 
 this_version = "$version"
 
-cwd     = os.getcwd()
-id      = "$Id$"
+try:    command = sys.argv[1]
+except: command = ''
 
-print "LITM: cwd[%s] id[%s]" % (cwd, id)
-
-command = sys.argv[1]
+try:    version = sys.argv[2]
+except: version = ''
+	
+print "LITM: prerm: command[%s] configured version[%s] version[%s]" % (command, version, this_version)
 
 if command is 'remove':
 	os.system("ldconfig")
-	
 
 sys.exit(0)
